@@ -1,0 +1,17 @@
+{
+  "variant": "V20 phoneme auxiliary supervision",
+  "base_architecture": "V19 TC-ResNet intent path",
+  "input": [
+    148,
+    60,
+    1
+  ],
+  "phone_branch": "Dense phone-symbol logits from 74-frame tensor after first MaxPool1D",
+  "phone_vocab_size": 40,
+  "phone_classes_with_blank": 41,
+  "blank_id": 0,
+  "intent_only_params": 246035,
+  "multitask_training_params": 248700,
+  "loss": "sparse intent CE + 0.1 x length-normalized CTC phone-symbol loss",
+  "phone_labels": "eSpeak en-US IPA-symbol G2P from transcript"
+}

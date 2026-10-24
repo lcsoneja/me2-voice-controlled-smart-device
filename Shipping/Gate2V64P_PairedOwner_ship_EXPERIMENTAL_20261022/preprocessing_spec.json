@@ -1,0 +1,24 @@
+{
+  "gate2_version": "Gate2V64P_PairedOwner_ship_EXPERIMENTAL_20261022",
+  "input_frames": 148,
+  "n_mels": 60,
+  "sample_rate": 16000,
+  "n_fft": 1024,
+  "hop_length": 640,
+  "win_length": 1024,
+  "center": true,
+  "power": 2.0,
+  "log": "log1p",
+  "crop": "center-crop/pad to 148 frames",
+  "stats_mean": 0.04175618290901184,
+  "stats_std": 0.2824768126010895,
+  "normalization_source": "Gate2v6 train-only statistics (same as v16-v18)",
+  "views": "8 per base: clean, music, music+Gaussian, music+babble, gain(-6..+6dB), time-shift(+/-100ms), speed(0.85-1.15x), ambient-only(user-recorded quiet pool, SNR 10-20dB)",
+  "view_weight": 0.125,
+  "input_dims": [
+    148,
+    60,
+    9
+  ],
+  "channel_semantics": "V28B 9-window; paired NEG + owner fine-tune (8 views, w=2.0)"
+}

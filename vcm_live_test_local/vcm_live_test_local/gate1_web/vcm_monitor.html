@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>VCM Monitor — Gate 1v4 / Gate 2 v2 (combined) / Pipeline</title>
+<style>
+ body{font-family:'Segoe UI',Arial,sans-serif;background:#0d1117;color:#c9d1d9;margin:0;padding:14px}
+ h1{font-size:18px;margin:0 0 4px;color:#58a6ff}
+ .sub{color:#8b949e;font-size:12px;margin-bottom:10px}
+ .tabs{display:flex;gap:6px;margin-bottom:10px}
+ .tab{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:13px}
+ .tab.active{background:#1f6feb;color:#fff;border-color:#1f6feb}
+ #banner{font-size:22px;font-weight:700;padding:10px;border-radius:8px;text-align:center;margin-bottom:10px}
+ .wake{background:#1a7f37;color:#fff}.listen{background:#30363d;color:#c9d1d9}
+ .card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;margin-bottom:10px}
+ .card h2{font-size:13px;margin:0 0 6px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px}
+ canvas{width:100%;display:block;background:#0d1117;border-radius:4px}
+ .sec{display:none}.sec.active{display:block}
+ .grid2{display:grid;grid-template-columns:1fr 340px;gap:12px}
+ .grid2.logwide{grid-template-columns:40% 1fr}
+ .probrow{display:flex;align-items:center;margin:4px 0}
+ .probname{width:110px;font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+ .probbarwrap{flex:1;background:#0d1117;border-radius:4px;height:16px;overflow:hidden}
+ .probbar{height:100%;width:0%;background:#1f6feb;transition:width .15s}
+ .probval{width:52px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums}
+ .chip{display:inline-block;background:#21262d;border:1px solid #30363d;color:#c9d1d9;border-radius:14px;padding:4px 10px;margin:3px;cursor:pointer;font-size:12px}
+ .chip.sel{background:#1f6feb;color:#fff;border-color:#1f6feb}
+ .thr{width:100%}
+ .thrlabel{font-size:11px;color:#8b949e}
+ .log{height:170px;overflow-y:auto;font-family:Consolas,monospace;font-size:11px;background:#0d1117;padding:6px;border-radius:4px}
+ button{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:12px;margin:2px}
+ button:hover{background:#30363d}
+ #status{font-size:12px;color:#8b949e;margin-top:8px;white-space:pre-wrap}
+ .err{color:#f85149}.ok{color:#3fb950}
+ .verdict{font-size:15px;font-weight:700;padding:6px;border-radius:6px;margin:6px 0}
+ .v-pass{background:#1a7f37;color:#fff}.v-low{background:#9e6a03;color:#fff}.v-fail{background:#b62324;color:#fff}.v-idle{background:#21262d;color:#8b949e}
+ svg text{fill:#c9d1d9;font-size:11px}
+ svg .box{fill:#161b22;stroke:#30363d;stroke-width:1.5}
+ svg .lit{stroke:#2ea043;stroke-width:2.5}
+ svg .ln{stroke:#30363d;stroke-width:1.5}
+ svg .lnlit{stroke:#2ea043;stroke-width:2.5}
+ .statsline{font-size:12px;color:#8b949e;margin-top:4px}
+ .parallel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:10px}
+ .parallel-action{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:8px;min-height:72px}
+ .parallel-action.selected{border-color:#d29922;box-shadow:0 0 0 1px #d29922}
+ .parallel-led{display:inline-block;width:14px;height:14px;border-radius:50%;background:#30363d;margin-right:7px;vertical-align:middle}
+ .parallel-led.on{background:#2ea043;box-shadow:0 0 11px #2ea043}
+ .parallel-branch{padding:8px;border-bottom:1px solid #30363d;font-size:12px}
+ .parallel-branch.route{border:1px solid #2ea043;border-radius:6px;background:#0d1b13}
+ .parallel-branch .muted{color:#8b949e}
+ .parallel-value{font-size:20px;font-weight:700;margin:8px 0}
+  .parallel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:10px}
+ .parallel-action{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:8px;min-height:74px;display:grid;grid-template-columns:18px 1fr;column-gap:8px;align-items:start}
+ .parallel-action.selected{border-color:#2ea043;box-shadow:0 0 0 1px #2ea043}
+ .parallel-led{display:inline-block;width:14px;height:14px;border-radius:50%;background:#30363d;margin-top:2px;transition:background .15s,box-shadow .15s}
+ .parallel-led.on{background:#2ea043;box-shadow:0 0 11px #2ea043}
+ .parallel-action .phrase,.parallel-action .status{grid-column:2}
+ .parallel-branch{padding:8px;border-bottom:1px solid #30363d;font-size:12px}
+ .parallel-branch.route{border:1px solid #2ea043;border-radius:6px;background:#0d1b13}
+ .parallel-value{font-size:20px;font-weight:700;margin:8px 0}
+
+ .gate3to5-embed{padding:10px;overflow:hidden}.gate3to5-frame{display:block;width:100%;height:calc(100vh - 220px);min-height:760px;border:0;border-radius:8px;background:#0d1117}
+ @media(max-width:760px){.gate3to5-frame{height:1200px;min-height:1200px}}
+</style>
+</head>
+<body>
+<h1>VCM Live Monitor</h1>
+<div class="sub">rolling 5.92 s window · 1 s inference · Gate 1 main: V8 float32 (Nova/Piattos/speech-negative; silence uses energy floor) · v2–v5 remain selectable · Gate 2 model selectable: v2 tflite (default) / v6 keras source · GateN/4/5 specialists · fully local</div>
+<div class="tabs">
+ <button class="tab active" data-tab="gate1">GATE 1v8 · main wake</button>
+ <button class="tab" data-tab="gate2">GATE 2 · intents</button>
+ <button class="tab" data-tab="pipe">PIPELINE · G1→G2→specialists</button>
+ <button class="tab" data-tab="parallel">ALL GATES · PARALLEL TEST</button>
+ <button class="tab" data-tab="metrics">METRICS · Gate 2 eval</button>
+ <button class="tab" data-tab="gate3to5">GATES 3–5 · slot candidates</button>
+ <a class="tab" href="/gate2_rnnoise_test.html" style="text-decoration:none">GATE 2 · RNNoise A/B · 1s</a>
+ <a class="tab" href="/gate2_rnnoise_test_2s.html" style="text-decoration:none">GATE 2 · RNNoise A/B · 2s</a>
+ <a class="tab" href="/gate2_phrase_recorder.html" style="text-decoration:none">GATE 2 · phrase lab</a>
+ <a class="tab" href="/dataset_recorder.html" style="text-decoration:none">GATE 2 · dataset recorder</a>
+</div>
+<div id="banner" class="listen">STARTING…</div>
+<div class="card"><h2>Mic level / waveform</h2><canvas id="wave" width="760" height="90"></canvas><canvas id="level" width="760" height="80" style="margin-top:6px"></canvas></div>
+<div id="status"></div>
+
+<div id="sec-gate1" class="sec active">
+ <div class="grid2 logwide">
+  <div class="card"><h2>Class probabilities</h2><div id="g1bars"></div>
+   <div class="thrlabel" style="margin-top:8px">Gate 1 model (version · precision)</div>
+   <select id="g1model" class="thr"></select>
+   <div class="thrlabel" id="g1modelinfo">active model: gate1v8_f32</div>
+   <div class="thrlabel" style="margin-top:8px">Nova wake threshold</div><input id="thr_Nova" class="thr" type="range" min="0.05" max="0.95" step="0.01">
+   <div class="thrlabel">Piattos wake threshold</div><input id="thr_Piattos" class="thr" type="range" min="0.05" max="0.95" step="0.01">
+  </div>
+  <div class="card"><h2>Log</h2><canvas id="g1chart" width="760" height="110" style="margin-bottom:8px"></canvas><div id="g1log" class="log"></div>
+   <button id="g1saveCsv">CSV</button><button id="g1saveJson">JSON</button><button id="g1clear">Clear</button>
+   <div class="statsline" id="g1stats">windows scored: 0 · wakes: 0</div>
+  </div>
+ </div>
+</div>
+
+<div id="sec-gate2" class="sec">
+ <div class="grid2 logwide">
+  <div class="card"><h2>Top intent — Gate 2 (model-selectable)</h2><div id="g2top" class="verdict v-idle">—</div>
+   <div class="thrlabel" style="margin-top:8px">Gate 2 model</div>
+   <select id="g2model" class="thr">
+    <option value="gate2v2" selected>gate2v2 tflite (default)</option>
+    <option value="gate2v6_keras">gate2v6 keras source</option>
+   </select>
+   <div class="thrlabel" id="g2modelinfo">active model: gate2v2</div>
+   <h2>19-intent probabilities</h2><div id="g2bars"></div>
+  </div>
+  <div class="card"><h2>Choose a phrase (expected intent)</h2><div id="g2chips"></div>
+   <div class="thrlabel">Expected: <span id="g2expected">none</span></div>
+   <div class="thrlabel">Gate 2 global min confidence</div><input id="thr_g2" class="thr" type="range" min="0.05" max="0.95" step="0.01">
+   <div class="thrlabel" style="margin-top:6px">Phrase activation threshold (chart: red line)</div>
+   <select id="g2phrase" class="thr"></select>
+   <input id="thr_g2phrase" class="thr" type="range" min="0.05" max="0.95" step="0.01">
+   <div id="g2verdict" class="verdict v-idle">no phrase selected</div>
+   <h2>Log</h2><canvas id="g2chart" width="760" height="110" style="margin-bottom:8px"></canvas><div id="g2log" class="log"></div>
+   <button id="g2saveCsv">CSV</button><button id="g2saveJson">JSON</button><button id="g2clear">Clear</button>
+   <div class="statsline" id="g2stats">windows scored: 0</div>
+  </div>
+ </div>
+</div>
+
+<div id="sec-pipe" class="sec">
+ <div class="card"><h2>Concurrent Gate 1 + Gate 2 → Action Gate → specialists</h2>
+  <svg id="diagram" viewBox="0 0 780 210" width="100%" height="210">
+   <line class="ln" id="ln-mic-g1" x1="100" y1="95" x2="130" y2="50"/>
+   <line class="ln" id="ln-mic-g2" x1="100" y1="95" x2="130" y2="150"/>
+   <rect class="box" id="bx-mic" x="10" y="70" width="90" height="50" rx="8"/><text x="55" y="99" text-anchor="middle">MIC</text>
+   <rect class="box" id="bx-g1" x="130" y="20" width="130" height="60" rx="8"/><text x="195" y="45" text-anchor="middle">GATE 1 V8</text><text x="195" y="62" text-anchor="middle">8s wake latch</text>
+   <rect class="box" id="bx-g2" x="130" y="120" width="130" height="60" rx="8"/><text x="195" y="145" text-anchor="middle">GATE 2</text><text x="195" y="162" text-anchor="middle">4s intent latch</text>
+   <line class="ln" id="ln-g1-action" x1="260" y1="50" x2="300" y2="82"/>
+   <line class="ln" id="ln-g2-action" x1="260" y1="150" x2="300" y2="108"/>
+   <rect class="box" id="bx-action" x="300" y="65" width="135" height="60" rx="8"/><text x="367" y="90" text-anchor="middle">ACTION GATE</text><text x="367" y="108" text-anchor="middle">8s ∩ 4s overlap</text>
+   <line class="ln" id="ln-action-gn" x1="435" y1="80" x2="480" y2="32"/>
+   <line class="ln" id="ln-action-g4" x1="435" y1="95" x2="480" y2="97"/>
+   <line class="ln" id="ln-action-g5" x1="435" y1="110" x2="480" y2="162"/>
+   <rect class="box" id="bx-gn" x="480" y="10" width="175" height="44" rx="8"/><text x="567" y="36" text-anchor="middle">GATE N — timer/alarm/temp/brightness</text>
+   <rect class="box" id="bx-g4" x="480" y="75" width="175" height="44" rx="8"/><text x="567" y="101" text-anchor="middle">GATE 4 — color</text>
+   <rect class="box" id="bx-g5" x="480" y="140" width="175" height="44" rx="8"/><text x="567" y="166" text-anchor="middle">GATE 5 — reminder</text>
+   <line class="ln" id="ln-gn-out" x1="655" y1="32" x2="690" y2="90"/>
+   <line class="ln" id="ln-g4-out" x1="655" y1="97" x2="690" y2="97"/>
+   <line class="ln" id="ln-g5-out" x1="655" y1="162" x2="690" y2="104"/>
+   <rect class="box" id="bx-out" x="690" y="75" width="80" height="44" rx="8"/><text x="730" y="101" text-anchor="middle">FINAL</text>
+  </svg>
+ </div>
+ <div class="card" style="margin-bottom:10px"><h2>Activation charts — Gate 1 | Gate 2 (dashed = thresholds)</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+   <canvas id="g1chart_pipe" width="380" height="110"></canvas>
+   <canvas id="g2chart_pipe" width="380" height="110"></canvas>
+  </div>
+ </div>
+ <div class="grid2 logwide">
+  <div class="card"><h2>Stage results</h2>
+   <div id="pipe-memory" class="thrlabel">MEMORY: 0/20 s · waiting for frames</div>
+   <div id="pipe-path" class="verdict v-idle">PATH: —</div>
+   <div id="pipe-g1" class="thrlabel">G1: —</div>
+   <div id="pipe-g2" class="thrlabel">G2: —</div>
+   <div id="pipe-action" class="thrlabel">ACTION GATE: waiting for G1/G2 overlap</div>
+   <div id="pipe-spec" class="thrlabel">SPECIALIST: —</div>
+   <div id="pipe-final" class="verdict v-idle">FINAL: —</div>
+   <div id="pipe-accuracy" class="thrlabel">ACCURACY: select an expected phrase to track accuracy</div>
+  </div>
+  <div class="card"><h2>Choose a phrase</h2>
+   <div class="thrlabel">Wake words</div><div id="pipechips-wake"></div>
+   <div class="thrlabel" style="margin-top:6px">Commands (intent [+ value])</div><div id="pipechips"></div>
+   <button id="pipecal">Calibrate room (10 s)</button>
+   <div class="thrlabel">Expected: <span id="pipeexpected">none</span></div>
+   <div id="pipeverdict" class="verdict v-idle">no phrase selected</div>
+   <h2>Log</h2><div id="pipelog" class="log"></div>
+   <button id="pipesaveCsv">CSV</button><button id="pipesaveJson">JSON</button><button id="pipeclear">Clear</button>
+   <div class="statsline" id="pipestats">windows scored: 0 · wakes: 0</div>
+  </div>
+  <div class="card" id="pipe-ownervoice"><h2>Recorded voices accuracy (280)</h2>
+   <button id="pipeownervoiceRun">Score my 280 recordings</button>
+   <div id="pipe-ownervoice-summary" class="verdict v-idle">not scored yet</div>
+   <div id="pipe-ownervoice-perintent" class="statsline">—</div>
+   <div id="pipe-ownervoice-mismatches" class="statsline">—</div>
+  </div>
+ </div>
+</div>
+
+<div id="sec-parallel" class="sec">
+ <div class="card">
+  <h2>All gates — parallel diagnostic</h2>
+  <p class="statsline">Gate 1 must confirm Nova/Piattos first. After that, Gate 2, Gate N (numeric), Gate 4 (color), and Gate 5 (reminder) score the same 5.92 s window concurrently. This is a test dashboard; lights indicate the picked command, with no external/device action.</p>
+  <div class="grid2 logwide">
+   <div class="card">
+    <div class="thrlabel">Gate 1 wake state</div><div id="parallel-g1" class="verdict v-idle">waiting for wake word</div>
+    <div class="thrlabel">Gate 2 model / picked intent</div><div id="parallel-g2" class="verdict v-idle">waiting</div>
+    <div class="thrlabel">Picked action light</div><div id="parallel-action-status" class="verdict v-idle">no command selected</div>
+    <div id="parallel-cards" class="parallel-grid"></div>
+   </div>
+   <div class="card">
+    <h2>Parallel specialist outputs (same window)</h2>
+    <div id="parallel-gateN" class="parallel-branch">Gate N: waiting</div>
+    <div id="parallel-gate4" class="parallel-branch">Gate 4: waiting</div>
+    <div id="parallel-gate5" class="parallel-branch">Gate 5: waiting</div>
+    <h2>Routed Gate 3–5 value</h2><div id="parallel-slot-value" class="parallel-value">—</div>
+    <div id="parallel-stage" class="statsline">waiting for Gate 1</div>
+   </div>
+  </div>
+ </div>
+</div>
+<div id="sec-metrics" class="sec">
+ <div class="grid2 logwide">
+  <div>
+   <div class="card"><h2>Accuracy summary — the domain gap</h2><div id="metricsSummary"></div></div>
+   <div class="card" style="margin-top:10px"><h2>t-SNE embeddings — penultimate CRNN layer (19 classes)</h2>
+    <canvas id="tsneCanvas" width="760" height="420"></canvas>
+    <div id="tsneTip" style="display:none;position:absolute;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:6px;font-size:11px;pointer-events:none"></div>
+    <div id="tsneLegend" style="margin-top:6px"></div>
+   </div>
+  </div>
+  <div>
+   <div class="card"><h2>Per-class bars</h2><div id="metricsPerClass"></div></div>
+   <div class="card" style="margin-top:10px"><h2>Confusion matrices</h2><div id="metricsConfusion"></div></div>
+  </div>
+ </div>
+</div>
+<div id="sec-gate3to5" class="sec">
+<div class="card gate3to5-embed">
+<h2>Gate 3–5 slot-specialist candidates</h2>
+<p class="statsline">Separate clip-level classifiers. Choose a gate and either candidate ratio inside the app; the ratios are not promoted or merged. Gate4 Color and Gate2v8 are excluded from this tab.</p>
+<iframe id="gate3to5-frame" class="gate3to5-frame" title="Gate3–Gate5 candidate specialist app" src="/gate3to5/"></iframe>
+</div>
+</div>
+<script src="js/metrics_data.js"></script>
+<script defer src="js/metrics.js"></script>
+<script defer src="js/shared.js"></script>
+<script defer src="js/gate2.js"></script>
+<script defer src="js/pipeline.js"></script>
+<script defer src="js/parallel_all_gates.js"></script>
+<script>
+// Gate 2 model chooser: v2 tflite (default) / v6 keras source.
+// Sends {type:"g2model", model} on change; keeps the select in sync with the
+// model reported by probs2/pipe/g2model messages, and re-checks every 3 s so a
+// server restart (fresh process defaults to gate2v2) cannot leave a stale pick.
+(function () {
+  "use strict";
+  function bindG2Model() {
+    const sel = document.getElementById("g2model");
+    if (sel && !sel.dataset.bound) {
+      sel.dataset.bound = "1";
+      sel.addEventListener("change", function () {
+        const info = document.getElementById("g2modelinfo");
+        if (info) info.textContent = "requested: " + sel.value;
+        if (window.VCM && typeof window.VCM.send === "function") {
+          VCM.send({ type: "g2model", model: sel.value });
+        }
+      });
+    }
+  }
+  function syncActive(model) {
+    if (!model) return;
+    const active = String(model);
+    const sel = document.getElementById("g2model");
+    if (sel && sel.value !== active) {
+      sel.value = active;
+      if (sel.selectedIndex === -1) sel.selectedIndex = 0;
+    }
+    const info = document.getElementById("g2modelinfo");
+    if (info) info.textContent = "active model: " + active;
+  }
+  function initG2Model() {
+    bindG2Model();
+    if (window.VCM && typeof window.VCM.on === "function") {
+      VCM.on("probs2", function (msg) { syncActive(msg && msg.model); });
+      VCM.on("pipe", function (msg) { syncActive(msg && msg.g2 && msg.g2.model); });
+      VCM.on("g2model", function (msg) { syncActive(msg && msg.model); });
+      setInterval(function () {
+        if (window.VCM && typeof window.VCM.send === "function") VCM.send({ type: "g2model" });
+      }, 3000);
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initG2Model);
+  else initG2Model();
+})();
+</script>
+</body>
+</html>

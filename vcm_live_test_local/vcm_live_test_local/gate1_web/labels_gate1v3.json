@@ -1,0 +1,12 @@
+{
+  "labels": [
+    "nova",
+    "piattos",
+    "negative"
+  ],
+  "index_map": {
+    "nova": 0,
+    "piattos": 1,
+    "negative": 2
+  }
+}

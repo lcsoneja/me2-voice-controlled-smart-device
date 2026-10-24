@@ -1,0 +1,10 @@
+{
+  "sr": 16000,
+  "source_sample_rates": "mixed 12k/16k in MEX2 WAVs; 12k resampled to 16k at load (scipy resample_poly)",
+  "n_mels": 60,
+  "n_fft": 1024,
+  "hop_length": 640,
+  "win_length": 1024,
+  "target_frames": 74,
+  "dtype": "float16"
+}

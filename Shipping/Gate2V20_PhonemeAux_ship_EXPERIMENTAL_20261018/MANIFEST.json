@@ -1,0 +1,670 @@
+{
+  "package": "Gate2V20_PhonemeAux_ship_EXPERIMENTAL_20261018",
+  "created": "2026-10-18",
+  "status": "experimental",
+  "files": {
+    "README.md": {
+      "bytes": 2009,
+      "sha256": "a6b3a7540b37051bd9c626faaae34d7f5380e68e598e06cde0b11494349d5466"
+    },
+    "assets/v19_dataset_summary.json": {
+      "bytes": 762,
+      "sha256": "67a7c217271b3bad8dde70bbe3d0eadd31930f75792f9950ebeab661eef22ff2"
+    },
+    "infer.py": {
+      "bytes": 2237,
+      "sha256": "84b185798b0e4482477756f8871f65010255862c2227004690cf14030f98c85d"
+    },
+    "labels.json": {
+      "bytes": 374,
+      "sha256": "ede7f5557c99905f5178dbcb979afdb2241013a5bbda1c41967bf43f8a95747b"
+    },
+    "model_src/intent_only_model.keras": {
+      "bytes": 1112068,
+      "sha256": "3d7a63c2bdfc418d8c84d325e0493599511f9403b22efeaf8fff9af38b3117d2"
+    },
+    "model_src/multitask_training_model.keras": {
+      "bytes": 3128764,
+      "sha256": "395b898de752860592b60c8f57aef2806f19ce54cfe86f545cd664aac686977b"
+    },
+    "preprocessing_spec.json": {
+      "bytes": 776,
+      "sha256": "eac7e24e83ad72a8d110e5916b3b8df432bd82a0181b3de09bd12001d66d470f"
+    },
+    "reports/architecture.json": {
+      "bytes": 527,
+      "sha256": "b9d70839042429e769eafebb8258ad5efeb3007a48ead89c4daa2fb6558968a2"
+    },
+    "reports/history.csv": {
+      "bytes": 3365,
+      "sha256": "cc0cac29f71e2a60e7525c924ddb095a305eeba49ecb739f78308f4cf6b754de"
+    },
+    "reports/latency_comparison_host_cpu.json": {
+      "bytes": 1411,
+      "sha256": "8a36eb4b2ee2ec3a406c3197406264008085afaeddae8fb28928f889da8b4556"
+    },
+    "reports/phone_vocab.json": {
+      "bytes": 953,
+      "sha256": "3608c8f9e5370ddd66c8edb7fcbeadb258539a37419841d46b4ba95f24bf80ab"
+    },
+    "reports/report.json": {
+      "bytes": 10263,
+      "sha256": "fda01e119f87c2e07e9ababcb3810c0d3a2ae88c7b51e62cf27cbc78a336503e"
+    },
+    "reports/tflite_validation.json": {
+      "bytes": 628,
+      "sha256": "3e2a3f83de2b3acdd9c66e1fb1b03a0d60521568a9f36c2c364dfbe32dd32153"
+    },
+    "tflite/CONVERSION_NOTES.txt": {
+      "bytes": 248,
+      "sha256": "772ae96c4b3be936795bd8cac6aaf9cf469b4a069ef1a8091137e9616c564770"
+    },
+    "tflite/gate2v20_phoneme_aux_intent_float16.tflite": {
+      "bytes": 515332,
+      "sha256": "a7f872f9de85ca62ef467075617d6a6aac570365412267398d9964417f935b12"
+    }
+  },
+  "training_params": 248700,
+  "inference_params": 246035,
+  "validation": {
+    "intent_accuracy": 0.9884411121524523,
+    "balanced_accuracy": 0.9853157363106299,
+    "per_class": {
+      "PLAY_MUSIC": {
+        "precision": 0.9626168224299065,
+        "recall": 0.9809523809523809,
+        "f1": 0.9716981132075472,
+        "support": 105
+      },
+      "WEATHER": {
+        "precision": 0.9896907216494846,
+        "recall": 0.9696969696969697,
+        "f1": 0.9795918367346939,
+        "support": 99
+      },
+      "TIME": {
+        "precision": 0.9591836734693877,
+        "recall": 0.9494949494949495,
+        "f1": 0.9543147208121827,
+        "support": 99
+      },
+      "LIGHT_ON": {
+        "precision": 0.9626168224299065,
+        "recall": 0.9809523809523809,
+        "f1": 0.9716981132075472,
+        "support": 105
+      },
+      "LIGHT_OFF": {
+        "precision": 0.9519230769230769,
+        "recall": 0.9801980198019802,
+        "f1": 0.9658536585365853,
+        "support": 101
+      },
+      "PAUSE": {
+        "precision": 0.979381443298969,
+        "recall": 0.95,
+        "f1": 0.9644670050761421,
+        "support": 100
+      },
+      "STOP": {
+        "precision": 0.9541284403669725,
+        "recall": 1.0,
+        "f1": 0.9765258215962441,
+        "support": 104
+      },
+      "NEXT": {
+        "precision": 0.9626168224299065,
+        "recall": 1.0,
+        "f1": 0.9809523809523809,
+        "support": 103
+      },
+      "VOLUME_UP": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 101
+      },
+      "VOLUME_DOWN": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 104
+      },
+      "CALL": {
+        "precision": 0.9803921568627451,
+        "recall": 0.970873786407767,
+        "f1": 0.975609756097561,
+        "support": 103
+      },
+      "MESSAGE": {
+        "precision": 0.9803921568627451,
+        "recall": 1.0,
+        "f1": 0.9900990099009901,
+        "support": 100
+      },
+      "LIST_REMINDERS": {
+        "precision": 0.9805825242718447,
+        "recall": 0.9805825242718447,
+        "f1": 0.9805825242718447,
+        "support": 103
+      },
+      "TIMER": {
+        "precision": 1.0,
+        "recall": 0.9871382636655949,
+        "f1": 0.9935275080906149,
+        "support": 311
+      },
+      "ALARM": {
+        "precision": 1.0,
+        "recall": 0.9902597402597403,
+        "f1": 0.9951060358890701,
+        "support": 308
+      },
+      "TEMPERATURE": {
+        "precision": 0.9936908517350158,
+        "recall": 1.0,
+        "f1": 0.9968354430379747,
+        "support": 315
+      },
+      "BRIGHTNESS": {
+        "precision": 1.0,
+        "recall": 0.9873015873015873,
+        "f1": 0.9936102236421726,
+        "support": 315
+      },
+      "COLOR": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 315
+      },
+      "CREATE_REMINDER": {
+        "precision": 1.0,
+        "recall": 0.9935483870967742,
+        "f1": 0.9967637540453075,
+        "support": 310
+      }
+    },
+    "confusion_matrix": [
+      [
+        103,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        96,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        94,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        103,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        2,
+        99,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        95,
+        2,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        104,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        103,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        101,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        104,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        100,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        100,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        101,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        307,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        305,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        315,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        311,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        315,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        308
+      ]
+    ]
+  },
+  "tflite_validation": {
+    "bytes": 515332,
+    "full_validation_accuracy": 0.9884411121524523,
+    "argmax_agreement_64": 64,
+    "max_abs_probability_difference_64": 0.0008558034896850586,
+    "ops": [
+      "ADD",
+      "CONV_2D",
+      "DELEGATE",
+      "DEQUANTIZE",
+      "EXPAND_DIMS",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "PACK",
+      "RESHAPE",
+      "SHAPE",
+      "SOFTMAX",
+      "STRIDED_SLICE"
+    ],
+    "flex_ops_present": false,
+    "latency": {
+      "runs": 400,
+      "warmup": 50,
+      "threads": 1,
+      "p50_ms": 0.2548517659306526,
+      "p90_ms": 0.26201745495200157,
+      "p95_ms": 0.26343907229602337,
+      "mean_ms": 0.25729918852448463
+    }
+  },
+  "host_latency": {
+    "comparison_basis": "same V19 clean validation features, same HPC host CPU/TFLite XNNPACK, 1 thread, batch 1, model only",
+    "V20_phoneme_aux_intent_only_float16": {
+      "bytes": 515332,
+      "full_validation_accuracy": 0.9884411121524523,
+      "argmax_agreement_64": 64,
+      "max_abs_probability_difference_64": 0.0008558034896850586,
+      "ops": [
+        "ADD",
+        "CONV_2D",
+        "DELEGATE",
+        "DEQUANTIZE",
+        "EXPAND_DIMS",
+        "FULLY_CONNECTED",
+        "MAX_POOL_2D",
+        "MEAN",
+        "PACK",
+        "RESHAPE",
+        "SHAPE",
+        "SOFTMAX",
+        "STRIDED_SLICE"
+      ],
+      "flex_ops_present": false,
+      "latency": {
+        "runs": 400,
+        "warmup": 50,
+        "threads": 1,
+        "p50_ms": 0.2548517659306526,
+        "p90_ms": 0.26201745495200157,
+        "p95_ms": 0.26343907229602337,
+        "mean_ms": 0.25729918852448463
+      }
+    },
+    "V19_CNN_float16": {
+      "bytes": 515716,
+      "full_validation_accuracy": 0.9853170884098719,
+      "latency": {
+        "runs": 400,
+        "warmup": 50,
+        "threads": 1,
+        "p50_ms": 0.2534845843911171,
+        "p90_ms": 0.2598140388727188,
+        "p95_ms": 0.26075770147144794,
+        "mean_ms": 0.2561139897443354
+      }
+    },
+    "host_latency_ratio_p50_v20_to_v19": 1.0053935490508015,
+    "note": "The CTC phone branch is removed from deployed V20 inference; no extra phoneme recognizer runs at inference. Host-only timing is not Raspberry Pi timing."
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "comparison_basis": "same V19 clean validation features, same HPC host CPU/TFLite XNNPACK, 1 thread, batch 1, model only",
+  "V20_phoneme_aux_intent_only_float16": {
+    "bytes": 515332,
+    "full_validation_accuracy": 0.9884411121524523,
+    "argmax_agreement_64": 64,
+    "max_abs_probability_difference_64": 0.0008558034896850586,
+    "ops": [
+      "ADD",
+      "CONV_2D",
+      "DELEGATE",
+      "DEQUANTIZE",
+      "EXPAND_DIMS",
+      "FULLY_CONNECTED",
+      "MAX_POOL_2D",
+      "MEAN",
+      "PACK",
+      "RESHAPE",
+      "SHAPE",
+      "SOFTMAX",
+      "STRIDED_SLICE"
+    ],
+    "flex_ops_present": false,
+    "latency": {
+      "runs": 400,
+      "warmup": 50,
+      "threads": 1,
+      "p50_ms": 0.2548517659306526,
+      "p90_ms": 0.26201745495200157,
+      "p95_ms": 0.26343907229602337,
+      "mean_ms": 0.25729918852448463
+    }
+  },
+  "V19_CNN_float16": {
+    "bytes": 515716,
+    "full_validation_accuracy": 0.9853170884098719,
+    "latency": {
+      "runs": 400,
+      "warmup": 50,
+      "threads": 1,
+      "p50_ms": 0.2534845843911171,
+      "p90_ms": 0.2598140388727188,
+      "p95_ms": 0.26075770147144794,
+      "mean_ms": 0.2561139897443354
+    }
+  },
+  "host_latency_ratio_p50_v20_to_v19": 1.0053935490508015,
+  "note": "The CTC phone branch is removed from deployed V20 inference; no extra phoneme recognizer runs at inference. Host-only timing is not Raspberry Pi timing."
+}

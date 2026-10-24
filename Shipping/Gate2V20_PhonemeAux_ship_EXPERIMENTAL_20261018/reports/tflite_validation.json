@@ -1,0 +1,31 @@
+{
+  "bytes": 515332,
+  "full_validation_accuracy": 0.9884411121524523,
+  "argmax_agreement_64": 64,
+  "max_abs_probability_difference_64": 0.0008558034896850586,
+  "ops": [
+    "ADD",
+    "CONV_2D",
+    "DELEGATE",
+    "DEQUANTIZE",
+    "EXPAND_DIMS",
+    "FULLY_CONNECTED",
+    "MAX_POOL_2D",
+    "MEAN",
+    "PACK",
+    "RESHAPE",
+    "SHAPE",
+    "SOFTMAX",
+    "STRIDED_SLICE"
+  ],
+  "flex_ops_present": false,
+  "latency": {
+    "runs": 400,
+    "warmup": 50,
+    "threads": 1,
+    "p50_ms": 0.2548517659306526,
+    "p90_ms": 0.26201745495200157,
+    "p95_ms": 0.26343907229602337,
+    "mean_ms": 0.25729918852448463
+  }
+}

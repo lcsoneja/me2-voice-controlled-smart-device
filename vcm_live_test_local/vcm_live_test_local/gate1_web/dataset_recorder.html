@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gate 2 · Dataset Recorder</title>
+<style>
+:root{color-scheme:dark;--bg:#10151a;--panel:#171f26;--panel2:#1d2831;--line:#32414b;--text:#e9f0f2;--muted:#9aaab2;--accent:#82aee8;--good:#58c9b0;--danger:#ed7777;--warn:#e4b669}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -24%,#26343b 0,transparent 52%),var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",Arial,sans-serif}
+main{max-width:1420px;margin:0 auto;padding:20px 16px 44px}
+header.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}h1{font-size:clamp(22px,3.4vw,32px);letter-spacing:-.03em;line-height:1.1;margin:0 0 7px}.sub{color:var(--muted);max-width:700px;font-size:13.5px}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a{color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px}.nav a:hover{border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:minmax(0,1.98fr) minmax(320px,1fr);gap:14px;align-items:start}
+.leftcol{min-width:0}.monitor{position:sticky;top:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 14px;margin:0 0 12px}.card h2{font-size:15px;margin:0 0 9px}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.toolbar button,.prow button,.mini-player button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:7px 10px}.toolbar button{cursor:pointer;font-weight:650}.toolbar button.stop{background:#422629;border-color:#76454a}.toolbar button:disabled,.prow button:disabled,.mini-player button:disabled{opacity:.42;cursor:not-allowed}label{color:var(--muted)}
+.takebar{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px}.takebar span{color:var(--muted);font-size:13px}.takebar b{color:var(--text)}
+#status{margin:9px 2px 0;color:var(--muted);min-height:20px;font-size:13px}#status.error{color:var(--danger)}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(305px,1fr));gap:9px}.group{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 11px}.group h3{color:var(--accent);font-size:13px;margin:0 0 6px;display:flex;justify-content:space-between}.group h3 small{color:var(--muted);font-weight:400}
+.prow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px solid #2f3d47;padding:6px 0}.prow:first-of-type{border-top:0}.ptext{flex:1 1 140px;min-width:0;font-size:13px}.ptext .pint{display:block;color:var(--muted);font-size:10.5px}.prow .btns{display:flex;gap:5px;align-items:center}.prow button{font-size:12px;padding:5px 9px;cursor:pointer}.record-phrase.primary{background:#245247;border-color:#3b8a76;font-weight:650}.stop-take{background:#422629;border-color:#76454a}.stop-take.recording{animation:pulse 1.2s infinite;color:#ffd8d8}.takes{font:11px ui-monospace,Consolas,monospace;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:2px 7px}.take-select{font:inherit;font-size:11.5px;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 5px;max-width:150px}
+@keyframes pulse{50%{box-shadow:0 0 0 4px rgba(229,83,75,.28)}}
+.mini-player{flex-basis:100%;display:flex;gap:6px;align-items:center;background:#131b21;border:1px solid var(--line);border-radius:6px;padding:5px 7px}.mini-canvas{width:150px;height:18px;background:#0d1117;border-radius:3px}.mini-dur{color:var(--muted);font:11px ui-monospace,Consolas,monospace}.mini-fname{color:#7f9098;font:10.5px ui-monospace,Consolas,monospace;overflow-wrap:anywhere;flex:1;min-width:0}
+.loghead{display:grid;grid-template-columns:minmax(140px,1.1fr) minmax(90px,.8fr) minmax(230px,1.7fr) minmax(110px,.9fr) auto;gap:9px;color:var(--muted);font-size:12px;border-bottom:1px solid var(--line);padding-bottom:7px}.logrow{display:grid;grid-template-columns:minmax(140px,1.1fr) minmax(90px,.8fr) minmax(230px,1.7fr) minmax(110px,.9fr) auto;gap:9px;align-items:center;font-size:12.5px;border-top:1px solid #2b3944;padding:7px 0;cursor:pointer}.logrow:hover{background:#1a242c}.logrow .fname{font:12px ui-monospace,Consolas,monospace;color:#c3ced3;overflow-wrap:anywhere}.rowbtns{display:flex;gap:6px}.rowbtns button{font-size:11px;padding:4px 8px}.empty{color:var(--muted);padding:9px 0}
+.monitor .panehead{display:flex;justify-content:space-between;align-items:center;gap:8px}.recchip{font-size:12px;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:4px 10px;color:var(--muted)}.recchip.recording{color:#fff;background:var(--rec);border-color:var(--rec);animation:pulse 1.4s infinite}.recchip.saving{color:var(--warn);border-color:var(--warn)}.micstate{color:var(--muted);font-size:12px}#elapsed{font:600 34px/1.1 ui-monospace,Consolas,monospace;letter-spacing:1px;margin:9px 0 7px}.track{height:9px;background:#0b0f13;border-radius:9px;overflow:hidden;margin:2px 0 9px}#levelFill{height:100%;width:0;background:linear-gradient(90deg,var(--good),var(--warn) 70%,var(--danger));border-radius:9px;transition:width .1s linear}
+#wave{width:100%;height:90px;display:block;background:#0d1117;border:1px solid var(--line);border-radius:8px}
+.mini-card{margin-top:11px;border-top:1px solid var(--line);padding-top:9px}.mini-card h3{font-size:13px;color:var(--accent);margin:0 0 6px}.minitop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}#miniTop{font-size:20px;font-weight:700;overflow-wrap:anywhere}#miniTop.match{color:var(--good)}#miniConf{font:600 16px ui-monospace,Consolas,monospace;color:var(--accent)}#miniMatch{min-height:17px;font-size:11.5px;color:var(--muted)}#miniMatch.good{color:var(--good);font-weight:650}
+#miniChart{width:100%;height:60px;display:block;background:#0d1117;border:1px solid var(--line);border-radius:6px;margin-top:7px}.chartnote{color:var(--muted);font-size:10.5px;margin-top:5px}
+.minilog-wrap{margin-top:11px;border-top:1px solid var(--line);padding-top:9px}.minilog-wrap h3{font-size:13px;color:var(--accent);margin:0 0 6px}#miniLog{font:11px ui-monospace,Consolas,monospace;color:#c3ced3;background:#0d1117;border:1px solid var(--line);border-radius:6px;padding:7px;height:118px;overflow:auto;white-space:nowrap}#miniLog .good{color:var(--good)}
+.panefoot{margin-top:11px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.panefoot .hint{font-size:10.5px;flex:1;min-width:0}.panefoot button{font:inherit;font-size:12px;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 10px;cursor:pointer}.panefoot button:disabled{opacity:.42;cursor:not-allowed}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.monitor{position:static;order:-1}}
+</style>
+</head>
+<body>
+<main>
+<header class="top"><div><h1>Gate 2 dataset recorder</h1><div class="sub">Pick a phrase, Record, Stop &amp; save beside it. Takes are auto-labeled, saved in this browser, downloadable as WAV — with a live Gate 2 view in the right pane.</div></div><nav class="nav"><a href="/">Main monitor</a><a href="/gate2_phrase_recorder.html">A/B phrase lab</a></nav></header>
+<div class="layout">
+ <section class="leftcol">
+  <section class="card">
+   <div class="toolbar"><button id="export-csv">Export CSV log</button><button id="export-zip">Export ZIP folder</button><button id="clear-all" class="stop">Delete all</button></div>
+   <div class="takebar"><span>Total takes <b id="countTotal">0</b></span><span>Labeled intents covered <b id="countIntents">0</b>/19</span><span>Phrases recorded <b id="countPhrases">0</b>/93</span></div>
+   <div id="status" role="status" aria-live="polite">Waiting. Choose a phrase and record your voice.</div>
+  </section>
+  <section class="card"><h2>Phrases</h2><p class="hint" style="margin:0 0 8px">Record, then <b>Stop &amp; save</b> on the same row. Open a past take from its dropdown to play or delete it.</p><div id="phrase-list" class="groups"></div></section>
+  <section class="card"><h2>Recording log</h2><div class="loghead"><span>Recorded at</span><span>Intent</span><span>Phrase / file</span><span>Duration</span><span>Actions</span></div><div id="log-list"><div class="empty">No takes yet.</div></div></section>
+ </section>
+ <aside class="monitor card" id="monitorPane">
+  <div class="panehead"><span id="recState" class="recchip">● Idle</span><span id="micState" class="micstate">Mic: off</span></div>
+  <div id="recording-label" class="hint">Click Record beside a phrase to begin.</div>
+  <div id="elapsed">0:00.0</div>
+  <div class="track"><div id="levelFill"></div></div>
+  <canvas id="wave" width="400" height="90"></canvas>
+  <div class="mini-card"><h3>Gate 2 · live</h3><div class="minitop"><span id="miniTop">—</span><span id="miniConf">—</span></div><div id="miniMatch">Waiting for Gate 2 window…</div><canvas id="miniChart" width="400" height="60"></canvas><div class="chartnote">solid = top-intent score · dashed = per-phrase threshold · global min <span id="g2minNote">0.5</span></div></div>
+  <div class="minilog-wrap"><h3>Gate 2 log</h3><div id="miniLog"><div class="empty">No inferences yet.</div></div></div>
+    <div class="panefoot"><button id="rescueServer">Rescue to server</button><button id="stopMic" disabled>Stop microphone</button><span class="hint">Mic streams to 127.0.0.1 (Gate 2 live view) while on. Takes stay in this browser.</span></div>
+ </aside>
+</div>
+</main>
+<script type="module" src="/js/dataset_recorder.js"></script>
+</body>
+</html>

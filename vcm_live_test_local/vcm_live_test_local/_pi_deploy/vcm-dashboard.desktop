@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=VCM Pipeline Dashboard
+Comment=Start or verify the current VCM pipeline, then open its dashboard
+Exec=/home/lcsoneja/Desktop/restart_vcm.sh
+Icon=/home/lcsoneja/Exercise2/vcm_live_test_local/vcm_live_test_local/vcm_pipeline.png
+Terminal=false
+Categories=Utility;Development;
+StartupNotify=true

@@ -1,0 +1,10 @@
+{
+  "model": "gate3a_v3",
+  "variant": "float16",
+  "bytes": 445652,
+  "output_shape": [
+    1,
+    3
+  ],
+  "output_sum": 1.0
+}

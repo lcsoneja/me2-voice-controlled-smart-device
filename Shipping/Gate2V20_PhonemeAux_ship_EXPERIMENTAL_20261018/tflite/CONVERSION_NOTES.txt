@@ -1,0 +1,2 @@
+Intent-only branch exported from the multi-task-trained model. Auxiliary CTC phone head is removed at inference.
+Float16-optimized weights, float32 I/O, TFLITE_BUILTINS only, no Flex. Full-integer INT8 and Raspberry Pi benchmarks are not included.

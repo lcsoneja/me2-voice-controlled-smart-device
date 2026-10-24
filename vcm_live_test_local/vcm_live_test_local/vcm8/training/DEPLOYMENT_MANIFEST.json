@@ -1,0 +1,80 @@
+{
+  "deployment_date": "2026-10-02",
+  "model_list": [
+    {
+      "name": "gate1_v1",
+      "checkpoint_path": "vcm8/training/runs/gate1_v1/best_model.keras",
+      "val_accuracy": 0.94,
+      "sha256": "6737ee83c8ea30e3df2a466b106ec8c0283a486d3f21579e4c708ee67fb25204",
+      "tflite_variants": []
+    },
+    {
+      "name": "gate2_v2",
+      "checkpoint_path": "vcm8/training/runs/gate2_v2/best_model.keras",
+      "val_accuracy": 0.9712,
+      "sha256": "dfa46cb9feefa2bd2217767043429995d85fc67bc27644c818db17827cb82dc1",
+      "tflite_variants": [
+        "gate2_float16.json\ngate2_float16.tflite\ngate2_float32.json\ngate2_float32.tflite\ngate3c_float16.json\ngate3c_float16.tflite\ngate3c_float32.json\ngate3c_float32.tflite\ngate3d_float16.json\ngate3d_float16.tflite\ngate3d_float32.json\ngate3d_float32.tflite\ngate4_float16.json\ngate4_float16.tflite\ngate4_float32.json\ngate4_float32.tflite\ngate5_float16.json\ngate5_float16.tflite\ngate5_float32.json\ngate5_float32.tflite"
+      ]
+    },
+    {
+      "name": "gate3a_v3",
+      "checkpoint_path": "vcm8/training/runs/gate3a_v3/best_model.keras",
+      "val_accuracy": 0.9432,
+      "sha256": "40feec5a57a97a07b29cb1411f04a78c94fb6ad8ce4e9c439300b7ea0d338c7d",
+      "tflite_variants": []
+    },
+    {
+      "name": "gate3b_v3",
+      "checkpoint_path": "vcm8/training/runs/gate3b_v3/best_model.keras",
+      "val_accuracy": 0.4104,
+      "sha256": "3f2b072182862c4af4d061954c8cfecc0ff4c7259ed38e0856651a810d9a6866",
+      "tflite_variants": []
+    },
+    {
+      "name": "gate3c",
+      "checkpoint_path": "vcm8/training/runs/gate3c/best_model.keras",
+      "val_accuracy": 0.9556,
+      "sha256": "2078238dfc32019715b38a7d4f0e60089f2de62ded41dc3ae3345d1172bcc2b8",
+      "tflite_variants": []
+    },
+    {
+      "name": "gate3d_v2",
+      "checkpoint_path": "vcm8/training/runs/gate3d_v2/best_model.keras",
+      "val_accuracy": 0.9167,
+      "sha256": "4184ac1cc5f3b8d760bc245b3b087afe7dea87c2a6f6c25e062d811d545b126b",
+      "tflite_variants": []
+    },
+    {
+      "name": "gate4",
+      "checkpoint_path": "vcm8/training/runs/gate4/best_model.keras",
+      "val_accuracy": 0.8833,
+      "sha256": "4fe080eaa919aa1fd9d526e984cc5d3a40980baab563c91d4526fcbf0995c325",
+      "tflite_variants": []
+    },
+    {
+      "name": "gate5",
+      "checkpoint_path": "vcm8/training/runs/gate5/best_model.keras",
+      "val_accuracy": 0.9771,
+      "sha256": "3a474d7f8f29e394be4f7a7879d23ab864c9f686bda059a3400db93189b40af2",
+      "tflite_variants": []
+    },
+    {
+      "name": "gateN_v1",
+      "checkpoint_path": "vcm8/training/runs/gateN_v1/best_model.keras",
+      "val_accuracy": 0.9323,
+      "sha256": "68f90abb6a5e40a133cc2c94e7267a00b795887542f5fb5999fc4d221aa6452e",
+      "tflite_variants": []
+    }
+  ],
+  "pipeline_description": "Wake-word (Gate1) -> Intent (Gate2) -> Specialist (GateN for numbers, or Gate4 Color / Gate5 Reminder). GateN_v1 supersedes Gate3a-d.",
+  "known_limitations": [
+    "gate3b standalone broken (data limited); supersession by gateN_v1 recommended",
+    "gate4 GREEN recall 0.73 (baseline); acceptable for deployment",
+    "gate1 validation set size small (50 samples)",
+    "int8 quantization blocked due to TF converter segfault on Bidirectional GRU"
+  ],
+  "bundle_path": "/home/leandro.soneja/vcm_live_test_local.tar.gz",
+  "bundle_sha256": "dbad6a0052d2c2a90c25b0c943337b43294416548d089677a07e803c392bb8f5",
+  "verdict": "READY_WITH_CAVEATS"
+}

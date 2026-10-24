@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gate 1 v4 Monitor</title>
+<style>
+ body{font-family:'Segoe UI',Arial,sans-serif;background:#0d1117;color:#c9d1d9;margin:0;padding:14px}
+ h1{font-size:18px;margin:0 0 4px;color:#58a6ff}
+ .sub{color:#8b949e;font-size:12px;margin-bottom:10px}
+ #banner{font-size:22px;font-weight:700;padding:10px;border-radius:8px;text-align:center;margin-bottom:10px}
+ .wake{background:#1a7f37;color:#fff}.listen{background:#30363d;color:#c9d1d9}
+ .card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;margin-bottom:10px}
+ .card h2{font-size:13px;margin:0 0 6px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px}
+ canvas{width:100%;display:block;background:#0d1117;border-radius:4px}
+ .row{display:flex;gap:12px;align-items:stretch}
+ .col-probs{flex:0 0 40%}
+ .col-log{flex:1}
+ .probrow{display:flex;align-items:center;margin:6px 0}
+ .probname{width:80px;font-size:13px}
+ .probbarwrap{flex:1;background:#0d1117;border-radius:4px;height:22px;overflow:hidden}
+ .probbar{height:100%;width:0%;background:#1f6feb;transition:width .15s}
+ .probval{width:56px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums}
+ .thr{width:100%}
+ .thrlabel{font-size:12px;color:#8b949e}
+ .log{height:320px;overflow-y:auto;font-family:Consolas,monospace;font-size:12px;background:#0d1117;padding:8px;border-radius:4px}
+ button{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:12px;margin:2px}
+ button:hover{background:#30363d}
+ #status{font-size:12px;color:#8b949e;margin-top:8px;white-space:pre-wrap}
+ .err{color:#f85149}
+ .statsline{font-size:12px;color:#8b949e;margin-top:4px}
+</style>
+</head>
+<body>
+<h1>Gate 1 v4 Wake-Word Monitor</h1>
+<div class="sub">148-frame, silence-only negative class (sealed eval 60%) · model: gate1v4_float32.tflite · stats: feature_stats_v4_148.npz · <a href="vcm_monitor.html" style="color:#58a6ff">back to combined monitor</a></div>
+<div id="banner" class="listen">STARTING…</div>
+<div class="card"><h2>Waveform</h2><canvas id="wave" width="760" height="100"></canvas><canvas id="level" width="760" height="70" style="margin-top:6px"></canvas></div>
+<div class="row">
+ <div class="card col-probs"><h2>Class probabilities</h2><div id="bars"></div>
+  <div class="thrlabel" style="margin-top:8px">Nova threshold</div><input id="thr_Nova" class="thr" type="range" min="0.05" max="0.95" step="0.01">
+  <div class="thrlabel">Piattos threshold</div><input id="thr_Piattos" class="thr" type="range" min="0.05" max="0.95" step="0.01">
+ </div>
+ <div class="card col-log"><h2>Log (60% width)</h2><canvas id="g1chart" width="760" height="130" style="margin-bottom:8px"></canvas><div id="logbox" class="log"></div>
+  <button id="saveCsv">Download CSV</button><button id="saveJson">Download JSON</button><button id="clearLog">Clear</button>
+  <div class="statsline" id="statsline">windows scored: 0 · wakes: 0</div>
+ </div>
+</div>
+<div id="status"></div>
+<script>
+const SR = 16000, WIN_S = 5.92, WIN_SAMPLES = 94720;
+const LABELS = ["Nova", "Piattos", "Negative"];
+const IS_TWO_CLASS = LABELS.length === 2;
+let thr = { Nova: 0.5, Piattos: 0.5 };
+try { const s = localStorage.getItem("gate1_thr_v4"); if (s) thr = JSON.parse(s); } catch (e) {}
+function saveThr() { try { localStorage.setItem("gate1_thr_v4", JSON.stringify(thr)); } catch (e) {} }
+
+const probsDiv = document.getElementById("bars");
+function buildBars() {
+  probsDiv.innerHTML = "";
+  LABELS.forEach(function (l) {
+    const disp = l.charAt(0).toUpperCase() + l.slice(1);
+    const row = document.createElement("div"); row.className = "probrow";
+    const nm = document.createElement("div"); nm.className = "probname"; nm.textContent = disp;
+    const wrap = document.createElement("div"); wrap.className = "probbarwrap";
+    const bar = document.createElement("div"); bar.className = "probbar"; bar.id = "bar_" + disp;
+    wrap.appendChild(bar);
+    const val = document.createElement("div"); val.className = "probval"; val.id = "val_" + disp; val.textContent = "0.000";
+    row.appendChild(nm); row.appendChild(wrap); row.appendChild(val); probsDiv.appendChild(row);
+  });
+  if (IS_TWO_CLASS) {
+    const note = document.createElement("div"); note.className = "thrlabel";
+    note.textContent = "2-class model: no Negative output - SILENCE/AUDIO is derived from mic level";
+    probsDiv.appendChild(note);
+  }
+}
+let lastProbs = {};
+function drawProbs(msg) {
+  LABELS.forEach(function (l) {
+    const disp = l.charAt(0).toUpperCase() + l.slice(1);
+    const p = Number(msg[l.toLowerCase()]);
+    if (!Number.isFinite(p)) p = 0;
+    lastProbs[disp] = p;
+    const bar = document.getElementById("bar_" + disp);
+    if (bar) {
+      bar.style.width = (p * 100).toFixed(1) + "%";
+      const isWake = (disp === "Nova" || disp === "Piattos") && p >= thr[disp] && msg.wake;
+      bar.style.background = isWake ? "#2ea043" : "#1f6feb";
+    }
+    const val = document.getElementById("val_" + disp);
+    if (val) val.textContent = p.toFixed(3);
+  });
+  const banner = document.getElementById("banner");
+  if (msg.wake) { banner.className = "wake"; banner.textContent = "WAKE DETECTED: " + msg.wake; }
+  else if (!IS_TWO_CLASS) { banner.className = "listen"; banner.textContent = "LISTENING…"; }
+}
+
+// ---- Probability-over-time line chart (threshold-anchored) ----
+const G1_CHART_MAX = 180; // 3 minutes at 1 inference/second
+const g1Hist = [];
+const chartC = document.getElementById("g1chart") ? document.getElementById("g1chart").getContext("2d") : null;
+function chartY(v, H) { return H - 7 - Math.max(0, Math.min(1, v)) * (H - 14); }
+function pushG1Hist(msg) {
+  g1Hist.push(LABELS.map(function (l) { const p = Number(msg[l.toLowerCase()]); return Number.isFinite(p) ? p : null; }));
+  if (g1Hist.length > G1_CHART_MAX) g1Hist.shift();
+}
+function drawChart() {
+  if (!chartC) return;
+  const W = chartC.canvas.width, H = chartC.canvas.height;
+  chartC.fillStyle = "#0d1117"; chartC.fillRect(0, 0, W, H);
+  [0, 0.25, 0.5, 0.75, 1].forEach(function (v) {
+    const y = chartY(v, H);
+    chartC.strokeStyle = "#21262d"; chartC.lineWidth = 1;
+    chartC.beginPath(); chartC.moveTo(0, y); chartC.lineTo(W, y); chartC.stroke();
+    chartC.fillStyle = "#8b949e"; chartC.font = "10px Consolas,monospace"; chartC.textAlign = "left";
+    chartC.fillText(v.toFixed(2), 2, Math.max(10, y - 2));
+  });
+  // Dashed threshold lines — move live with the sliders
+  chartC.setLineDash([4, 4]);
+  [["Nova", "#f85149"], ["Piattos", "#d29922"]].forEach(function (item) {
+    const y = chartY(thr[item[0]], H);
+    chartC.strokeStyle = item[1]; chartC.lineWidth = 1;
+    chartC.beginPath(); chartC.moveTo(0, y); chartC.lineTo(W, y); chartC.stroke();
+  });
+  chartC.setLineDash([]);
+  const colors = { Nova: "#1f6feb", Piattos: "#a371f7", Negative: "#8b949e" };
+  if (g1Hist.length >= 2) {
+    LABELS.forEach(function (l, li) {
+      const disp = l.charAt(0).toUpperCase() + l.slice(1);
+      chartC.strokeStyle = colors[disp] || "#8b949e"; chartC.lineWidth = 1.5; chartC.beginPath();
+      let started = false;
+      for (let i = 0; i < g1Hist.length; i++) {
+        const v = g1Hist[i][li];
+        if (v == null) { started = false; continue; }
+        const x = W - (g1Hist.length - 1 - i) / (G1_CHART_MAX - 1) * W;
+        const y = chartY(v, H);
+        if (!started) { chartC.moveTo(x, y); started = true; } else chartC.lineTo(x, y);
+      }
+      chartC.stroke();
+    });
+  }
+  // Legend (top-right)
+  chartC.font = "10px Consolas,monospace"; chartC.textAlign = "right";
+  let lx = W - 4;
+  LABELS.slice().reverse().forEach(function (l) {
+    const disp = l.charAt(0).toUpperCase() + l.slice(1);
+    chartC.fillStyle = colors[disp] || "#8b949e";
+    chartC.fillText(disp, lx, 10);
+    lx -= chartC.measureText(disp).width + 14;
+  });
+}
+
+const logRows = [];
+function addLog(ts, msg, extra) {
+  const parts = LABELS.map(function (l) {
+    const p = Number(msg[l.toLowerCase()]);
+    return l.charAt(0).toUpperCase() + l.slice(1) + "=" + (Number.isFinite(p) ? p.toFixed(3) : "—");
+  });
+  const result = extra || (msg.wake ? "WAKE: " + msg.wake : (IS_TWO_CLASS ? "listening" : "no-wake"));
+  logRows.push({ ts: ts, parts: parts, result: result });
+  const box = document.getElementById("logbox");
+  const d = document.createElement("div");
+  d.textContent = ts + "  " + parts.join("  ") + "  -> " + result;
+  if (result.indexOf("WAKE") === 0) d.style.color = "#3fb950";
+  box.insertBefore(d, box.firstChild);
+  while (box.childNodes.length > 300) box.removeChild(box.lastChild);
+  const wakes = logRows.filter(function (r) { return r.result.indexOf("WAKE") === 0; }).length;
+  document.getElementById("statsline").textContent = "windows scored: " + logRows.length + " · wakes: " + wakes;
+}
+function download(name, text) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+  a.download = name; a.click();
+}
+document.getElementById("saveCsv").onclick = function () {
+  let t = "timestamp," + LABELS.map(function (l) { return l.toLowerCase(); }).join(",") + ",result\n";
+  logRows.forEach(function (r) { t += r.ts + "," + r.parts.map(function (p) { return p.split("=")[1]; }).join(",") + "," + r.result + "\n"; });
+  download("gate1v4_log.csv", t);
+};
+document.getElementById("saveJson").onclick = function () { download("gate1v4_log.json", JSON.stringify(logRows, null, 1)); };
+document.getElementById("clearLog").onclick = function () { logRows.length = 0; document.getElementById("logbox").innerHTML = ""; };
+
+const waveC = document.getElementById("wave").getContext("2d");
+const levelC = document.getElementById("level").getContext("2d");
+let rmsHist = [];
+let lastGated = null;
+function drawWave() {
+  const W = waveC.canvas.width, H = waveC.canvas.height;
+  waveC.fillStyle = "#0d1117"; waveC.fillRect(0, 0, W, H);
+  waveC.strokeStyle = "#1f6feb"; waveC.beginPath();
+  const acc = window.VCM ? VCM.state.streamAcc : null;
+  if (acc && acc.length) {
+    const tail = Math.min(4096, acc.length);
+    for (let x = 0; x < W; x++) {
+      const v = acc[acc.length - tail + Math.floor(x / W * tail)];
+      const y = H / 2 - v * (H / 2) * 4;
+      if (x === 0) waveC.moveTo(x, Math.max(0, Math.min(H, y))); else waveC.lineTo(x, Math.max(0, Math.min(H, y)));
+    }
+  }
+  waveC.stroke();
+}
+function drawLevel() {
+  const W = levelC.canvas.width, H = levelC.canvas.height;
+  levelC.fillStyle = "#0d1117"; levelC.fillRect(0, 0, W, H);
+  levelC.strokeStyle = "#30363d"; levelC.beginPath();
+  [-60, -50, -40, -30, -20, -10].forEach(function (db) { const y = H - (db + 60) / 60 * H; levelC.moveTo(0, y); levelC.lineTo(W, y); });
+  levelC.stroke();
+  if (rmsHist.length > 1) {
+    levelC.strokeStyle = "#2ea043"; levelC.lineWidth = 1.5; levelC.beginPath();
+    rmsHist.forEach(function (db, i) { const x = i / (rmsHist.length - 1) * W; const y = H - (db + 60) / 60 * H; if (i === 0) levelC.moveTo(x, y); else levelC.lineTo(x, y); });
+    levelC.stroke();
+  }
+}
+
+let ws = null;
+let actx = null, ctxSR = SR, streamAcc = new Float32Array(0);
+function rms(x) { let s = 0; for (let i = 0; i < x.length; i++) s += x[i] * x[i]; return Math.sqrt(s / x.length); }
+function pushAudio(f32) {
+  if (ctxSR !== SR) {
+    const ratio = ctxSR / SR;
+    const out = new Float32Array(Math.floor(f32.length / ratio));
+    for (let i = 0; i < out.length; i++) { const p = i * ratio; const i0 = Math.floor(p); const fr = p - i0; out[i] = f32[i0] * (1 - fr) + (f32[i0 + 1] || 0) * fr; }
+    f32 = out;
+  }
+  const merged = new Float32Array(streamAcc.length + f32.length);
+  merged.set(streamAcc); merged.set(f32, streamAcc.length);
+  streamAcc = merged.slice(-WIN_SAMPLES);
+  rmsHist.push(20 * Math.log10(Math.max(rms(f32), 1e-10)));
+  if (rmsHist.length > 120) rmsHist.shift();
+}
+function connectWS() {
+  const proto = location.protocol === "https:" ? "wss" : "ws";
+  ws = new WebSocket(proto + "://" + location.host + "/ws");
+  ws.binaryType = "arraybuffer";
+  ws.onopen = function () {
+    document.getElementById("status").textContent += "server connected\n";
+    ws.send(JSON.stringify({ type: "mode", mode: "gate1" }));
+    ws.send(JSON.stringify({ type: "thr", thr: thr }));
+    ws.send(JSON.stringify({ type: "model", model: "gate1v4_f32" }));
+  };
+  ws.onmessage = function (ev) {
+    let d; try { d = JSON.parse(ev.data); } catch (e) { return; }
+    if (d.type === "probs") {
+      // This page's threshold set governs the local banner only; the server
+      // may carry thresholds from the combined monitor - display honestly.
+      drawProbs(d);
+      addLog(d.ts, d);
+      pushG1Hist(d);
+      drawChart();
+    } else if (d.type === "gated") {
+      lastGated = d;
+      const banner = document.getElementById("banner");
+      if (!IS_TWO_CLASS) { banner.className = "listen"; banner.textContent = "SILENCE (gated)"; }
+    } else if (d.type === "status") {
+      document.getElementById("status").textContent += d.text + "\n";
+    }
+  };
+  ws.onclose = function () { setTimeout(connectWS, 2000); };
+}
+
+async function startMic() {
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 }
+  });
+  actx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+  ctxSR = actx.sampleRate;
+  const src = actx.createMediaStreamSource(stream);
+  const proc = actx.createScriptProcessor(4096, 1, 1);
+  proc.onaudioprocess = function (ev) {
+    const inp = ev.inputBuffer.getChannelData(0);
+    pushAudio(new Float32Array(inp));
+    if (ws && ws.readyState === 1) ws.send(new Float32Array(inp));
+  };
+  src.connect(proc); proc.connect(actx.destination);
+  document.getElementById("status").textContent += "microphone live (" + ctxSR + " Hz)\n";
+  setInterval(function () { drawWave(); drawLevel(); }, 100);
+}
+
+["Nova", "Piattos"].forEach(function (key) {
+  const sl = document.getElementById("thr_" + key);
+  if (!sl) return;
+  sl.value = thr[key];
+  const lbl = document.createElement("div"); lbl.className = "thrlabel";
+  function upd() { thr[key] = parseFloat(sl.value); lbl.textContent = key + " threshold: " + thr[key].toFixed(2); saveThr(); drawChart(); }
+  upd();
+  sl.oninput = upd;
+  sl.parentNode.insertBefore(lbl, sl);
+});
+
+buildBars();
+connectWS();
+startMic().catch(function (e) {
+  const st = document.getElementById("status");
+  st.textContent += "MIC ERROR: " + e.message + " (serve via http://localhost)\n";
+  st.className = "err";
+});
+setInterval(function () { drawWave(); drawLevel(); }, 100);
+</script>
+</body>
+</html>

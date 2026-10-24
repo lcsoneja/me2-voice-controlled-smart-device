@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gate 2 · RNNoise A/B test</title>
+<style>
+:root{color-scheme:dark;--bg:#10151a;--panel:#171f26;--panel2:#1d2831;--line:#32414b;--text:#e9f0f2;--muted:#9aaab2;--raw:#e1a45a;--clean:#58c9b0;--danger:#ed7777;--accent:#82aee8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -25%,#26343b 0,transparent 55%),var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",Arial,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:24px 22px 40px}header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:20px}
+h1{font-size:clamp(26px,4vw,38px);letter-spacing:-.035em;line-height:1.08;margin:0 0 8px;font-weight:680}.sub{color:var(--muted);max-width:670px}.back{color:var(--accent);white-space:nowrap;text-decoration:none;border:1px solid var(--line);border-radius:7px;padding:8px 12px}.back:hover{border-color:var(--accent)}.page-links{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:12px}button,select{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:9px 13px}button{cursor:pointer;font-weight:650}button.primary{background:#245247;border-color:#3b8a76}button.stop{background:#422629;border-color:#76454a}button:disabled{opacity:.45;cursor:not-allowed}label{color:var(--muted)}#status{color:var(--muted);margin:8px 2px 16px;min-height:24px}.notice{font-size:13px;color:var(--muted);margin-left:auto;max-width:420px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}.branch{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0}.branch-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);background:linear-gradient(100deg,#202b32,var(--panel))}.branch h2{margin:0;font-size:18px;letter-spacing:.01em}.branch.raw{--branch:var(--raw)}.branch.filtered{--branch:var(--clean)}.tag{font-size:12px;color:var(--branch);border:1px solid currentColor;border-radius:99px;padding:3px 9px}
+.result{padding:18px 16px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}.intent{font-size:clamp(24px,4vw,34px);font-weight:700;line-height:1.05;letter-spacing:-.025em;overflow-wrap:anywhere}.confidence{font:600 24px/1 ui-monospace,Consolas,monospace;color:var(--branch);white-space:nowrap}.small{font-size:12px;color:var(--muted)}.expect-result{padding:0 16px 14px;min-height:40px;color:var(--muted)}.expect-result.good{color:var(--clean)}.expect-result.bad{color:var(--danger)}
+.meterline{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:10px 16px;color:var(--muted);font-size:13px}.bars{padding:8px 16px 16px;display:grid;gap:7px}.barrow{display:grid;grid-template-columns:minmax(94px,145px) 1fr 47px;align-items:center;gap:9px;font-size:12px}.barlabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#c9d4d8}.track{height:7px;background:#0d1216;border-radius:9px;overflow:hidden}.fill{height:100%;width:0;background:var(--branch);border-radius:9px;transition:width .16s ease}.barval{text-align:right;color:var(--muted);font:12px ui-monospace,Consolas,monospace}.expected{display:flex;align-items:center;gap:9px}.expected select{min-width:210px}.footer{margin-top:16px;color:var(--muted);font-size:13px;max-width:900px}.error{color:var(--danger)}
+.phrase-bank{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}.phrase-bank summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;font-size:17px;font-weight:650}.phrase-bank summary small{font-size:12px;color:var(--muted);font-weight:400}.phrase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;padding:0 12px 12px}.phrase-group{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.phrase-group h3{font-size:13px;color:var(--accent);margin:0 0 6px}.phrase-group ul{margin:0;padding-left:18px}.read-phrase{padding:2px 0;color:#d7e0e3;font-size:13px}
+@media(max-width:760px){main{padding:16px 12px 30px}.compare{grid-template-columns:1fr}header.top{display:block}.page-links{justify-content:flex-start;margin-top:12px}.notice{margin-left:0;max-width:none}.expected{width:100%}.expected select{flex:1}}
+</style>
+</head>
+<body>
+<main>
+<header class="top"><div><h1>Raw vs RNNoise</h1><div class="sub">A live Gate 2 comparison. The microphone is captured once; the same audio goes to both Gate 2 v2 paths, with RNNoise filtering only the right-hand path. Both use the same 5.92-second rolling audio window; predictions refresh every <strong id="cadence-label">1 second</strong>.</div></div><div class="page-links"><a class="back" href="/">← Back to live monitor</a><a class="back" href="/gate2_phrase_recorder.html">Phrase recorder lab</a><a class="back" id="interval-variant" href="/gate2_rnnoise_test_2s.html">Try 2-second updates</a></div></header>
+<div class="controls">
+<button class="primary" id="start">Start both streams</button><button class="stop" id="stop" disabled>Stop test</button>
+<div class="expected"><label for="expected">Expected command</label><select id="expected"><option value="">Choose when ready</option><option>PLAY_MUSIC</option><option>WEATHER</option><option>TIME</option><option>LIGHT_ON</option><option>LIGHT_OFF</option><option>PAUSE</option><option>STOP</option><option>NEXT</option><option>VOLUME_UP</option><option>VOLUME_DOWN</option><option>CALL</option><option>MESSAGE</option><option>LIST_REMINDERS</option><option>TIMER</option><option>ALARM</option><option>TEMPERATURE</option><option>BRIGHTNESS</option><option>COLOR</option><option>CREATE_REMINDER</option></select></div>
+<div class="notice">Two Gate 2 streams run in parallel (~2× Gate 2 inference while this test is active). Allow about 6 seconds for each rolling window to fill.</div>
+</div>
+<div id="status" role="status" aria-live="polite">Stopped. Start the test and allow microphone access.</div>
+<div class="compare">
+<section class="branch raw" id="raw-panel" aria-label="Raw Gate 2 result"><div class="branch-head"><h2>Raw microphone</h2><span class="tag">RNNoise off</span></div><div class="result"><div><div class="small">Top intent</div><div class="intent" id="raw-top">Waiting for audio</div></div><div class="confidence" id="raw-conf">—</div></div><div class="expect-result" id="raw-match">No inference yet</div><div class="meterline"><span>Input RMS <strong id="raw-rms">—</strong></span><span>WebSocket <strong id="raw-connection">idle</strong></span></div><div class="bars" id="raw-bars"></div></section>
+<section class="branch filtered" id="clean-panel" aria-label="RNNoise filtered Gate 2 result"><div class="branch-head"><h2>RNNoise filtered</h2><span class="tag">RNNoise on</span></div><div class="result"><div><div class="small">Top intent</div><div class="intent" id="clean-top">Waiting for audio</div></div><div class="confidence" id="clean-conf">—</div></div><div class="expect-result" id="clean-match">RNNoise initializes when started</div><div class="meterline"><span>RMS in → out <strong id="clean-rms">—</strong></span><span>WebSocket <strong id="clean-connection">idle</strong></span></div><div class="bars" id="clean-bars"></div></section>
+</div>
+<details id="phrases-to-read" class="phrase-bank" open>
+ <summary><span>Read-aloud phrase list</span><small>31 example phrases · 19 Gate 2 intents</small></summary>
+ <div class="phrase-grid">
+  <section class="phrase-group"><h3>Music and controls</h3><ul>
+   <li class="read-phrase">play some music</li><li class="read-phrase">pause the music</li><li class="read-phrase">stop</li><li class="read-phrase">next song</li><li class="read-phrase">turn the volume up</li><li class="read-phrase">turn the volume down</li>
+  </ul></section>
+  <section class="phrase-group"><h3>Information</h3><ul>
+   <li class="read-phrase">what's the weather today</li><li class="read-phrase">what time is it</li>
+  </ul></section>
+  <section class="phrase-group"><h3>Lights and color</h3><ul>
+   <li class="read-phrase">turn on the lights</li><li class="read-phrase">turn off the lights</li><li class="read-phrase">set brightness to 20 percent</li><li class="read-phrase">set brightness to 60 percent</li><li class="read-phrase">set brightness to 100 percent</li><li class="read-phrase">make the lights red</li><li class="read-phrase">make the lights blue</li><li class="read-phrase">make the lights green</li>
+  </ul></section>
+  <section class="phrase-group"><h3>Calls and messages</h3><ul>
+   <li class="read-phrase">call mom</li><li class="read-phrase">send a message to john</li>
+  </ul></section>
+  <section class="phrase-group"><h3>Reminders</h3><ul>
+   <li class="read-phrase">list my reminders</li><li class="read-phrase">remind me to drink water</li><li class="read-phrase">remind me to study</li><li class="read-phrase">remind me to exercise</li>
+  </ul></section>
+  <section class="phrase-group"><h3>Timers and alarms</h3><ul>
+   <li class="read-phrase">set a timer for 10 seconds</li><li class="read-phrase">set a timer for 30 seconds</li><li class="read-phrase">set a timer for 1 minute</li><li class="read-phrase">set an alarm for 6 am</li><li class="read-phrase">set an alarm for 8 am</li><li class="read-phrase">set an alarm for 9 pm</li>
+  </ul></section>
+  <section class="phrase-group"><h3>Temperature</h3><ul>
+   <li class="read-phrase">set the temperature to 18 degrees</li><li class="read-phrase">set the temperature to 22 degrees</li><li class="read-phrase">set the temperature to 26 degrees</li>
+  </ul></section>
+ </div>
+</details>
+<p class="footer">Noise suppression runs locally in your browser using RNNoise WASM. Audio is sent only to this computer’s Gate 2 server at 127.0.0.1; it is not uploaded to a cloud service. For a fair comparison, say the same command in a steady voice after both panels begin updating.</p>
+</main>
+<script type="module" src="/js/gate2_rnnoise_test.js"></script>
+</body>
+</html>

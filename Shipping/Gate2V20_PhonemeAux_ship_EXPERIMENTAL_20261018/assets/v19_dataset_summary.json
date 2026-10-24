@@ -1,0 +1,40 @@
+{
+  "run": "gate2v19_eightview",
+  "parent": "gate2v18_cosyvoice_full_148",
+  "total_rows": 239169,
+  "reused_v18_rows": 121185,
+  "new_view_rows": 117984,
+  "train_bases": 29496,
+  "new_views": [
+    "gain",
+    "time_shift",
+    "speed",
+    "ambient_only"
+  ],
+  "view_weight": 0.125,
+  "views_per_base": 8,
+  "ambient_sources": [
+    "Recording (3).m4a",
+    "Recording (6).m4a",
+    "Recording (7).m4a",
+    "Recording (8).m4a"
+  ],
+  "ambient_snr_db": [
+    10.0,
+    20.0
+  ],
+  "gain_db": [
+    -6.0,
+    6.0
+  ],
+  "shift_ms": [
+    -100.0,
+    100.0
+  ],
+  "speed_rate": [
+    0.85,
+    1.15
+  ],
+  "normalization": "gate2v6/v18 train-only stats reused",
+  "ambient_note": "Quiet user-recorded ambient; not verified music-free; provisional sources."
+}

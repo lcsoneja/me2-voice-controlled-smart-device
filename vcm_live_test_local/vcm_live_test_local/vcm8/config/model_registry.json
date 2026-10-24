@@ -1,0 +1,181 @@
+{
+  "models": {
+    "gate1": {
+      "labels": [
+        "Nova",
+        "Piattos",
+        "Negative"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "status": "trained_val_acc_0.9400_v1",
+      "description": "Wake-word classifier"
+    },
+    "gate2": {
+      "status": "trained_val_acc_0.9712_v2_promoted",
+      "labels": [
+        "PLAY_MUSIC",
+        "WEATHER",
+        "TIME",
+        "LIGHT_ON",
+        "LIGHT_OFF",
+        "PAUSE",
+        "STOP",
+        "NEXT",
+        "VOLUME_UP",
+        "VOLUME_DOWN",
+        "CALL",
+        "MESSAGE",
+        "LIST_REMINDERS",
+        "TIMER",
+        "ALARM",
+        "TEMPERATURE",
+        "BRIGHTNESS",
+        "COLOR",
+        "CREATE_REMINDER"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Command-intent classifier",
+      "routing": {
+        "TIMER": "gate3a",
+        "ALARM": "gate3b",
+        "TEMPERATURE": "gate3c",
+        "BRIGHTNESS": "gate3d",
+        "COLOR": "gate4",
+        "CREATE_REMINDER": "gate5"
+      }
+    },
+    "gate3a": {
+      "status": "trained_val_acc_0.9432_v3_promoted",
+      "labels": [
+        "10 seconds",
+        "30 seconds",
+        "1 minute"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Timer-value classifier"
+    },
+    "gate3b": {
+      "status": "trained_val_acc_0.4104_data_limited",
+      "labels": [
+        "6 AM",
+        "8 AM",
+        "9 PM"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Alarm-time classifier"
+    },
+    "gate3c": {
+      "status": "trained_val_acc_0.9556",
+      "labels": [
+        "18 degrees",
+        "22 degrees",
+        "26 degrees"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Temperature-value classifier"
+    },
+    "gate3d": {
+      "status": "trained_val_acc_0.9167_v2_promoted",
+      "labels": [
+        "20 percent",
+        "60 percent",
+        "100 percent"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Brightness-value classifier"
+    },
+    "gate4": {
+      "status": "trained_val_acc_0.8889",
+      "labels": [
+        "Red",
+        "Blue",
+        "Green"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Color classifier"
+    },
+    "gateN": {
+      "status": "trained_val_acc_0.9323_recommended_promotion",
+      "labels": [
+        "10 seconds",
+        "30 seconds",
+        "1 minute",
+        "6 AM",
+        "8 AM",
+        "9 PM",
+        "18 degrees",
+        "22 degrees",
+        "26 degrees",
+        "20 percent",
+        "60 percent",
+        "100 percent"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Unified numerical model (supersedes gate3a-d at inference)"
+    },
+    "gate5": {
+      "status": "trained_val_acc_0.9771",
+      "labels": [
+        "Drink water",
+        "Study",
+        "Exercise"
+      ],
+      "input_shape": [
+        1,
+        74,
+        60,
+        1
+      ],
+      "description": "Reminder classifier"
+    }
+  },
+  "global_config": {
+    "input_shape": [
+      1,
+      74,
+      60,
+      1
+    ],
+    "default_status": "audit_blocked"
+  }
+}

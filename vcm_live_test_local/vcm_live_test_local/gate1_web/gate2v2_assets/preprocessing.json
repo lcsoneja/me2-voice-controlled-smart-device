@@ -1,0 +1,21 @@
+{
+  "sample_rate": 16000,
+  "channels": 1,
+  "n_fft": 1024,
+  "hop_length": 640,
+  "win_length": 1024,
+  "n_mels": 60,
+  "center": true,
+  "log_transform": "log1p",
+  "target_frames": 148,
+  "input_shape": [
+    1,
+    148,
+    60,
+    1
+  ],
+  "normalization": "scalar z-score; same statistics for clean and augmented runs",
+  "stats_scope": "MEX2 train + CosyVoice clean-original train only; no validation/test/augmented rows",
+  "stats_mean": 0.04175618212954686,
+  "stats_std": 0.2824768235640882
+}

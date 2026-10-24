@@ -1,0 +1,37 @@
+{
+  "package": "Gate2V64P_PairedOwner_ship_EXPERIMENTAL_20261022",
+  "files": {
+    "README.md": {
+      "bytes": 548,
+      "sha256": "b66e52d97ab15061f44d4d21cfa7505af51a82b9815d6cc3b0110aacdef1b293"
+    },
+    "labels.json": {
+      "bytes": 352,
+      "sha256": "e1fed4e8fa0d44733db191d901ac425ba04110972486dbfda3758052e85ceee6"
+    },
+    "model_src/best_model.keras": {
+      "bytes": 4196793,
+      "sha256": "98c6909f7414f7a6e7d761d993a8689339da79a7888251af7dbcd0ce99cc68a1"
+    },
+    "preprocessing_spec.json": {
+      "bytes": 777,
+      "sha256": "3b7523704be9ad27c33b09eedba4b402a425ba7324a1904d74a25ad3d2b4d412"
+    },
+    "reports/history.csv": {
+      "bytes": 618,
+      "sha256": "c53eca66254215f52df9c3a62ce0ae93ee13757c185b532ba0209cec8ea85820"
+    },
+    "reports/owner280_tflite_reused_diagnostic.json": {
+      "bytes": 2099,
+      "sha256": "8d2aac77ae49290fb3111204c36f6af558291bb981415c5e757a6b84e9e78abd"
+    },
+    "reports/report.json": {
+      "bytes": 6509,
+      "sha256": "231af452a813d0e5050e7293ff1c7044b069c038a5b1022869b43f9cf33489f9"
+    },
+    "tflite/gate2v64p_paired_owner_float16.tflite": {
+      "bytes": 698728,
+      "sha256": "4de96989cc522caf6dbf1e63204f9ea45e4347811d76424e8edfde55b86b5280"
+    }
+  }
+}

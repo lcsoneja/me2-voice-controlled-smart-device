@@ -1,0 +1,106 @@
+{
+  "model": "V64P paired+owner TFLite (20-class)",
+  "n_clips": 280,
+  "correct": 280,
+  "incorrect": 0,
+  "accuracy_pct": 100.0,
+  "per_intent": {
+    "ALARM": {
+      "correct": 27,
+      "total": 27,
+      "accuracy_pct": 100.0
+    },
+    "BRIGHTNESS": {
+      "correct": 27,
+      "total": 27,
+      "accuracy_pct": 100.0
+    },
+    "CALL": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "COLOR": {
+      "correct": 27,
+      "total": 27,
+      "accuracy_pct": 100.0
+    },
+    "CREATE_REMINDER": {
+      "correct": 28,
+      "total": 28,
+      "accuracy_pct": 100.0
+    },
+    "LIGHT_OFF": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "LIGHT_ON": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "LIST_REMINDERS": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "MESSAGE": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "NEXT": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "PAUSE": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "PLAY_MUSIC": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "STOP": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "TEMPERATURE": {
+      "correct": 27,
+      "total": 27,
+      "accuracy_pct": 100.0
+    },
+    "TIME": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "TIMER": {
+      "correct": 27,
+      "total": 27,
+      "accuracy_pct": 100.0
+    },
+    "VOLUME_DOWN": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "VOLUME_UP": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    },
+    "WEATHER": {
+      "correct": 9,
+      "total": 9,
+      "accuracy_pct": 100.0
+    }
+  },
+  "confusion_counts": {},
+  "note": "\u26a0\ufe0f 224 train clips are FIT \u2014 this is NOT an independent owner metric. Held-out owner val: 1.0000 (43 clips). Use AI231 holdout for independent evaluation."
+}

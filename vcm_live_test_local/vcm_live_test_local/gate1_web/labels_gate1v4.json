@@ -1,0 +1,8 @@
+{
+  "labels": [
+    "nova",
+    "piattos",
+    "negative"
+  ],
+  "negative_semantics": "silence/ambient only (no speech negatives) - owner instruction v4"
+}
