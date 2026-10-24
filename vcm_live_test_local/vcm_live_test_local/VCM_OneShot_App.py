@@ -24,7 +24,20 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+
+# When frozen into an .exe, __file__ lives in a temporary unpack folder, so resolve against the
+# executable's own directory. The exe may sit beside the app (normal use) or inside dist/, so
+# accept either and pick the folder that actually contains the server.
+def _app_root() -> Path:
+    frozen = getattr(sys, "frozen", False)
+    start = Path(sys.executable).resolve().parent if frozen else Path(__file__).resolve().parent
+    for candidate in (start, start.parent):
+        if (candidate / "gate1_server.py").is_file():
+            return candidate
+    return start
+
+
+HERE = _app_root()
 SERVER = HERE / "gate1_server.py"
 PID_FILE = HERE / "_oneshot_server.pid"
 PAGE = "http://127.0.0.1:8765/oneshot.html"
@@ -47,6 +60,38 @@ def healthy() -> bool:
         return False
 
 
+def _fatal(message: str) -> None:
+    """Report a failure even when running windowed, where there is no console."""
+    print("[app] " + message)
+    try:
+        import ctypes
+
+        ctypes.windll.user32.MessageBoxW(0, message, "VCM One-Shot", 0x10)
+    except (AttributeError, OSError):
+        pass
+
+
+def _server_command() -> list[str]:
+    """Command that runs the pipeline server.
+
+    Inside a frozen exe sys.executable is the exe itself, so it cannot be reused to run
+    gate1_server.py - that would relaunch the app. A real Python launcher is resolved instead.
+    """
+    if not getattr(sys, "frozen", False):
+        return [sys.executable, str(SERVER)]
+    for launcher in (["py", "-3.12"], ["py"], ["python"]):
+        try:
+            probe = subprocess.run([*launcher, "--version"], capture_output=True, timeout=10,
+                                    check=False)
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if probe.returncode == 0:
+            print("[app] using " + " ".join(launcher) + " for the server")
+            return [*launcher, str(SERVER)]
+    _fatal("Python 3 is required to run the VCM pipeline server, but it was not found on PATH.")
+    raise SystemExit(3)
+
+
 def start_server() -> subprocess.Popen | None:
     """Start the pipeline server when nothing is listening, and wait until it answers."""
     if healthy():
@@ -59,7 +104,7 @@ def start_server() -> subprocess.Popen | None:
         flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     print("[app] starting server ...")
     handle = subprocess.Popen(
-        [sys.executable, str(SERVER)],
+        _server_command(),
         cwd=str(HERE),
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,

@@ -12,6 +12,12 @@ nul
 # Local build artifact: the USB/SD delivery folder (regenerated on demand, ~176 MB)
 USB_ME2/
 
+# PyInstaller output for the one-shot desktop app (rebuild with BUILD_EXE.md; the exe is ~17 MB)
+build/
+dist/
+*.spec
+VCM_OneShot.exe
+
 # Python caches
 __pycache__/
 *.py[cod]
