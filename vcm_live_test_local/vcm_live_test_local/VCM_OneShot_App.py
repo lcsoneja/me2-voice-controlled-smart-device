@@ -104,15 +104,15 @@ def main() -> int:
                                         min_size=(980, 720), text_select=True)
         if created is None:
             raise SystemExit("could not create the application window")
-        # Bind the narrowed value: type checkers cannot narrow a captured variable inside the
-        # selftest closure below, so it would still look optional there.
-        window = created
 
         if args.selftest:
             def schedule_close() -> None:
                 def worker() -> None:
+                    import webview as gui  # re-import: the outer name may be the None fallback
+
                     time.sleep(5)
-                    window.destroy()
+                    for item in gui.windows:
+                        item.destroy()
                 threading.Thread(target=worker, daemon=True).start()
 
             webview.start(schedule_close)
