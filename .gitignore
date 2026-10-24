@@ -9,6 +9,9 @@
 # Windows stray artifact (redirect target, not a real file)
 nul
 
+# Local build artifact: the USB/SD delivery folder (regenerated on demand, ~176 MB)
+USB_ME2/
+
 # Python caches
 __pycache__/
 *.py[cod]
