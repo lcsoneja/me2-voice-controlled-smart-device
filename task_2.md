@@ -100,13 +100,19 @@ Never hardcode the token, never commit it, never echo it.
 GitHub is the wrong host for audio and for multi-GB corpora. The dataset goes to a
 **HuggingFace dataset repo** owned by Leandro.
 
+Already-published stores (verify and top up; do **not** recreate or re-upload from scratch):
+
+| Store | Contents | Licence |
+|---|---|---|
+| `huggingface.co/datasets/Drewboy/ai231-vcm-v64p-training-store` | V64P training store (~300 files) | CC-BY-NC-4.0, research-only |
+| `huggingface.co/datasets/Drewboy/ai231-vcm-v20aux-phoneme-store` | V20 phoneme-aux store (~15 files) | CC-BY-NC-4.0, research-only |
+
+The HF account is **`Drewboy`**. Do not create a dataset repo under any other account.
+
 ```bash
 huggingface-cli login          # token stays on this host; never commit it
-huggingface-cli upload <HF_USER>/ai231-me2-vcm-dataset <local_dir> --repo-type dataset
+huggingface-cli upload Drewboy/ai231-vcm-v64p-training-store <local_dir> --repo-type dataset
 ```
-
-`<HF_USER>` is **not yet confirmed** - if it is not supplied, stop and ask before creating the
-repo. Do not create a dataset repo under any account but Leandro's.
 
 ### 3a. HARD RULE - what may and may not be published
 
