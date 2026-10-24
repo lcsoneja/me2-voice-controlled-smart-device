@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gate3–Gate5 Slot-Specialist Candidates</title>
+<link rel="stylesheet" href="static/app.css">
+<script type="module" src="static/app.js"></script>
+</head>
+<body>
+<main>
+<header class="hero">
+  <div><p class="eyebrow">LOCAL · CLIP-LEVEL CLASSIFICATION</p><h1>Slot Specialist Bench</h1><p class="lede">Run one short WAV through a selected Gate3 or Gate5 candidate. No routing, streaming, cloud calls, or hidden ratio selection.</p></div>
+  <div class="hero-actions"><span class="local-badge">127.0.0.1 only</span><a class="main-monitor-link" href="http://127.0.0.1:8765/" target="_top" rel="noopener">Back to Gate 1/2 Monitor</a></div>
+</header>
+<section class="layout">
+  <form id="inference-form" class="card controls">
+    <h2>Choose a candidate</h2>
+    <label for="gate">Gate</label>
+    <select id="gate" name="gate" required><option value="">Select a gate…</option></select>
+    <label for="ratio">REJECT weighting candidate</label>
+    <select id="ratio" name="ratio" required><option value="">Select a ratio…</option></select>
+    <p class="hint">Both neg1x and neg2x are candidates. Neither is promoted; choose explicitly for every test.</p>
+    <label for="audio">One WAV clip</label>
+    <input id="audio" name="audio" type="file" accept=".wav,audio/wav" required>
+    <p id="file-name" class="file-name">No clip selected.</p>
+    <p class="limit">Window limit: <strong id="max-duration">…</strong>. Longer clips are rejected, not treated as a stream.</p>
+    <button id="run" type="submit" disabled>Run selected candidate</button>
+    <div id="status" role="status" aria-live="polite">Loading local model catalog…</div>
+  </form>
+  <section id="result" class="card result" aria-live="polite" hidden>
+    <div class="result-head"><div><p class="eyebrow">SELECTED RESULT</p><h2 id="selected">—</h2></div><span id="state-badge" class="state-badge">Waiting</span></div>
+    <div id="reject-alert" class="reject-alert" hidden>REJECT — this candidate classified the clip as out of slot.</div>
+    <div class="top-result"><div><span class="hint">Top label</span><strong id="top-label">—</strong></div><div class="top-score"><span class="hint">Uncalibrated model score</span><strong id="top-score">—</strong></div></div>
+    <div class="scores-head"><h3>Class scores</h3><span>Uncalibrated; not confidence</span></div>
+    <div id="scores" class="scores"></div>
+    <p id="result-note" class="hint"></p>
+  </section>
+</section>
+<section class="card instructions">
+  <h2>What this app does</h2>
+  <ul>
+    <li>Classifies one short WAV clip using the gate and ratio you selected.</li>
+    <li>Loads class order from the shipped <code>labels.json</code>; <strong>REJECT</strong> is a regular class.</li>
+    <li>Uses the shipped Gate2v6 preprocessing contract: mono, 16 kHz, 148×60 log-Mel, scalar train-only normalization.</li>
+    <li>Audio is processed in memory on this computer and discarded after inference; the app does not save or log it.</li>
+  </ul>
+  <p class="warning">This is clip-level classification, not phone-sequence recognition or continuous streaming. Scores are uncalibrated model scores; no rejection threshold is applied.</p>
+</section>
+<footer>Candidate models are not promoted or production-certified. No Raspberry Pi benchmark or real-microphone acceptance test has been done.</footer>
+</main>
+</body>
+</html>

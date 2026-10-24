@@ -1,0 +1,44 @@
+# Secrets - never commit
+.github_token
+*.token
+*.pem
+.env
+*_ppw.txt
+*password*
+
+# Windows stray artifact (redirect target, not a real file)
+nul
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Multi-GB corpora and bundles: linked, not cloned
+Shipping/
+DemoApp/
+vcm_live_test_local.tar.gz
+vcm_live_test_local/_pi_update.tar.gz
+vcm_live_test_local/vcm_live_test_local/_pi_deploy/.build_pi_latest/
+vcm_live_test_local/vcm_live_test_local/_pi_deploy/*.tar.gz
+*.tar.gz
+
+# Local audio + session data (privacy)
+vcm_live_test_local/vcm_live_test_local/recordings/
+laptop_sessions/
+vcm_live_test_local/vcm_live_test_local/laptop_sessions/
+collected_data/
+LoFiRadio/
+Call_Sounds/
+Gate2RosterV3_ship/
+UserScreenshots and prompts/
+Screenshots/
+
+# Local run output
+vcm_live_test_local/vcm_live_test_local/logs/
+v3_pipeline/
+*.log
+ws_received.log
+server_restart.log
+_dbg_rec/
