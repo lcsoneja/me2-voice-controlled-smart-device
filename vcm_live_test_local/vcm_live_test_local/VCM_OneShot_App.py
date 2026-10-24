@@ -16,8 +16,10 @@ Usage
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import urllib.error
@@ -30,7 +32,11 @@ from pathlib import Path
 # accept either and pick the folder that actually contains the server.
 def _app_root() -> Path:
     frozen = getattr(sys, "frozen", False)
-    start = Path(sys.executable).resolve().parent if frozen else Path(__file__).resolve().parent
+    start = (
+        Path(sys.executable).resolve().parent
+        if frozen
+        else Path(__file__).resolve().parent
+    )
     for candidate in (start, start.parent):
         if (candidate / "gate1_server.py").is_file():
             return candidate
@@ -40,6 +46,22 @@ def _app_root() -> Path:
 HERE = _app_root()
 SERVER = HERE / "gate1_server.py"
 PID_FILE = HERE / "_oneshot_server.pid"
+APP_LOG = HERE / "_oneshot_app.log"
+
+
+def _log(message: str) -> None:
+    """Append to the app log and echo to the console when there is one.
+
+    A windowed exe has no console, so a silent failure used to be indistinguishable from a
+    working app. Everything that matters is recorded here instead.
+    """
+    line = time.strftime("%H:%M:%S ") + message
+    print(line)
+    try:
+        with APP_LOG.open("a", encoding="utf-8") as handle:
+            handle.write(line + "\n")
+    except OSError:
+        pass
 PAGE = "http://127.0.0.1:8765/oneshot.html"
 HEALTH = "http://127.0.0.1:8765/oneshot.html"
 TITLE = "VCM One-Shot - wake gates a single 5 s Gate 2 capture"
@@ -62,7 +84,7 @@ def healthy() -> bool:
 
 def _fatal(message: str) -> None:
     """Report a failure even when running windowed, where there is no console."""
-    print("[app] " + message)
+    _log("[app] FATAL " + message)
     try:
         import ctypes
 
@@ -81,14 +103,17 @@ def _server_command() -> list[str]:
         return [sys.executable, str(SERVER)]
     for launcher in (["py", "-3.12"], ["py"], ["python"]):
         try:
-            probe = subprocess.run([*launcher, "--version"], capture_output=True, timeout=10,
-                                    check=False)
+            probe = subprocess.run(
+                [*launcher, "--version"], capture_output=True, timeout=10, check=False
+            )
         except (OSError, subprocess.SubprocessError):
             continue
         if probe.returncode == 0:
             print("[app] using " + " ".join(launcher) + " for the server")
             return [*launcher, str(SERVER)]
-    _fatal("Python 3 is required to run the VCM pipeline server, but it was not found on PATH.")
+    _fatal(
+        "Python 3 is required to run the VCM pipeline server, but it was not found on PATH."
+    )
     raise SystemExit(3)
 
 
@@ -130,12 +155,75 @@ def start_server() -> subprocess.Popen | None:
     )
 
 
-def open_browser_app() -> bool:
+WINDOW_TITLE_HINT = "One-Shot"
+WINDOW_POLL_SECONDS = 2.0
+WINDOW_MAX_HOURS = 12.0
+
+
+def window_open(hint: str = WINDOW_TITLE_HINT) -> bool:
+    """True while a visible top-level window whose title contains ``hint`` exists.
+
+    The browser launcher process exits as soon as it hands the URL to the real browser, so its
+    lifetime says nothing about the window. The window itself is the only reliable signal: this
+    keeps the app (and therefore the pipeline server) alive exactly as long as the user sees it.
+    """
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        user32 = ctypes.windll.user32
+        found: list[int] = []
+        callback_type = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+
+        def visit(handle: int, _param: int) -> bool:
+            if user32.IsWindowVisible(handle):
+                length = user32.GetWindowTextLengthW(handle)
+                if length:
+                    buffer = ctypes.create_unicode_buffer(length + 1)
+                    user32.GetWindowTextW(handle, buffer, length + 1)
+                    if hint.lower() in buffer.value.lower():
+                        found.append(handle)
+            return True
+
+        user32.EnumWindows(callback_type(visit), 0)
+        return bool(found)
+    except (AttributeError, OSError, ValueError):
+        return False
+
+
+def profile_dir() -> Path:
+    """Browser profile for the app window, deliberately OUTSIDE the project folder.
+
+    Edge writes thousands of cache and extension files into a --user-data-dir (this one reached
+    561 MB / 2,322 files), which bloated the project folder and made other tooling crawl through
+    it. It lives in the local app-data directory instead and is reused between launches.
+    """
+    base = os.environ.get("LOCALAPPDATA") or tempfile.gettempdir()
+    return Path(base) / "VCM_OneShot" / "profile"
+
+
+def open_browser_app() -> subprocess.Popen | None:
+    """Open the dashboard as a chromeless app window and return the process hosting it.
+
+    A dedicated --user-data-dir is essential: without it the launcher process hands the URL to
+    an already-running browser and exits immediately, so waiting for it would stop the server
+    while the window is still open. With its own profile this process lives until the window
+    closes, which is exactly the lifetime we need.
+    """
+    profile = profile_dir()
+    profile.mkdir(parents=True, exist_ok=True)
     for exe in BROWSERS:
         if Path(exe).is_file():
-            subprocess.Popen([exe, "--app=" + PAGE, "--window-size=1280,920"])
-            return True
-    return False
+            _log("[app] opening the app window with " + Path(exe).name + " profile=" + str(profile))
+            return subprocess.Popen([
+                exe,
+                "--app=" + PAGE,
+                "--window-size=1280,920",
+                "--user-data-dir=" + str(profile),
+                "--no-first-run",
+                "--no-default-browser-check",
+            ])
+    return None
 
 
 def main() -> int:
@@ -145,29 +233,54 @@ def main() -> int:
         action="store_true",
         help="open the window, close it after 5 s, and report whether it worked",
     )
+    parser.add_argument(
+        "--native",
+        action="store_true",
+        help="force the in-process pywebview window (onefile bundles cannot host it reliably)",
+    )
     args = parser.parse_args()
 
     server = start_server()
     try:
+        frozen = bool(getattr(sys, "frozen", False))
+        _log("[app] mode frozen=" + str(frozen) + " native=" + str(args.native)
+             + " root=" + str(HERE))
+
+        if frozen and not args.native:
+            # pywebview's native window cannot initialise inside a onefile bundle: it blocks with
+            # no window ever appearing. A frozen build therefore opens the very same dashboard as
+            # a chromeless app window, and waits for that window to close.
+            window = open_browser_app()
+            if window is None:
+                _fatal("No Edge or Chrome found to host the application window.")
+                return 1
+            if args.selftest:
+                time.sleep(5)
+                window.terminate()
+                _log("SELFTEST=BROWSER_WINDOW_OK")
+                return 0
+            _log("[app] waiting for the dashboard window to close ...")
+            deadline = time.time() + WINDOW_MAX_HOURS * 3600.0
+            while time.time() < deadline:
+                time.sleep(WINDOW_POLL_SECONDS)
+                if not window_open():
+                    _log("[app] dashboard window closed")
+                    return 0
+            _log("[app] window remained open for the maximum wait; closing")
+            return 0
+
         try:
             import webview  # optional dependency, imported late so a missing GUI does not break --selftest
         except ImportError:
-            webview = None
-
-        if webview is None:
-            if args.selftest:
-                print("SELFTEST=NO_WEBVIEW")
-                return 2
-            print(
-                "[app] pywebview missing; opening a chromeless browser window instead"
-            )
-            return 0 if open_browser_app() else 1
+            _fatal("pywebview is not installed. Run the packaged .exe, or install pywebview.")
+            return 2
 
         created = webview.create_window(
             TITLE, PAGE, width=1280, height=920, min_size=(980, 720), text_select=True
         )
         if created is None:
-            raise SystemExit("could not create the application window")
+            _fatal("could not create the application window")
+            return 3
 
         if args.selftest:
 
@@ -183,7 +296,7 @@ def main() -> int:
                 threading.Thread(target=worker, daemon=True).start()
 
             webview.start(schedule_close)
-            print("SELFTEST=WINDOW_OK")
+            _log("SELFTEST=WINDOW_OK")
             return 0
 
         webview.start()

@@ -11,6 +11,32 @@ copy dist\VCM_OneShot.exe .
 
 Result: **VCM_OneShot.exe, ~16.9 MB**, beside `gate1_server.py`.
 
+## Windows may refuse to run it: Smart App Control
+
+On a machine with **Smart App Control** enabled (Windows Security -> App & browser control),
+Windows blocks freshly built unsigned executables. Double-clicking the exe then does nothing at
+all, and the Code Integrity log shows why:
+
+```text
+Microsoft-Windows-CodeIntegrity/Operational, event 3077 / 3033
+"Code Integrity determined that a process ... attempted to load
+ ...VCM_OneShot.exe that did not meet the ... signing level requirements"
+```
+
+Check the state first:
+
+```powershell
+(Get-CimInstance -Namespace root/Microsoft/Windows/Defender -ClassName MSFT_MpComputerStatus).SmartAppControlState
+```
+
+If it reports `On`, launch the app with the **Desktop shortcut or `Start_VCM_OneShot.bat`**
+instead: they run `pythonw.exe VCM_OneShot_App.py`, and `pythonw.exe` is signed by the Python
+Software Foundation, so it is allowed to run. **The Desktop shortcut "VCM One-Shot" was
+retargeted to `pythonw.exe VCM_OneShot_App.py` for exactly this reason**, so a double-click works
+on this PC. The exe is kept for machines without Smart App Control; there, point a shortcut at
+`VCM_OneShot.exe` (or keep using the .bat, which works everywhere Python 3 is installed).
+
+
 ## What the exe is
 
 A **launcher**, not a sealed bundle. The exe contains the app window (pywebview) and its Python
@@ -32,7 +58,8 @@ that unpacks itself on every launch, so the launcher split is deliberate.
 ## Verify a build
 
 ```powershell
-.\VCM_OneShot.exe --selftest     # opens the window, closes it after 5 s
+py -3.12 VCM_OneShot_App.py --selftest   # opens the window, closes it after 5 s (works anywhere)
+.\VCM_OneShot.exe --selftest             # same, but blocked where Smart App Control is on
 ```
 
 A good build shows `[app] starting server`, `[app] server ready`, `SELFTEST=WINDOW_OK`, then
@@ -42,6 +69,24 @@ console build to see those lines:
 ```powershell
 py -3.12 -m PyInstaller --noconfirm --clean --onefile --console --name VCM_OneShot_dbg VCM_OneShot_App.py
 .\dist\VCM_OneShot_dbg.exe --selftest
+```
+
+## Verified launchers (checked 2026-10-25)
+
+Every row below was launched for real and watched in the process table and the window list; the
+window was then closed by posting `WM_CLOSE` to it, which is identical to clicking the X.
+
+| Launcher | Window | While open | After close |
+| --- | --- | --- | --- |
+| Desktop shortcut "VCM One-Shot" (`pythonw.exe` + `VCM_OneShot_App.py`) | `VCM One-Shot - wake gates a single 5 s Gate 2 capture`, ready in ~6 s | app 1, server 1 | app 0, server 0, no pidfile |
+| `Start_VCM_OneShot.bat` | same title, ready in ~6 s | app 2, server 1 | app 0, server 0, `OK: no pipeline processes remain.` |
+| `VCM_OneShot.exe` | blocked by Windows before launch on this PC | - | - |
+
+The app writes `_oneshot_app.log` beside itself (mode, server start/stop, failures), which is the
+only way to see what a windowed launch did. `_verify_app_window.ps1` re-runs the shortcut check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\_verify_app_window.ps1 "<app folder>"
 ```
 
 ## Clean exit

@@ -18,6 +18,11 @@ dist/
 *.spec
 VCM_OneShot.exe
 
+# App-window browser profile + runtime logs (kept outside the project; ignored defensively)
+_oneshot_profile/
+_oneshot_app.log
+_oneshot_server.pid
+
 # Python caches
 __pycache__/
 *.py[cod]
