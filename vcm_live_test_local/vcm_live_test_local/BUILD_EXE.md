@@ -17,7 +17,7 @@ A **launcher**, not a sealed bundle. The exe contains the app window (pywebview)
 dependencies; the pipeline itself stays external and is used from this folder:
 
 | Required beside the exe | Why |
-|---|---|
+| --- | --- |
 | `gate1_server.py` | the pipeline server the app starts and stops |
 | `gate1_web/` | the dashboard pages, including `oneshot.html` |
 | `vcm8/`, models | Gate 1 / Gate 2 weights and specs |
