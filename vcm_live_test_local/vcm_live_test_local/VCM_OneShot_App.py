@@ -26,6 +26,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SERVER = HERE / "gate1_server.py"
+PID_FILE = HERE / "_oneshot_server.pid"
 PAGE = "http://127.0.0.1:8765/oneshot.html"
 HEALTH = "http://127.0.0.1:8765/oneshot.html"
 TITLE = "VCM One-Shot - wake gates a single 5 s Gate 2 capture"
@@ -57,9 +58,18 @@ def start_server() -> subprocess.Popen | None:
     if sys.platform == "win32":
         flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     print("[app] starting server ...")
-    handle = subprocess.Popen([sys.executable, str(SERVER)], cwd=str(HERE),
-                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                              creationflags=flags)
+    handle = subprocess.Popen(
+        [sys.executable, str(SERVER)],
+        cwd=str(HERE),
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        creationflags=flags,
+    )
+    # Record what we started so the launcher can stop it even if this window is force-closed.
+    try:
+        PID_FILE.write_text(str(handle.pid), encoding="utf-8")
+    except OSError:
+        pass
     deadline = time.time() + START_TIMEOUT
     while time.time() < deadline:
         if healthy():
@@ -69,7 +79,10 @@ def start_server() -> subprocess.Popen | None:
             break
         time.sleep(0.5)
     handle.terminate()
-    raise SystemExit("server did not become healthy within " + str(START_TIMEOUT) + " s")
+    PID_FILE.unlink(missing_ok=True)
+    raise SystemExit(
+        "server did not become healthy within " + str(START_TIMEOUT) + " s"
+    )
 
 
 def open_browser_app() -> bool:
@@ -82,8 +95,11 @@ def open_browser_app() -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--selftest", action="store_true",
-                        help="open the window, close it after 5 s, and report whether it worked")
+    parser.add_argument(
+        "--selftest",
+        action="store_true",
+        help="open the window, close it after 5 s, and report whether it worked",
+    )
     args = parser.parse_args()
 
     server = start_server()
@@ -97,22 +113,28 @@ def main() -> int:
             if args.selftest:
                 print("SELFTEST=NO_WEBVIEW")
                 return 2
-            print("[app] pywebview missing; opening a chromeless browser window instead")
+            print(
+                "[app] pywebview missing; opening a chromeless browser window instead"
+            )
             return 0 if open_browser_app() else 1
 
-        created = webview.create_window(TITLE, PAGE, width=1280, height=920,
-                                        min_size=(980, 720), text_select=True)
+        created = webview.create_window(
+            TITLE, PAGE, width=1280, height=920, min_size=(980, 720), text_select=True
+        )
         if created is None:
             raise SystemExit("could not create the application window")
 
         if args.selftest:
+
             def schedule_close() -> None:
                 def worker() -> None:
                     import webview as gui  # re-import: the outer name may be the None fallback
 
                     time.sleep(5)
                     for item in gui.windows:
-                        item.destroy()
+                        if item is not None:
+                            item.destroy()
+
                 threading.Thread(target=worker, daemon=True).start()
 
             webview.start(schedule_close)
@@ -125,6 +147,7 @@ def main() -> int:
         if server is not None and server.poll() is None:
             print("[app] stopping the server this app started")
             server.terminate()
+        PID_FILE.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
