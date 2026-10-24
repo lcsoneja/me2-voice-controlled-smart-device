@@ -86,7 +86,9 @@ def _select_assistant_pack() -> Path:
     return SHIP_DIR / ASSISTANT_PACK_NAMES[0]
 
 
-def _load_assistant_pack(pack: Path) -> tuple[set[tuple[str, str, int]], dict[tuple[str, str, int], str]]:
+def _load_assistant_pack(
+    pack: Path,
+) -> tuple[set[tuple[str, str, int]], dict[tuple[str, str, int], str]]:
     """Index a pack's clips (persona, intent/wake slug, variant) and their text.
 
     Clip names are the contract: resp_<persona>_<slug>_<variant>.wav, where the
@@ -105,9 +107,14 @@ def _load_assistant_pack(pack: Path) -> tuple[set[tuple[str, str, int]], dict[tu
             clips.add((persona.lower(), slug.lower(), int(variant_text)))
     texts: dict[tuple[str, str, int], str] = {}
     try:
-        with (pack / "responses_manifest.csv").open(newline="", encoding="utf-8") as handle:
+        with (pack / "responses_manifest.csv").open(
+            newline="", encoding="utf-8"
+        ) as handle:
             for row in csv.DictReader(handle):
-                fields = {(key or "").strip().lower(): (value or "").strip() for key, value in row.items()}
+                fields = {
+                    (key or "").strip().lower(): (value or "").strip()
+                    for key, value in row.items()
+                }
                 variant_text = fields.get("variant_index", "")
                 persona = fields.get("persona", "").lower()
                 slug = fields.get("intent", "").lower()
@@ -137,8 +144,11 @@ def assistant_clip(persona: str | None, slug: str) -> dict[str, str] | None:
         for variant in (1, 2):
             if (who, wanted, variant) in ASSISTANT_CLIPS:
                 name = f"resp_{who}_{wanted}_{variant}.wav"
-                return {"url": "/assistant-responses/" + name, "persona": who,
-                        "text": ASSISTANT_TEXTS.get((who, wanted, variant), "")}
+                return {
+                    "url": "/assistant-responses/" + name,
+                    "persona": who,
+                    "text": ASSISTANT_TEXTS.get((who, wanted, variant), ""),
+                }
     return None
 
 
@@ -146,68 +156,292 @@ def assistant_clip(persona: str | None, slug: str) -> dict[str, str] | None:
 # preprocessing_spec.json; their manifests document the base version's scalar
 # statistics as identical, so the runner falls back to the base package spec.
 GATE2_PACKAGE_RUNNERS = {
-    "gate2v16": (SHIP_DIR / "Gate2V16_ship_20261017", "tflite/gate2v16_float16.tflite", None),
-    "gate2v18": (SHIP_DIR / "Gate2V18_ship_20261017", "tflite/gate2v18_float16.tflite", None),
-    "gate2v19": (SHIP_DIR / "Gate2V19_ship_20261017", "tflite/gate2v19_float16.tflite", None),
-    "gate2v19p": (SHIP_DIR / "Gate2V19P_ship_EXPERIMENTAL_20261017", "tflite/gate2v19p_float16.tflite", SHIP_DIR / "Gate2V19_ship_20261017"),
-    "gate2v20_aux": (SHIP_DIR / "Gate2V20_PhonemeAux_ship_EXPERIMENTAL_20261018", "tflite/gate2v20_phoneme_aux_intent_float16.tflite", None),
-    "gate2v21": (SHIP_DIR / "Gate2V21_ship_20261017", "tflite/gate2v21_float16.tflite", None),
-    "gate2v21p": (SHIP_DIR / "Gate2V21P_ship_EXPERIMENTAL_20261017", "tflite/gate2v21p_float16.tflite", SHIP_DIR / "Gate2V21_ship_20261017"),
-    "gate2v22": (SHIP_DIR / "Gate2V22_ship_20261017", "tflite/gate2v22_float16.tflite", None),
-    "gate2v22s": (SHIP_DIR / "Gate2V22_SilenceNeg_ship_EXPERIMENTAL_20261017", "tflite/gate2v22s_float16.tflite", None),
-    "gate2v23_crnn50x30": (SHIP_DIR / "Gate2V23_CRNN50x30_ship_EXPERIMENTAL_20261017", "tflite/gate2v23_crnn50x30_float16.tflite", None),
-    "gate2v24_crnn148x60": (SHIP_DIR / "Gate2V24_CRNN148x60_ship_EXPERIMENTAL_20261017", "tflite/gate2v24_crnn148x60_float16.tflite", None),
-    "gate2v25": (SHIP_DIR / "Gate2V25_ship_EXPERIMENTAL_20261018", "tflite/gate2v25_float16.tflite", SHIP_DIR / "Gate2V19_ship_20261017"),
-    "gate2v25_phraseconcat": (SHIP_DIR / "Gate2V25_PhraseConcat_ship_EXPERIMENTAL_20261019", "tflite/gate2v25_phrase_concat_float16.tflite", None),
-    "gate2v26": (SHIP_DIR / "Gate2V26_ship_EXPERIMENTAL_20261018", "tflite/gate2v26_float16.tflite", None),
-    "gate2v26_phraseconcat_neg": (SHIP_DIR / "Gate2V26_PhraseConcat_NEG_ship_EXPERIMENTAL_20261019", "tflite/gate2v26_phrase_concat_negclass_float16.tflite", None),
-    "gate2v28a_5win": (SHIP_DIR / "Gate2V28A_5WinSlide_ship_EXPERIMENTAL_20261019", "tflite/gate2v28a_float16.tflite", None),
-    "gate2v28b_9win": (SHIP_DIR / "Gate2V28B_9WinSlide05_ship_EXPERIMENTAL_20261019", "tflite/gate2v28b_float16.tflite", None),
-    "gate2v29_deep9": (SHIP_DIR / "Gate2V29_Deep9WinSlide_ship_EXPERIMENTAL_20261019", "tflite/gate2v29_deep9win_float16.tflite", None),
-    "gate2v29b_wide9": (SHIP_DIR / "Gate2V29B_Wide9WinSlide_ship_EXPERIMENTAL_20261019", "tflite/gate2v29b_wide9win_float16.tflite", None),
-    "gate2v34a_std": (SHIP_DIR / "Gate2V34A_StdFrontend_ship_EXPERIMENTAL_20261019", "tflite/gate2v34_std_float16.tflite", None),
-    "gate2v34b_finehop": (SHIP_DIR / "Gate2V34B_FineHop10ms5ms_ship_EXPERIMENTAL_20261019", "tflite/gate2v34_fine_float16.tflite", None),
-    "gate2v36_17win": (SHIP_DIR / "Gate2V36_17WinSlide4s_ship_EXPERIMENTAL_20261019", "tflite/gate2v36_17win_float16.tflite", None),
-    "gate2v37_9win_neg": (SHIP_DIR / "Gate2V37_9WinSlide_NEG_ship_EXPERIMENTAL_20261019", "tflite/gate2v37_slide_neg_float16.tflite", None),
-    "gate2v38_crnn9": (SHIP_DIR / "Gate2V38_CRNN_9WinSlide_ship_EXPERIMENTAL_20261019", "tflite/gate2v38_crnn9win_float16.tflite", None),
-    "gate2v40b_9win_attention": (SHIP_DIR / "Gate2V40B_9WinAttention_ship_EXPERIMENTAL_20261019", "tflite/gate2v40b_float16.tflite", None),
-    "gate2v41_specaugmix": (SHIP_DIR / "Gate2V41_SpecAugMix_ship_EXPERIMENTAL_20261019", "tflite/gate2v41_specaug_float16.tflite", None),
-    "gate2v42_reverb": (SHIP_DIR / "Gate2V42_ReverbMicSim_ship_EXPERIMENTAL_20261019", "tflite/gate2v42_reverb_float16.tflite", None),
-    "gate2v46_impwarp": (SHIP_DIR / "Gate2V46_ImpWarp_ship_EXPERIMENTAL_20261020", "tflite/gate2v46_warp_float16.tflite", None),
-    "gate2v47_windrop_melwarp": (SHIP_DIR / "Gate2V47_WinDropout_MelWarp_ship_EXPERIMENTAL_20261020", "tflite/gate2v47_windrop_float16.tflite", None),
-    "gate2v48_audiopack": (SHIP_DIR / "Gate2V48_AudioPack_ship_EXPERIMENTAL_20261020", "tflite/gate2v48_audiopack_float16.tflite", None),
-    "gate2v49_warpdilatedneg": (SHIP_DIR / "Gate2V49_WarpDilatedNEG_ship_EXPERIMENTAL_20261020", "tflite/gate2v49_warp_dilated_neg_float16.tflite", None),
-    "gate2v50_channelshuffle": (SHIP_DIR / "Gate2V50_ChannelShuffle_ship_EXPERIMENTAL_20261020", "tflite/gate2v50_chshuffle_float16.tflite", None),
-    "gate2v52_adjswap": (SHIP_DIR / "Gate2V52_AdjSwap_ship_EXPERIMENTAL_20261020", "tflite/gate2v52_adjswap_float16.tflite", None),
-    "gate2v53_melbin_dropout": (SHIP_DIR / "Gate2V53_MelBinDropout_ship_EXPERIMENTAL_20261020", "tflite/gate2v53_melbin_dropout_float16.tflite", None),
-    "gate2v56_v54": (SHIP_DIR / "Gate2V56_ChampionStack_V46_PID_ship_EXPERIMENTAL_20261020", "tflite/gate2v46_warp_float16.tflite", None),
-    "gate2v56_v54b": (SHIP_DIR / "Gate2V56_ChampionStack_V46_PID_ship_EXPERIMENTAL_20261020", "tflite/gate2v46_warp_float16.tflite", None),
-    "gate2v57_pidgate": (SHIP_DIR / "Gate2V57_PIDGate_ship_EXPERIMENTAL_20261021", "tflite/gate2v57_pidgate_float16.tflite", None),
-    "gate2v58_smooth_pidgate": (SHIP_DIR / "Gate2V58_SmoothPIDGate_ship_EXPERIMENTAL_20261022", "gate2v58_smooth_pidgate_float16.tflite", None),
-    "gate2v59_focal_warp": (SHIP_DIR / "Gate2V59_FocalLabelWarp_ship_EXPERIMENTAL_20261021", "tflite/gate2v59_focal_warp_float16.tflite", None),
-    "gate2v60_phone_warp": (SHIP_DIR / "Gate2V60_PhoneWarp_ship_EXPERIMENTAL_20261021", "tflite/gate2v60_phone_warp_float16.tflite", None),
-    "gate2v61_keyword_mix": (SHIP_DIR / "Gate2V61_KeywordMix_ship_EXPERIMENTAL_20261022", "tflite/gate2v61_keyword_mix_float16.tflite", None),
-    "gate2v62_speechtrim": (SHIP_DIR / "Gate2V62_SpeechTrim_ship_EXPERIMENTAL_20261022", "tflite/gate2v62_speechtrim_float16.tflite", None),
-    "gate2v63_pca_frontend": (SHIP_DIR / "Gate2V63_PCAFrontend_ship_EXPERIMENTAL_20261022", "tflite/gate2v63_pca_frontend_float16.tflite", None),
-    "gate2v64_paired_negatives": (SHIP_DIR / "Gate2V64_PairedNegatives_ship_EXPERIMENTAL_20261022", "tflite/gate2v64_paired_negatives_float16.tflite", None),
-    "gate2v64c_stochmel": (SHIP_DIR / "Gate2V64C_StochMelNEG_ship_EXPERIMENTAL_20261022", "tflite/gate2v64c_stochmel_float16.tflite", None),
-    "gate2v64d_expandedneg": (SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022", "tflite/gate2v64c_stochmel_float16.tflite", None),
-    "gate2v64p_paired_owner": (SHIP_DIR / "Gate2V64P_PairedOwner_ship_EXPERIMENTAL_20261022", "tflite/gate2v64p_paired_owner_float16.tflite", None),
-    "gate2v65_stoch15k": (SHIP_DIR / "Gate2V65_StochNEG15K_ship_EXPERIMENTAL_20261022", "tflite/gate2v65_stoch15k_float16.tflite", None),
-    "gate2v66_clean_only": (SHIP_DIR / "Gate2V66_CleanOnly_ship_EXPERIMENTAL_20261022", "tflite/gate2v66_clean_only_float16.tflite", None),
-    "gate2v66a_3extra": (SHIP_DIR / "Gate2V66a_3extra_ship_EXPERIMENTAL_20261022", "tflite/gate2v66a_float16.tflite", None),
-    "gate2v66d_2extra": (SHIP_DIR / "Gate2V66d_2extra_ship_EXPERIMENTAL_20261022", "tflite/gate2v66d_float16.tflite", None),
-    "gate2v67_timeshift_only": (SHIP_DIR / "Gate2V67_TimeShiftOnly_ship_EXPERIMENTAL_20261022", "tflite/gate2v67_timeshift_only_float16.tflite", None),
-    "gate2v68_timeshift_neg": (SHIP_DIR / "Gate2V68_TIMESHIFT_NEG_ship_EXPERIMENTAL_20261022", "tflite/gate2v68_timeshift_neg_float16.tflite", None),
+    "gate2v16": (
+        SHIP_DIR / "Gate2V16_ship_20261017",
+        "tflite/gate2v16_float16.tflite",
+        None,
+    ),
+    "gate2v18": (
+        SHIP_DIR / "Gate2V18_ship_20261017",
+        "tflite/gate2v18_float16.tflite",
+        None,
+    ),
+    "gate2v19": (
+        SHIP_DIR / "Gate2V19_ship_20261017",
+        "tflite/gate2v19_float16.tflite",
+        None,
+    ),
+    "gate2v19p": (
+        SHIP_DIR / "Gate2V19P_ship_EXPERIMENTAL_20261017",
+        "tflite/gate2v19p_float16.tflite",
+        SHIP_DIR / "Gate2V19_ship_20261017",
+    ),
+    "gate2v20_aux": (
+        SHIP_DIR / "Gate2V20_PhonemeAux_ship_EXPERIMENTAL_20261018",
+        "tflite/gate2v20_phoneme_aux_intent_float16.tflite",
+        None,
+    ),
+    "gate2v21": (
+        SHIP_DIR / "Gate2V21_ship_20261017",
+        "tflite/gate2v21_float16.tflite",
+        None,
+    ),
+    "gate2v21p": (
+        SHIP_DIR / "Gate2V21P_ship_EXPERIMENTAL_20261017",
+        "tflite/gate2v21p_float16.tflite",
+        SHIP_DIR / "Gate2V21_ship_20261017",
+    ),
+    "gate2v22": (
+        SHIP_DIR / "Gate2V22_ship_20261017",
+        "tflite/gate2v22_float16.tflite",
+        None,
+    ),
+    "gate2v22s": (
+        SHIP_DIR / "Gate2V22_SilenceNeg_ship_EXPERIMENTAL_20261017",
+        "tflite/gate2v22s_float16.tflite",
+        None,
+    ),
+    "gate2v23_crnn50x30": (
+        SHIP_DIR / "Gate2V23_CRNN50x30_ship_EXPERIMENTAL_20261017",
+        "tflite/gate2v23_crnn50x30_float16.tflite",
+        None,
+    ),
+    "gate2v24_crnn148x60": (
+        SHIP_DIR / "Gate2V24_CRNN148x60_ship_EXPERIMENTAL_20261017",
+        "tflite/gate2v24_crnn148x60_float16.tflite",
+        None,
+    ),
+    "gate2v25": (
+        SHIP_DIR / "Gate2V25_ship_EXPERIMENTAL_20261018",
+        "tflite/gate2v25_float16.tflite",
+        SHIP_DIR / "Gate2V19_ship_20261017",
+    ),
+    "gate2v25_phraseconcat": (
+        SHIP_DIR / "Gate2V25_PhraseConcat_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v25_phrase_concat_float16.tflite",
+        None,
+    ),
+    "gate2v26": (
+        SHIP_DIR / "Gate2V26_ship_EXPERIMENTAL_20261018",
+        "tflite/gate2v26_float16.tflite",
+        None,
+    ),
+    "gate2v26_phraseconcat_neg": (
+        SHIP_DIR / "Gate2V26_PhraseConcat_NEG_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v26_phrase_concat_negclass_float16.tflite",
+        None,
+    ),
+    "gate2v28a_5win": (
+        SHIP_DIR / "Gate2V28A_5WinSlide_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v28a_float16.tflite",
+        None,
+    ),
+    "gate2v28b_9win": (
+        SHIP_DIR / "Gate2V28B_9WinSlide05_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v28b_float16.tflite",
+        None,
+    ),
+    "gate2v29_deep9": (
+        SHIP_DIR / "Gate2V29_Deep9WinSlide_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v29_deep9win_float16.tflite",
+        None,
+    ),
+    "gate2v29b_wide9": (
+        SHIP_DIR / "Gate2V29B_Wide9WinSlide_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v29b_wide9win_float16.tflite",
+        None,
+    ),
+    "gate2v34a_std": (
+        SHIP_DIR / "Gate2V34A_StdFrontend_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v34_std_float16.tflite",
+        None,
+    ),
+    "gate2v34b_finehop": (
+        SHIP_DIR / "Gate2V34B_FineHop10ms5ms_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v34_fine_float16.tflite",
+        None,
+    ),
+    "gate2v36_17win": (
+        SHIP_DIR / "Gate2V36_17WinSlide4s_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v36_17win_float16.tflite",
+        None,
+    ),
+    "gate2v37_9win_neg": (
+        SHIP_DIR / "Gate2V37_9WinSlide_NEG_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v37_slide_neg_float16.tflite",
+        None,
+    ),
+    "gate2v38_crnn9": (
+        SHIP_DIR / "Gate2V38_CRNN_9WinSlide_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v38_crnn9win_float16.tflite",
+        None,
+    ),
+    "gate2v40b_9win_attention": (
+        SHIP_DIR / "Gate2V40B_9WinAttention_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v40b_float16.tflite",
+        None,
+    ),
+    "gate2v41_specaugmix": (
+        SHIP_DIR / "Gate2V41_SpecAugMix_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v41_specaug_float16.tflite",
+        None,
+    ),
+    "gate2v42_reverb": (
+        SHIP_DIR / "Gate2V42_ReverbMicSim_ship_EXPERIMENTAL_20261019",
+        "tflite/gate2v42_reverb_float16.tflite",
+        None,
+    ),
+    "gate2v46_impwarp": (
+        SHIP_DIR / "Gate2V46_ImpWarp_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v46_warp_float16.tflite",
+        None,
+    ),
+    "gate2v47_windrop_melwarp": (
+        SHIP_DIR / "Gate2V47_WinDropout_MelWarp_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v47_windrop_float16.tflite",
+        None,
+    ),
+    "gate2v48_audiopack": (
+        SHIP_DIR / "Gate2V48_AudioPack_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v48_audiopack_float16.tflite",
+        None,
+    ),
+    "gate2v49_warpdilatedneg": (
+        SHIP_DIR / "Gate2V49_WarpDilatedNEG_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v49_warp_dilated_neg_float16.tflite",
+        None,
+    ),
+    "gate2v50_channelshuffle": (
+        SHIP_DIR / "Gate2V50_ChannelShuffle_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v50_chshuffle_float16.tflite",
+        None,
+    ),
+    "gate2v52_adjswap": (
+        SHIP_DIR / "Gate2V52_AdjSwap_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v52_adjswap_float16.tflite",
+        None,
+    ),
+    "gate2v53_melbin_dropout": (
+        SHIP_DIR / "Gate2V53_MelBinDropout_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v53_melbin_dropout_float16.tflite",
+        None,
+    ),
+    "gate2v56_v54": (
+        SHIP_DIR / "Gate2V56_ChampionStack_V46_PID_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v46_warp_float16.tflite",
+        None,
+    ),
+    "gate2v56_v54b": (
+        SHIP_DIR / "Gate2V56_ChampionStack_V46_PID_ship_EXPERIMENTAL_20261020",
+        "tflite/gate2v46_warp_float16.tflite",
+        None,
+    ),
+    "gate2v57_pidgate": (
+        SHIP_DIR / "Gate2V57_PIDGate_ship_EXPERIMENTAL_20261021",
+        "tflite/gate2v57_pidgate_float16.tflite",
+        None,
+    ),
+    "gate2v58_smooth_pidgate": (
+        SHIP_DIR / "Gate2V58_SmoothPIDGate_ship_EXPERIMENTAL_20261022",
+        "gate2v58_smooth_pidgate_float16.tflite",
+        None,
+    ),
+    "gate2v59_focal_warp": (
+        SHIP_DIR / "Gate2V59_FocalLabelWarp_ship_EXPERIMENTAL_20261021",
+        "tflite/gate2v59_focal_warp_float16.tflite",
+        None,
+    ),
+    "gate2v60_phone_warp": (
+        SHIP_DIR / "Gate2V60_PhoneWarp_ship_EXPERIMENTAL_20261021",
+        "tflite/gate2v60_phone_warp_float16.tflite",
+        None,
+    ),
+    "gate2v61_keyword_mix": (
+        SHIP_DIR / "Gate2V61_KeywordMix_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v61_keyword_mix_float16.tflite",
+        None,
+    ),
+    "gate2v62_speechtrim": (
+        SHIP_DIR / "Gate2V62_SpeechTrim_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v62_speechtrim_float16.tflite",
+        None,
+    ),
+    "gate2v63_pca_frontend": (
+        SHIP_DIR / "Gate2V63_PCAFrontend_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v63_pca_frontend_float16.tflite",
+        None,
+    ),
+    "gate2v64_paired_negatives": (
+        SHIP_DIR / "Gate2V64_PairedNegatives_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v64_paired_negatives_float16.tflite",
+        None,
+    ),
+    "gate2v64c_stochmel": (
+        SHIP_DIR / "Gate2V64C_StochMelNEG_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v64c_stochmel_float16.tflite",
+        None,
+    ),
+    "gate2v64d_expandedneg": (
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v64c_stochmel_float16.tflite",
+        None,
+    ),
+    "gate2v64p_paired_owner": (
+        SHIP_DIR / "Gate2V64P_PairedOwner_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v64p_paired_owner_float16.tflite",
+        None,
+    ),
+    "gate2v65_stoch15k": (
+        SHIP_DIR / "Gate2V65_StochNEG15K_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v65_stoch15k_float16.tflite",
+        None,
+    ),
+    "gate2v66_clean_only": (
+        SHIP_DIR / "Gate2V66_CleanOnly_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v66_clean_only_float16.tflite",
+        None,
+    ),
+    "gate2v66a_3extra": (
+        SHIP_DIR / "Gate2V66a_3extra_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v66a_float16.tflite",
+        None,
+    ),
+    "gate2v66d_2extra": (
+        SHIP_DIR / "Gate2V66d_2extra_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v66d_float16.tflite",
+        None,
+    ),
+    "gate2v67_timeshift_only": (
+        SHIP_DIR / "Gate2V67_TimeShiftOnly_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v67_timeshift_only_float16.tflite",
+        None,
+    ),
+    "gate2v68_timeshift_neg": (
+        SHIP_DIR / "Gate2V68_TIMESHIFT_NEG_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v68_timeshift_neg_float16.tflite",
+        None,
+    ),
     # v7x layered stacks: one base TFLite + one inference-time layer. The base
     # packages ship spec+labels; the layer parameters live in
     # GATE2_PID_CONFIGS / GATE2_TR_CONFIGS below (handoff 2026-10-22 ships).
-    "gate2v72_v64d_pid": (SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022", "tflite/gate2v64c_stochmel_float16.tflite", None),
-    "gate2v76_v64d_tr": (SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022", "tflite/gate2v64c_stochmel_float16.tflite", None),
+    "gate2v72_v64d_pid": (
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v64c_stochmel_float16.tflite",
+        None,
+    ),
+    "gate2v76_v64d_tr": (
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v64c_stochmel_float16.tflite",
+        None,
+    ),
     # V77 (2026-10-24 ship): the NEG class retrained on SPEECH-OOS (LibriSpeech
     # + non-command word clips) over the V64d recipe. Its 20th class is named
     # NEG (not NEGATIVE) and is masked like NEGATIVE in the scoring paths.
-    "gate2v77_speech_neg": (SHIP_DIR / "Gate2V77_SpeechOOS_NEG_ship_EXPERIMENTAL_20261022", "tflite/gate2v77_speech_neg_float16.tflite", None),
+    "gate2v77_speech_neg": (
+        SHIP_DIR / "Gate2V77_SpeechOOS_NEG_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v77_speech_neg_float16.tflite",
+        None,
+    ),
 }
 
 GATE2_DISABLED_CANDIDATES = {
@@ -222,12 +456,33 @@ GATE2_DISABLED_CANDIDATES = {
 }
 
 GATE2_PID_CONFIGS = {
-    "gate2v56_v54": {"tau": 0.4, "kp": 0.4, "ki": 0.05, "kd": 0.1, "kc": 0.0, "margin_mode": False},
-    "gate2v56_v54b": {"tau": 0.25, "kp": 0.6, "ki": 0.02, "kd": 0.1, "kc": 2.0, "margin_mode": True},
+    "gate2v56_v54": {
+        "tau": 0.4,
+        "kp": 0.4,
+        "ki": 0.05,
+        "kd": 0.1,
+        "kc": 0.0,
+        "margin_mode": False,
+    },
+    "gate2v56_v54b": {
+        "tau": 0.25,
+        "kp": 0.6,
+        "ki": 0.02,
+        "kd": 0.1,
+        "kc": 2.0,
+        "margin_mode": True,
+    },
     # V72 (ship 2026-10-22): V64d ExpandedNEG base + V54 PID evidence
     # integrator. Params from Gate2V72 reports/results.json (owner-280 PID
     # acc 88.21%); accuracy arm, streaming per-connection state.
-    "gate2v72_v64d_pid": {"tau": 0.3, "kp": 0.3, "ki": 0.01, "kd": 0.05, "kc": 0.0, "margin_mode": False},
+    "gate2v72_v64d_pid": {
+        "tau": 0.3,
+        "kp": 0.3,
+        "ki": 0.01,
+        "kd": 0.05,
+        "kc": 0.0,
+        "margin_mode": False,
+    },
 }
 
 # V76 deployable threshold-reject layer (Gate2V76 tuned_thresholds.json):
@@ -235,7 +490,11 @@ GATE2_PID_CONFIGS = {
 # Tuned on the 202-clip class holdout; the keep>=98% arm retains 98.9% of
 # command clips (96.7% acc on kept) while rejecting 56.2% of OOS traps.
 GATE2_TR_CONFIGS = {
-    "gate2v76_v64d_tr": {"score": "maxprob", "tau": 0.5917618364095688, "profile": "keep>=98%"},
+    "gate2v76_v64d_tr": {
+        "score": "maxprob",
+        "tau": 0.5917618364095688,
+        "profile": "keep>=98%",
+    },
 }
 
 
@@ -254,14 +513,23 @@ def _gate2_tr_scores(model_name: str, probabilities: list[float]) -> list[float]
     else:
         scores[:n] = p
     return scores.tolist()
+
+
 _V56_PID_MODULE: Any = None
 
 
 def _v56_pid_module():
     global _V56_PID_MODULE
     if _V56_PID_MODULE is None:
-        pid_path = SHIP_DIR / "Gate2V56_ChampionStack_V46_PID_ship_EXPERIMENTAL_20261020" / "deploy" / "pid_stream_integrator.py"
-        spec = importlib.util.spec_from_file_location("gate2_v56_pid_integrator", pid_path)
+        pid_path = (
+            SHIP_DIR
+            / "Gate2V56_ChampionStack_V46_PID_ship_EXPERIMENTAL_20261020"
+            / "deploy"
+            / "pid_stream_integrator.py"
+        )
+        spec = importlib.util.spec_from_file_location(
+            "gate2_v56_pid_integrator", pid_path
+        )
         if spec is None or spec.loader is None:
             raise ImportError(f"Cannot load V56 PID integrator: {pid_path}")
         module = importlib.util.module_from_spec(spec)
@@ -271,12 +539,16 @@ def _v56_pid_module():
     return _V56_PID_MODULE
 
 
-def _gate2_v56_pid_scores(model_name: str, state: dict, probabilities: list[float]) -> list[float]:
+def _gate2_v56_pid_scores(
+    model_name: str, state: dict, probabilities: list[float]
+) -> list[float]:
     if model_name not in GATE2_PID_CONFIGS:
         return list(probabilities)
     pid = _v56_pid_module()
     prediction, accepted = pid.integrate_step(
-        state, np.asarray(probabilities, dtype=np.float32), **GATE2_PID_CONFIGS[model_name]
+        state,
+        np.asarray(probabilities, dtype=np.float32),
+        **GATE2_PID_CONFIGS[model_name],
     )
     scores = np.zeros(len(probabilities) + 1, dtype=np.float32)
     if accepted and 0 <= int(prediction) < len(probabilities):
@@ -286,13 +558,16 @@ def _gate2_v56_pid_scores(model_name: str, state: dict, probabilities: list[floa
     return scores.tolist()
 
 
-
-def _slide_window_features(features: np.ndarray, offsets: tuple[int, ...], pad_value: float) -> np.ndarray:
+def _slide_window_features(
+    features: np.ndarray, offsets: tuple[int, ...], pad_value: float
+) -> np.ndarray:
     """Build time-shifted feature channels using the shipped slide-window contract."""
     x = np.asarray(features, dtype=np.float32)
     if x.ndim != 2:
         raise ValueError("slide-window input must be a 2D frame-by-mel matrix")
-    out = np.full((x.shape[0], x.shape[1], len(offsets)), float(pad_value), dtype=np.float32)
+    out = np.full(
+        (x.shape[0], x.shape[1], len(offsets)), float(pad_value), dtype=np.float32
+    )
     is_pad = np.max(np.abs(x - float(pad_value)), axis=1) < 0.02
     end = x.shape[0]
     while end > 0 and is_pad[end - 1]:
@@ -312,11 +587,13 @@ def _slide_window_features(features: np.ndarray, offsets: tuple[int, ...], pad_v
         j0 = max(0, -offset)
         j1 = min(x.shape[0], length - offset)
         if j1 > j0:
-            out[j0:j1, :, channel] = speech[offset + j0:offset + j1]
+            out[j0:j1, :, channel] = speech[offset + j0 : offset + j1]
     return out
 
 
-def _resize_area(features: np.ndarray, target_frames: int, target_mels: int) -> np.ndarray:
+def _resize_area(
+    features: np.ndarray, target_frames: int, target_mels: int
+) -> np.ndarray:
     """NumPy area-resize a normalized frame/mel feature matrix."""
     out = np.asarray(features, dtype=np.float32)
     for axis, target in ((0, int(target_frames)), (1, int(target_mels))):
@@ -332,7 +609,9 @@ def _resize_area(features: np.ndarray, target_frames: int, target_mels: int) -> 
             first = int(np.floor(left))
             last = int(np.ceil(right))
             for src_index in range(first, min(last, source)):
-                weight = max(0.0, min(right, src_index + 1.0) - max(left, float(src_index)))
+                weight = max(
+                    0.0, min(right, src_index + 1.0) - max(left, float(src_index))
+                )
                 resized[index] += moved[src_index] * (weight / scale)
         out = np.moveaxis(resized, 0, axis)
     return out.astype(np.float32)
@@ -340,11 +619,20 @@ def _resize_area(features: np.ndarray, target_frames: int, target_mels: int) -> 
 
 def _inference_interval_s(mode: str, data: dict[str, Any]) -> float:
     requested = data.get("interval_s")
-    if isinstance(requested, (int, float)) and not isinstance(requested, bool) and requested in (1, 2, 3, 6, 1.0, 2.0, 3.0, 6.0):
+    if (
+        isinstance(requested, (int, float))
+        and not isinstance(requested, bool)
+        and requested in (1, 2, 3, 6, 1.0, 2.0, 3.0, 6.0)
+    ):
         return float(requested)
     if mode == "both":
         return 1.0
-    if mode == "gate2" and isinstance(requested, (int, float)) and not isinstance(requested, bool) and requested == 2:
+    if (
+        mode == "gate2"
+        and isinstance(requested, (int, float))
+        and not isinstance(requested, bool)
+        and requested == 2
+    ):
         return 2.0
     return 1.0
 
@@ -368,13 +656,20 @@ def _make_interpreter(model_path: Path):
         except (ImportError, AttributeError, OSError, ValueError) as e:
             last_error = e
     raise ImportError(
-        "No TFLite interpreter available (install tflite-runtime or ai-edge-litert): " + str(last_error)
+        "No TFLite interpreter available (install tflite-runtime or ai-edge-litert): "
+        + str(last_error)
     )
 
 
 def _asset(name: str) -> Path:
     """Resolve a runtime asset from the project root, gate1_web/, or vcm8/."""
-    for base in (HERE, HERE / "gate1_web", HERE / "vcm8" / "training", HERE / "vcm8" / "training" / "tflite", HERE / "vcm8" / "config"):
+    for base in (
+        HERE,
+        HERE / "gate1_web",
+        HERE / "vcm8" / "training",
+        HERE / "vcm8" / "training" / "tflite",
+        HERE / "vcm8" / "config",
+    ):
         p = base / name
         if p.is_file():
             return p
@@ -389,7 +684,9 @@ class Gate2V2Preproc:
         try:
             self.config = json.loads(config_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
-            raise RuntimeError(f"Failed to load Gate 2 v2 preprocessing config {config_path}: {exc}") from exc
+            raise RuntimeError(
+                f"Failed to load Gate 2 v2 preprocessing config {config_path}: {exc}"
+            ) from exc
         self.sample_rate = int(self.config["sample_rate"])
         self.n_fft = int(self.config["n_fft"])
         self.hop_length = int(self.config["hop_length"])
@@ -401,7 +698,9 @@ class Gate2V2Preproc:
             self.mean = float(stats["mean"])
             self.std = float(stats["std"])
 
-    def extract(self, waveform: np.ndarray, sample_rate: int | None = None) -> np.ndarray:
+    def extract(
+        self, waveform: np.ndarray, sample_rate: int | None = None
+    ) -> np.ndarray:
         """Return one normalized (1, frames, mels, 1) input tensor."""
         y = np.asarray(waveform, dtype=np.float32)
         if y.ndim == 2:
@@ -423,11 +722,17 @@ class Gate2V2Preproc:
         )
         features = np.log1p(mel).T
         if len(features) < self.target_frames:
-            features = np.pad(features, ((0, self.target_frames - len(features)), (0, 0)), mode="constant")
+            features = np.pad(
+                features,
+                ((0, self.target_frames - len(features)), (0, 0)),
+                mode="constant",
+            )
         elif len(features) > self.target_frames:
             start = (len(features) - self.target_frames) // 2
             features = features[start : start + self.target_frames]
-        return ((features - self.mean) / (self.std + 1e-8)).astype(np.float32)[None, :, :, None]
+        return ((features - self.mean) / (self.std + 1e-8)).astype(np.float32)[
+            None, :, :, None
+        ]
 
 
 class Gate2V6KerasRunner:
@@ -442,7 +747,10 @@ class Gate2V6KerasRunner:
 
     def __init__(self, expected_labels: list[str]):
         pkg = GATE2V6_PKG
-        if not (pkg / "infer.py").is_file() or not (pkg / "model_src" / "best_model.keras").is_file():
+        if (
+            not (pkg / "infer.py").is_file()
+            or not (pkg / "model_src" / "best_model.keras").is_file()
+        ):
             raise RuntimeError(f"Gate2 v6 package not found: {pkg}")
         if str(pkg) not in sys.path:
             sys.path.insert(0, str(pkg))
@@ -454,15 +762,21 @@ class Gate2V6KerasRunner:
         import tensorflow as tf
 
         try:
-            self.model = tf.keras.models.load_model(pkg / "model_src" / "best_model.keras", compile=False)
+            self.model = tf.keras.models.load_model(  # type: ignore[attr-defined]  # tf.keras is lazy; the linter stub omits it
+                pkg / "model_src" / "best_model.keras", compile=False
+            )
             raw_labels = json.loads((pkg / "labels.json").read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError, ValueError) as exc:
-            raise RuntimeError(f"Cannot load Gate2 v6 source model or labels from {pkg}: {exc}") from exc
+            raise RuntimeError(
+                f"Cannot load Gate2 v6 source model or labels from {pkg}: {exc}"
+            ) from exc
         self.labels = list(raw_labels["labels"])
         self.labels_path = pkg / "labels.json"
         # Hard fail at load, same contract as the gate2v2 label check.
         if self.labels != list(expected_labels):
-            raise RuntimeError(f"Gate 2 v6 label order differs from the current registry: {self.labels_path}")
+            raise RuntimeError(
+                f"Gate 2 v6 label order differs from the current registry: {self.labels_path}"
+            )
 
     def predict(self, waveform: np.ndarray) -> list[float]:
         import soundfile as sf
@@ -492,7 +806,10 @@ class Preproc:
         self.mean = float(st["mean"])
         self.std = float(st["std"])
         self.target = int(target)
-        self.win = np.array([0.5 - 0.5 * np.cos(2 * np.pi * i / N_FFT) for i in range(N_FFT)], dtype=np.float32)
+        self.win = np.array(
+            [0.5 - 0.5 * np.cos(2 * np.pi * i / N_FFT) for i in range(N_FFT)],
+            dtype=np.float32,
+        )
 
     def extract(self, buf: np.ndarray) -> np.ndarray:
         pad = N_FFT // 2
@@ -512,7 +829,9 @@ class Preproc:
             s0 = (log_S.shape[1] - self.target) // 2
             log_S = log_S[:, s0 : s0 + self.target]
         feat = log_S.T
-        return ((feat - self.mean) / (self.std + 1e-8))[None, :, :, None].astype(np.float32)
+        return ((feat - self.mean) / (self.std + 1e-8))[None, :, :, None].astype(
+            np.float32
+        )
 
 
 LABELS_G1 = ["Nova", "Piattos", "Negative"]
@@ -533,7 +852,9 @@ GATE1_DISABLED_CANDIDATES = {
 }
 
 
-def _wake_candidate(probs: list[float], thresholds: dict[str, float], rms: float, floor: float) -> str | None:
+def _wake_candidate(
+    probs: list[float], thresholds: dict[str, float], rms: float, floor: float
+) -> str | None:
     """Return a wake candidate only above the app's ambient energy floor."""
     if len(probs) < 2 or not np.isfinite(rms) or not np.isfinite(floor) or rms < floor:
         return None
@@ -591,27 +912,41 @@ class Gate2PackageRunner:
         try:
             spec = json.loads(spec_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
-            raise RuntimeError(f"Cannot load Gate2 package spec {spec_path}: {exc}") from exc
+            raise RuntimeError(
+                f"Cannot load Gate2 package spec {spec_path}: {exc}"
+            ) from exc
         self.spec_data = spec
         stats = spec.get("stats") if isinstance(spec.get("stats"), dict) else {}
         self.mean = float(spec.get("stats_mean", stats.get("mean", float("nan"))))
         self.std = float(spec.get("stats_std", stats.get("std", float("nan"))))
         if not np.isfinite(self.mean) or not np.isfinite(self.std) or self.std <= 0:
-            raise RuntimeError(f"Gate2 package has no valid normalization stats: {spec_path}")
+            raise RuntimeError(
+                f"Gate2 package has no valid normalization stats: {spec_path}"
+            )
         try:
-            self.labels = list(json.loads((pkg_dir / "labels.json").read_text(encoding="utf-8"))["labels"])
+            self.labels = list(
+                json.loads((pkg_dir / "labels.json").read_text(encoding="utf-8"))[
+                    "labels"
+                ]
+            )
         except (OSError, json.JSONDecodeError) as exc:
-            raise RuntimeError(f"Cannot load Gate2 package labels {pkg_dir / 'labels.json'}: {exc}") from exc
+            raise RuntimeError(
+                f"Cannot load Gate2 package labels {pkg_dir / 'labels.json'}: {exc}"
+            ) from exc
         self.interp = _make_interpreter(tflite_path)
         input_details = self.interp.get_input_details()
         if len(input_details) != 1:
-            raise RuntimeError(f"Gate2 package expects {len(input_details)} input tensors; adapter supports one: {tflite_path}")
+            raise RuntimeError(
+                f"Gate2 package expects {len(input_details)} input tensors; adapter supports one: {tflite_path}"
+            )
         ind = input_details[0]
         self.in_idx = ind["index"]
         self.in_dtype = ind["dtype"]
         shape = tuple(int(d) for d in ind["shape"])
         if len(shape) != 4:
-            raise RuntimeError(f"Gate2 package input must be rank 4, got {shape}: {tflite_path}")
+            raise RuntimeError(
+                f"Gate2 package input must be rank 4, got {shape}: {tflite_path}"
+            )
         self.frames = shape[1]
         self.n_mels = shape[2]
         self.channels = shape[3]
@@ -621,29 +956,69 @@ class Gate2PackageRunner:
         self.win_length = int(spec.get("win_length", spec.get("win", self.n_fft)))
         self.center = bool(spec.get("center", True))
         self.power = float(spec.get("power", 2.0))
-        self.source_frames = int(spec.get("source_input_frames", spec.get("input_frames", spec.get("model_input_frames", spec.get("frames", self.frames)))))
-        self.source_mels = int(spec.get("source_n_mels", spec.get("n_mels", self.n_mels)))
+        self.source_frames = int(
+            spec.get(
+                "source_input_frames",
+                spec.get(
+                    "input_frames",
+                    spec.get("model_input_frames", spec.get("frames", self.frames)),
+                ),
+            )
+        )
+        self.source_mels = int(
+            spec.get("source_n_mels", spec.get("n_mels", self.n_mels))
+        )
         self.pad_value = float(spec.get("pad_value", -self.mean / self.std))
         self.resize_method = str(spec.get("feature_resize", ""))
         self.channel_offsets = {
             1: (),
             5: (-50, -25, 0, 25, 50),
             9: (-50, -38, -25, -12, 0, 12, 25, 38, 50),
-            17: (-100, -88, -75, -62, -50, -38, -25, -12, 0, 12, 25, 38, 50, 62, 75, 88, 100),
+            17: (
+                -100,
+                -88,
+                -75,
+                -62,
+                -50,
+                -38,
+                -25,
+                -12,
+                0,
+                12,
+                25,
+                38,
+                50,
+                62,
+                75,
+                88,
+                100,
+            ),
         }.get(self.channels)
         if self.channel_offsets is None:
-            raise RuntimeError(f"No adapter for {self.channels}-channel Gate2 frontend: {tflite_path}")
+            raise RuntimeError(
+                f"No adapter for {self.channels}-channel Gate2 frontend: {tflite_path}"
+            )
 
     def _extract_features(self, waveform: np.ndarray) -> np.ndarray:
         span = self.source_frames * self.hop_length + self.n_fft
         y = np.asarray(waveform, dtype=np.float32).reshape(-1)[-span:]
         mel = librosa.feature.melspectrogram(
-            y=y, sr=self.sample_rate, n_fft=self.n_fft, hop_length=self.hop_length,
-            win_length=self.win_length, n_mels=self.source_mels, center=self.center, power=self.power,
+            y=y,
+            sr=self.sample_rate,
+            n_fft=self.n_fft,
+            hop_length=self.hop_length,
+            win_length=self.win_length,
+            n_mels=self.source_mels,
+            center=self.center,
+            power=self.power,
         )
         features = np.log1p(mel).T.astype(np.float32)
         if len(features) < self.source_frames:
-            features = np.pad(features, ((0, self.source_frames - len(features)), (0, 0)), mode="constant")
+            features = np.pad(
+                features,
+                ((0, self.source_frames - len(features)), (0, 0)),
+                mode="constant",
+            )
         elif len(features) > self.source_frames:
             start = (len(features) - self.source_frames) // 2
             features = features[start : start + self.source_frames]
@@ -656,7 +1031,12 @@ class Gate2PackageRunner:
         x = np.asarray(features, dtype=self.in_dtype)[None, :, :, :]
         self.interp.set_tensor(self.in_idx, x)
         self.interp.invoke()
-        return [float(v) for v in self.interp.get_tensor(self.interp.get_output_details()[0]["index"])[0]]
+        return [
+            float(v)
+            for v in self.interp.get_tensor(
+                self.interp.get_output_details()[0]["index"]
+            )[0]
+        ]
 
     def predict(self, waveform: np.ndarray) -> list[float]:
         features = self._extract_features(waveform)
@@ -665,7 +1045,9 @@ class Gate2PackageRunner:
         else:
             offsets = self.channel_offsets
             if offsets is None:
-                raise RuntimeError(f"No slide offsets for {self.channels}-channel Gate2 model")
+                raise RuntimeError(
+                    f"No slide offsets for {self.channels}-channel Gate2 model"
+                )
             model_features = _slide_window_features(features, offsets, self.pad_value)
         return self._infer_features(model_features)
 
@@ -684,18 +1066,34 @@ class Gate2PackageRunner:
         prediction = len(self.labels)
         accepted = False
         for channel in range(self.channels):
-            one_hot = np.full((self.frames, self.n_mels, self.channels), self.pad_value, dtype=np.float32)
+            one_hot = np.full(
+                (self.frames, self.n_mels, self.channels),
+                self.pad_value,
+                dtype=np.float32,
+            )
             one_hot[:, :, channel] = slide_features[:, :, channel]
             probs = self._infer_features(one_hot)
-            prediction, accepted = pid.integrate_step(state, np.asarray(probs, dtype=np.float32), **config)
+            prediction, accepted = pid.integrate_step(
+                state, np.asarray(probs, dtype=np.float32), **config
+            )
         scores = np.zeros(len(self.labels) + 1, dtype=np.float32)
-        scores[int(prediction) if accepted and 0 <= int(prediction) < len(self.labels) else -1] = 1.0
+        scores[
+            int(prediction)
+            if accepted and 0 <= int(prediction) < len(self.labels)
+            else -1
+        ] = 1.0
         return scores.tolist()
 
 
 G3TO5P_DIR = SHIP_DIR / "Gate3to5P_OwnerFinetuned_ship_EXPERIMENTAL_20261017"
-G3TO5P_MAP = {"TIMER": "gate3a_p", "ALARM": "gate3b_p", "TEMPERATURE": "gate3c_p",
-              "BRIGHTNESS": "gate3d_p", "COLOR": "gate4_p", "CREATE_REMINDER": "gate5_p"}
+G3TO5P_MAP = {
+    "TIMER": "gate3a_p",
+    "ALARM": "gate3b_p",
+    "TEMPERATURE": "gate3c_p",
+    "BRIGHTNESS": "gate3d_p",
+    "COLOR": "gate4_p",
+    "CREATE_REMINDER": "gate5_p",
+}
 
 
 class Gate3to5PPack:
@@ -707,24 +1105,43 @@ class Gate3to5PPack:
 
     def __init__(self):
         import tensorflow as tf  # lazy: laptop-only pack
+
         try:
-            self.models = {intent: tf.keras.models.load_model(str(G3TO5P_DIR / "models" / f"{fname}.keras"), compile=False)
-                           for intent, fname in G3TO5P_MAP.items()}
-            self.slots = json.loads((G3TO5P_DIR / "slot_values.json").read_text(encoding="utf-8"))
+            self.models = {
+                intent: tf.keras.models.load_model(  # type: ignore[attr-defined]  # tf.keras is lazy; the linter stub omits it
+                    str(G3TO5P_DIR / "models" / f"{fname}.keras"), compile=False
+                )
+                for intent, fname in G3TO5P_MAP.items()
+            }
+            self.slots = json.loads(
+                (G3TO5P_DIR / "slot_values.json").read_text(encoding="utf-8")
+            )
         except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
-            raise RuntimeError(f"Cannot load Gate3-5P owner-finetuned pack from {G3TO5P_DIR}: {exc}") from exc
+            raise RuntimeError(
+                f"Cannot load Gate3-5P owner-finetuned pack from {G3TO5P_DIR}: {exc}"
+            ) from exc
 
     def predict(self, intent: str, waveform: np.ndarray) -> tuple[str, float]:
         y = np.asarray(waveform, dtype=np.float32).reshape(-1)
-        mel = librosa.feature.melspectrogram(y=y, sr=SR, n_fft=1024, hop_length=640,
-                                             win_length=1024, n_mels=60, center=True, power=2.0)
+        mel = librosa.feature.melspectrogram(
+            y=y,
+            sr=SR,
+            n_fft=1024,
+            hop_length=640,
+            win_length=1024,
+            n_mels=60,
+            center=True,
+            power=2.0,
+        )
         x = np.log1p(mel).T
         if len(x) < 148:
             x = np.pad(x, ((0, 148 - len(x)), (0, 0)), mode="constant")
         else:
             start = (len(x) - 148) // 2
             x = x[start : start + 148]
-        probs = self.models[intent].predict(x[None, :, :, None].astype(np.float32), verbose=0)[0]
+        probs = self.models[intent].predict(
+            x[None, :, :, None].astype(np.float32), verbose=0
+        )[0]
         return self.slots[intent][int(np.argmax(probs))], float(np.max(probs))
 
 
@@ -774,7 +1191,9 @@ class PipelineActivationWindows:
         # tick in between when speech was continuous.
         self._last_gate2_intent = None
 
-    def observe_gate2(self, intent: str | None, confidence: float, threshold: float, now: float) -> bool:
+    def observe_gate2(
+        self, intent: str | None, confidence: float, threshold: float, now: float
+    ) -> bool:
         """Latch a command window on a single threshold-qualified tick.
 
         NEGATIVE is the idle/reject prediction: it must never arm a pending
@@ -783,7 +1202,12 @@ class PipelineActivationWindows:
         utterance being re-scored, not a new event. Phantom prevention for
         stale commands lives in action_ready's wake-ordering check.
         """
-        if intent is None or intent in ("NEGATIVE", "NEG") or not np.isfinite(confidence) or confidence < threshold:
+        if (
+            intent is None
+            or intent in ("NEGATIVE", "NEG")
+            or not np.isfinite(confidence)
+            or confidence < threshold
+        ):
             self._last_gate2_intent = None
             return False
         # One command utterance fires once: a new event for the same intent
@@ -814,9 +1238,12 @@ class PipelineActivationWindows:
         (owner-voice run 2026-10-17): require the G2 confirmation to be at
         least as new as the current G1 activation.
         """
-        return (self.gate1_active(now) and self.gate2_active(now)
-                and self.g2_event_id > self._consumed_event_id
-                and self.g2_confirmed_at >= self.g1_activated_at - self.G2_WAKE_GRACE)
+        return (
+            self.gate1_active(now)
+            and self.gate2_active(now)
+            and self.g2_event_id > self._consumed_event_id
+            and self.g2_confirmed_at >= self.g1_activated_at - self.G2_WAKE_GRACE
+        )
 
     def snapshot(self, now: float) -> dict[str, dict[str, object]]:
         g1_active = self.gate1_active(now)
@@ -880,9 +1307,13 @@ class Gates:
     def __init__(self):
         registry_path = _asset("model_registry.json")
         try:
-            self.registry = json.loads(registry_path.read_text(encoding="utf-8"))["models"]
+            self.registry = json.loads(registry_path.read_text(encoding="utf-8"))[
+                "models"
+            ]
         except (OSError, json.JSONDecodeError) as e:
-            raise RuntimeError(f"Failed to load model registry {registry_path}: {e}") from e
+            raise RuntimeError(
+                f"Failed to load model registry {registry_path}: {e}"
+            ) from e
         self.pre148 = Preproc("feature_stats_148.npz", TARGET_148)
         self.pre74 = Preproc("feature_stats.npz", TARGET_74)
         self.pre_gate2v2 = Gate2V2Preproc()
@@ -893,12 +1324,20 @@ class Gates:
         try:
             self._gate2_extra["gate2v56_v54"] = Gate2PackageRunner("gate2v56_v54")
         except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
-            print("[gates] gate2v56_v54 default unavailable, falling back to gate2v21p: " + str(exc), flush=True)
+            print(
+                "[gates] gate2v56_v54 default unavailable, falling back to gate2v21p: "
+                + str(exc),
+                flush=True,
+            )
             self.gate2_runner = "gate2v21p"
             try:
                 self._gate2_extra["gate2v21p"] = Gate2PackageRunner("gate2v21p")
             except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc2:
-                print("[gates] gate2v21p fallback unavailable, falling back to gate2v2: " + str(exc2), flush=True)
+                print(
+                    "[gates] gate2v21p fallback unavailable, falling back to gate2v2: "
+                    + str(exc2),
+                    flush=True,
+                )
                 self.gate2_runner = "gate2v2"
         self.gates = {}
         specs = {
@@ -920,9 +1359,13 @@ class Gates:
                 try:
                     gate2_labels = json.loads(labels_path.read_text(encoding="utf-8"))
                 except (OSError, json.JSONDecodeError) as exc:
-                    raise RuntimeError(f"Failed to load Gate 2 v2 labels {labels_path}: {exc}") from exc
+                    raise RuntimeError(
+                        f"Failed to load Gate 2 v2 labels {labels_path}: {exc}"
+                    ) from exc
                 if gate2_labels != self.registry["gate2"]["labels"]:
-                    raise RuntimeError(f"Gate 2 v2 label order differs from the current registry: {labels_path}")
+                    raise RuntimeError(
+                        f"Gate 2 v2 label order differs from the current registry: {labels_path}"
+                    )
                 self.labels[name] = list(gate2_labels)
             else:
                 self.labels[name] = list(self.registry[reg_key]["labels"])
@@ -982,7 +1425,10 @@ class Gates:
             }
         # Gate1V10 (2026-10-17 upload) ships its own stats; labels are lowercase
         # in the package but the output order matches the canonical Nova/Piattos/Negative.
-        for key, fname in (("gate1v10_f16", "gate1v10_float16.tflite"), ("gate1v10_dr", "gate1v10_dynamic_range.tflite")):
+        for key, fname in (
+            ("gate1v10_f16", "gate1v10_float16.tflite"),
+            ("gate1v10_dr", "gate1v10_dynamic_range.tflite"),
+        ):
             v10_path = _asset(fname)
             if not v10_path.is_file():
                 continue
@@ -991,7 +1437,10 @@ class Gates:
             except (ImportError, RuntimeError, OSError, ValueError) as v10_exc:
                 # Newer-TF exports (op version > Pi tflite-runtime 2.14) must not
                 # crash the dashboard; the variant is simply not offered there.
-                print("[gates] " + key + " unavailable on this runtime: " + str(v10_exc), flush=True)
+                print(
+                    "[gates] " + key + " unavailable on this runtime: " + str(v10_exc),
+                    flush=True,
+                )
                 continue
             v10_ind = v10_interp.get_input_details()[0]
             v10_outd = v10_interp.get_output_details()[0]
@@ -1017,7 +1466,10 @@ class Gates:
             try:
                 v12_interp = _make_interpreter(v12_path)
             except (ImportError, RuntimeError, OSError, ValueError) as v12_exc:
-                print("[gates] gate1v12_f16 unavailable on this runtime: " + str(v12_exc), flush=True)
+                print(
+                    "[gates] gate1v12_f16 unavailable on this runtime: " + str(v12_exc),
+                    flush=True,
+                )
             else:
                 v12_ind = v12_interp.get_input_details()[0]
                 v12_outd = v12_interp.get_output_details()[0]
@@ -1034,7 +1486,11 @@ class Gates:
                         "two_class": False,
                     }
                 else:
-                    print("[gates] gate1v12_f16 skipped: unexpected input " + str(v12_shape), flush=True)
+                    print(
+                        "[gates] gate1v12_f16 skipped: unexpected input "
+                        + str(v12_shape),
+                        flush=True,
+                    )
         for g in self.g1_variants.values():
             dummy = np.zeros(g["in_shape"], dtype=np.float32)
             g["interp"].set_tensor(g["in_idx"], dummy)
@@ -1065,12 +1521,17 @@ class Gates:
         extra = self._gate2_extra.get(self.gate2_runner)
         if extra is not None:
             labels = list(extra.labels)
-            if self.gate2_runner in GATE2_PID_CONFIGS or self.gate2_runner in GATE2_TR_CONFIGS:
+            if (
+                self.gate2_runner in GATE2_PID_CONFIGS
+                or self.gate2_runner in GATE2_TR_CONFIGS
+            ):
                 return labels + ["NEGATIVE"]
             return labels
         return self.labels["gate2"]
 
-    def infer_gate2(self, waveform: np.ndarray, pid_state: dict | None = None) -> list[float]:
+    def infer_gate2(
+        self, waveform: np.ndarray, pid_state: dict | None = None
+    ) -> list[float]:
         with self._gate2_lock:
             extra = self._gate2_extra.get(self.gate2_runner)
             if extra is not None:
@@ -1086,22 +1547,31 @@ class Gates:
 
     def set_gate2_model(self, name: str) -> str:
         """Switch among the default, Keras, and compatible shipped TFLite Gate 2 models."""
-        if name not in ("gate2v2", "gate2v6_keras") and name not in GATE2_PACKAGE_RUNNERS:
+        if (
+            name not in ("gate2v2", "gate2v6_keras")
+            and name not in GATE2_PACKAGE_RUNNERS
+        ):
             raise ValueError("unknown gate2 model: " + name)
         with self._gate2_lock:
             if name == "gate2v6_keras" and "gate2v6_keras" not in self._gate2_extra:
                 # Gate2V6KerasRunner hard-fails at load if the packaged label order
                 # differs from the registry gate2 labels.
-                self._gate2_extra["gate2v6_keras"] = Gate2V6KerasRunner(self.registry["gate2"]["labels"])
+                self._gate2_extra["gate2v6_keras"] = Gate2V6KerasRunner(
+                    self.registry["gate2"]["labels"]
+                )
             if name in GATE2_PACKAGE_RUNNERS and name not in self._gate2_extra:
                 self._gate2_extra[name] = Gate2PackageRunner(name)
                 # Gate2V6KerasRunner hard-fails at load if the packaged label order
                 # differs from the registry gate2 labels.
-                self._gate2_extra["gate2v6_keras"] = Gate2V6KerasRunner(self.registry["gate2"]["labels"])
+                self._gate2_extra["gate2v6_keras"] = Gate2V6KerasRunner(
+                    self.registry["gate2"]["labels"]
+                )
             self.gate2_runner = name
         return name
 
-    def score_gate2_model(self, model: str, waveform: np.ndarray, pid_state: dict | None = None) -> list[float]:
+    def score_gate2_model(
+        self, model: str, waveform: np.ndarray, pid_state: dict | None = None
+    ) -> list[float]:
         """Score one EXPLICIT Gate 2 model without disturbing the live selection.
 
         The recording lab replays a saved take through every shipped model while
@@ -1116,7 +1586,9 @@ class Gates:
                 if model in GATE2_PID_CONFIGS:
                     if pid_state is None:
                         return extra.predict_pid_clip(waveform, model)
-                    return _gate2_v56_pid_scores(model, pid_state, extra.predict(waveform))
+                    return _gate2_v56_pid_scores(
+                        model, pid_state, extra.predict(waveform)
+                    )
                 if model in GATE2_TR_CONFIGS:
                     return _gate2_tr_scores(model, extra.predict(waveform))
                 return extra.predict(waveform)
@@ -1129,9 +1601,12 @@ class Gates:
         extra = self._gate2_extra.get(model)
         if extra is not None:
             labels = [str(label) for label in extra.labels]
-            return labels + ["NEGATIVE"] if model in GATE2_PID_CONFIGS or model in GATE2_TR_CONFIGS else labels
+            return (
+                labels + ["NEGATIVE"]
+                if model in GATE2_PID_CONFIGS or model in GATE2_TR_CONFIGS
+                else labels
+            )
         return [str(label) for label in self.labels["gate2"]]
-
 
     def warm(self) -> None:
         for g in self.gates.values():
@@ -1158,15 +1633,31 @@ class Gates:
         parallel = importlib.import_module("parallel_pipeline")
         raw = parallel.run_in_parallel(tasks)
 
-        def summarize(name: str, scores: list[float], labels: list[str]) -> dict[str, Any]:
+        def summarize(
+            name: str, scores: list[float], labels: list[str]
+        ) -> dict[str, Any]:
             if len(scores) != len(labels) or not scores:
-                raise RuntimeError(f"{name} returned {len(scores)} scores for {len(labels)} labels")
+                raise RuntimeError(
+                    f"{name} returned {len(scores)} scores for {len(labels)} labels"
+                )
             top_index = int(np.argmax(scores))
-            return {"labels": labels, "probs": scores, "top": labels[top_index],"conf": float(scores[top_index])}
+            return {
+                "labels": labels,
+                "probs": scores,
+                "top": labels[top_index],
+                "conf": float(scores[top_index]),
+            }
 
         gate2 = summarize("gate2", raw["gate2"], self.gate2_labels())
-        specialists = {name: summarize(name, raw[name], self.labels[name]) for name in ("gateN", "gate4", "gate5")}
-        return {"gate2": gate2, "specialists": specialists, "model": self.gate2_active_model()}
+        specialists = {
+            name: summarize(name, raw[name], self.labels[name])
+            for name in ("gateN", "gate4", "gate5")
+        }
+        return {
+            "gate2": gate2,
+            "specialists": specialists,
+            "model": self.gate2_active_model(),
+        }
 
 
 # Noise canceller DSP lives in nc_dsp.py so the live pipeline and the
@@ -1192,7 +1683,9 @@ def _g2_candidate_intent(p2, labels, g2thr, default_thr):
         masked[top_i] = -np.inf
         j = int(np.argmax(masked))
         cand = labels[j]
-        if cand not in ("NEGATIVE", "NEG") and float(p2[j]) >= float(g2thr.get(cand, default_thr)):
+        if cand not in ("NEGATIVE", "NEG") and float(p2[j]) >= float(
+            g2thr.get(cand, default_thr)
+        ):
             return cand, float(p2[j])
     return intent, conf
 
@@ -1300,17 +1793,34 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
     def now() -> str:
         return datetime.now(UTC).isoformat()
 
-    def attach_action_result(payload: dict, waveform: np.ndarray, monotonic_now: float) -> bool:
+    def attach_action_result(
+        payload: dict, waveform: np.ndarray, monotonic_now: float
+    ) -> bool:
         if not activations.action_ready(monotonic_now):
             return False
         intent = activations.g2_intent
         if intent is None:
             return False
-        payload["action_gate"].update({"active": True, "triggered": True, "pending": False, "intent": intent,
-                                       "event_id": activations.g2_event_id})
-        payload["action_gate"]["light_on"] = True  # LIGHT FIRST: on before any specialist runs
-        payload["g2"].update({"intent": intent, "conf": activations.g2_conf,
-                              "activation_intent": intent, "activation_conf": activations.g2_conf})
+        payload["action_gate"].update(
+            {
+                "active": True,
+                "triggered": True,
+                "pending": False,
+                "intent": intent,
+                "event_id": activations.g2_event_id,
+            }
+        )
+        payload["action_gate"]["light_on"] = (
+            True  # LIGHT FIRST: on before any specialist runs
+        )
+        payload["g2"].update(
+            {
+                "intent": intent,
+                "conf": activations.g2_conf,
+                "activation_intent": intent,
+                "activation_conf": activations.g2_conf,
+            }
+        )
         # Pseudo-code contract: when the action fires, test Gate 3, 4 AND 5 on
         # the same trailing 8-second audio window (model preprocessing crops to
         # its trained input); the routed specialist decides the value. The light
@@ -1326,8 +1836,18 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
             # trailing 8-second window (TensorFlow available on this host).
             try:
                 pack_label, pack_conf = pack.predict(routed, waveform)
-                payload["specialists"] = {routed: {"gate": "gate3to5p", "label": pack_label, "conf": pack_conf}}
-                payload["spec"] = {"gate": "gate3to5p", "label": pack_label, "conf": pack_conf}
+                payload["specialists"] = {
+                    routed: {
+                        "gate": "gate3to5p",
+                        "label": pack_label,
+                        "conf": pack_conf,
+                    }
+                }
+                payload["spec"] = {
+                    "gate": "gate3to5p",
+                    "label": pack_label,
+                    "conf": pack_conf,
+                }
                 payload["final"] = pack_label
                 payload["g3to5p"] = True
             except (RuntimeError, ValueError, KeyError):
@@ -1336,12 +1856,19 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
             # Fallback: legacy TFLite trio on the same window.
             payload["g3to5p"] = False
             parallel = importlib.import_module("parallel_pipeline")
-            tasks = {name: (lambda n=name: gates.infer(n, waveform)) for name in ("gateN", "gate4", "gate5")}
+            tasks = {
+                name: (lambda n=name: gates.infer(n, waveform))
+                for name in ("gateN", "gate4", "gate5")
+            }
             results = parallel.run_in_parallel(tasks)
             specialists = {}
             for name, scores in results.items():
                 idx = int(np.argmax(scores))
-                specialists[name] = {"gate": name, "label": gates.labels[name][idx], "conf": scores[idx]}
+                specialists[name] = {
+                    "gate": name,
+                    "label": gates.labels[name][idx],
+                    "conf": scores[idx],
+                }
             payload["specialists"] = specialists
             if routed and routed in specialists:
                 payload["spec"] = specialists[routed]
@@ -1353,7 +1880,11 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
         # the other persona, then to variation 2, e.g. volume_up ships only _2).
         clip = assistant_clip(activations.g1_label, intent)
         if clip is not None:
-            payload["assistant_response"] = {"intent": intent, "room_active": bool(_ROOM_QUEUES), **clip}
+            payload["assistant_response"] = {
+                "intent": intent,
+                "room_active": bool(_ROOM_QUEUES),
+                **clip,
+            }
         payload["new_event"] = True
         activations.consume_action()
         reset_gate2_pid()
@@ -1366,7 +1897,9 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                 tick_interval_changed.clear()
                 tick_elapsed = False
                 try:
-                    await asyncio.wait_for(tick_interval_changed.wait(), timeout=tick_interval)
+                    await asyncio.wait_for(
+                        tick_interval_changed.wait(), timeout=tick_interval
+                    )
                 except TimeoutError:
                     tick_elapsed = True  # expected tick deadline: proceed with scoring
                 if not tick_elapsed:
@@ -1374,7 +1907,16 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                 tick_start_time = time.monotonic()
                 tick_n += 1
                 if stream_acc.shape[0] < WIN_SAMPLES:
-                    await ws.send_json({"type": "status", "text": "filling first window... (" + str(stream_acc.shape[0]) + "/" + str(WIN_SAMPLES) + ")"})
+                    await ws.send_json(
+                        {
+                            "type": "status",
+                            "text": "filling first window... ("
+                            + str(stream_acc.shape[0])
+                            + "/"
+                            + str(WIN_SAMPLES)
+                            + ")",
+                        }
+                    )
                     continue
                 ts = now()
                 if mode == "gate1":
@@ -1386,9 +1928,23 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                     probs, g1_labels, _ = gates.infer_g1_variant(g1_model, win)
                     wake = _wake_candidate(probs, thr, wrms, floor)
                     # Variants differ in class count; render from model labels.
-                    payload = {"type": "probs", "ts": ts, "model": g1_model, "labels": g1_labels, "probs": dict(zip(g1_labels, probs, strict=False)), "nova": probs[0], "piattos": probs[1], "negative": (probs[2] if len(probs) > 2 else None), "wake": wake, "rms": round(wrms, 5), "floor": round(floor, 5)}
+                    payload = {
+                        "type": "probs",
+                        "ts": ts,
+                        "model": g1_model,
+                        "labels": g1_labels,
+                        "probs": dict(zip(g1_labels, probs, strict=False)),
+                        "nova": probs[0],
+                        "piattos": probs[1],
+                        "negative": (probs[2] if len(probs) > 2 else None),
+                        "wake": wake,
+                        "rms": round(wrms, 5),
+                        "floor": round(floor, 5),
+                    }
                     guard["recent"].append(wake)
-                    votes = sum(1 for w in guard["recent"] if w == wake and wake is not None)
+                    votes = sum(
+                        1 for w in guard["recent"] if w == wake and wake is not None
+                    )
                     if not wake or votes < 2 or time.time() < guard["cooldown_until"]:
                         payload["wake"] = None
                     if wake and votes >= 2 and time.time() >= guard["cooldown_until"]:
@@ -1399,7 +1955,16 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                     probs = infer_gate2_for_connection(stream_acc[-WIN_SAMPLES:])
                     top_i = int(np.argmax(probs))
                     g2_labels = gates.gate2_labels()
-                    await ws.send_json({"type": "probs2", "ts": ts, "model": gates.gate2_active_model(), "probs": dict(zip(g2_labels, probs, strict=False)), "top": g2_labels[top_i], "conf": probs[top_i]})
+                    await ws.send_json(
+                        {
+                            "type": "probs2",
+                            "ts": ts,
+                            "model": gates.gate2_active_model(),
+                            "probs": dict(zip(g2_labels, probs, strict=False)),
+                            "top": g2_labels[top_i],
+                            "conf": probs[top_i],
+                        }
+                    )
                 elif mode == "parallel":
                     # Parallel test page: Gate1 wake must latch first; then Gate2 + GateN/Gate4/Gate5
                     # score the SAME rolling window concurrently. Only Gate2's route selects the
@@ -1412,56 +1977,103 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                     # If Gate1 is not latched, low-energy audio is just idle. If the wake latch is
                     # active, still run the parallel heads for inspection; the action light remains
                     # energy-gated below so silence cannot trigger a command.
-                    if wrms < floor and not state["g1"]["active"] and not (time.time() < guard["calib_end"]):
+                    if (
+                        wrms < floor
+                        and not state["g1"]["active"]
+                        and not (time.time() < guard["calib_end"])
+                    ):
                         guard["recent"].append(None)
                         guard["last_wake_event"] = None
-                        activations.observe_gate2(None, 0.0, thr["gate2MinConf"], monotonic_now)
+                        activations.observe_gate2(
+                            None, 0.0, thr["gate2MinConf"], monotonic_now
+                        )
                         activations.consume_action()
                         state = activations.snapshot(monotonic_now)
-                        await ws.send_json({
-                            "type": "parallel", "ts": ts,
-                            "g1": {"active": state["g1"]["active"],
-                                   "wake": state["g1"]["activation_label"],
-                                   "candidate": None, "conf": state["g1"]["activation_conf"], "votes": 0,
-                                   "rms": round(wrms, 5), "floor": round(floor, 5)},
-                            "gate2": None, "specialists": {}, "action": None,
-                            "stage": "quiet/noise gated - awaiting wake/command"})
+                        await ws.send_json(
+                            {
+                                "type": "parallel",
+                                "ts": ts,
+                                "g1": {
+                                    "active": state["g1"]["active"],
+                                    "wake": state["g1"]["activation_label"],
+                                    "candidate": None,
+                                    "conf": state["g1"]["activation_conf"],
+                                    "votes": 0,
+                                    "rms": round(wrms, 5),
+                                    "floor": round(floor, 5),
+                                },
+                                "gate2": None,
+                                "specialists": {},
+                                "action": None,
+                                "stage": "quiet/noise gated - awaiting wake/command",
+                            }
+                        )
                         continue
 
                     p1, g1_labels, _ = gates.infer_g1_variant(g1_model, win)
                     wake = _wake_candidate(p1, thr, wrms, floor)
                     guard["recent"].append(wake)
-                    votes = sum(1 for w in guard["recent"] if w == wake and w is not None)
+                    votes = sum(
+                        1 for w in guard["recent"] if w == wake and w is not None
+                    )
                     if wake is not None and votes >= 2:
-                        if wake != guard["last_wake_event"] and time.time() >= guard["cooldown_until"]:
+                        if (
+                            wake != guard["last_wake_event"]
+                            and time.time() >= guard["cooldown_until"]
+                        ):
                             wake_index = 1 if wake == "Piattos" else 0
-                            activations.activate_gate1(monotonic_now, wake, p1[wake_index])
+                            activations.activate_gate1(
+                                monotonic_now, wake, p1[wake_index]
+                            )
                             guard["last_wake_event"] = wake
                             guard["cooldown_until"] = time.time() + 5.0
                     else:
                         guard["last_wake_event"] = None
                     state = activations.snapshot(monotonic_now)
-                    g1_state = {"active": state["g1"]["active"],
-                                "wake": state["g1"]["activation_label"],
-                                "candidate": wake, "conf": float(p1[int(np.argmax(p1[:2]))]),
-                                "probs": dict(zip(g1_labels, p1, strict=False)), "votes": votes,
-                                "remaining_s": state["g1"]["remaining_s"],
-                                "rms": round(wrms, 5), "floor": round(floor, 5)}
+                    g1_state = {
+                        "active": state["g1"]["active"],
+                        "wake": state["g1"]["activation_label"],
+                        "candidate": wake,
+                        "conf": float(p1[int(np.argmax(p1[:2]))]),
+                        "probs": dict(zip(g1_labels, p1, strict=False)),
+                        "votes": votes,
+                        "remaining_s": state["g1"]["remaining_s"],
+                        "rms": round(wrms, 5),
+                        "floor": round(floor, 5),
+                    }
                     if not state["g1"]["active"]:
-                        activations.observe_gate2(None, 0.0, thr["gate2MinConf"], monotonic_now)
+                        activations.observe_gate2(
+                            None, 0.0, thr["gate2MinConf"], monotonic_now
+                        )
                         activations.consume_action()
-                        await ws.send_json({"type": "parallel", "ts": ts, "g1": g1_state,
-                                            "gate2": None, "specialists": {}, "action": None,
-                                            "stage": "waiting for Gate 1 wake word"})
+                        await ws.send_json(
+                            {
+                                "type": "parallel",
+                                "ts": ts,
+                                "g1": g1_state,
+                                "gate2": None,
+                                "specialists": {},
+                                "action": None,
+                                "stage": "waiting for Gate 1 wake word",
+                            }
+                        )
                         continue
 
                     # All four model branches are independent and run concurrently after wake.
                     try:
                         outputs = await asyncio.to_thread(gates.infer_parallel, win)
                     except (RuntimeError, OSError, ValueError) as exc:
-                        await ws.send_json({"type": "parallel", "ts": ts, "g1": g1_state,
-                                            "gate2": None, "specialists": {}, "action": None,
-                                            "stage": "parallel inference error: " + str(exc)})
+                        await ws.send_json(
+                            {
+                                "type": "parallel",
+                                "ts": ts,
+                                "g1": g1_state,
+                                "gate2": None,
+                                "specialists": {},
+                                "action": None,
+                                "stage": "parallel inference error: " + str(exc),
+                            }
+                        )
                         continue
 
                     g2_result = outputs["gate2"]
@@ -1471,31 +2083,66 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                     g2_threshold = thr["g2thr"].get(current_intent, thr["gate2MinConf"])
                     if suppressed or wrms < floor:
                         # No G2 activation during wake-dominated or quiet windows.
-                        activations.observe_gate2(None, 0.0, thr["gate2MinConf"], monotonic_now)
+                        activations.observe_gate2(
+                            None, 0.0, thr["gate2MinConf"], monotonic_now
+                        )
                     else:
-                        activations.observe_gate2(current_intent, current_conf, g2_threshold, monotonic_now)
+                        activations.observe_gate2(
+                            current_intent, current_conf, g2_threshold, monotonic_now
+                        )
                     state = activations.snapshot(monotonic_now)
-                    intent = state["g2"]["activation_intent"] if state["g2"]["active"] else current_intent
-                    intent_conf = state["g2"]["activation_conf"] if state["g2"]["active"] else current_conf
-                    branch_summary = {name: {"label": result["top"], "conf": result["conf"]}
-                                      for name, result in outputs["specialists"].items()}
+                    intent = (
+                        state["g2"]["activation_intent"]
+                        if state["g2"]["active"]
+                        else current_intent
+                    )
+                    intent_conf = (
+                        state["g2"]["activation_conf"]
+                        if state["g2"]["active"]
+                        else current_conf
+                    )
+                    branch_summary = {
+                        name: {"label": result["top"], "conf": result["conf"]}
+                        for name, result in outputs["specialists"].items()
+                    }
                     parallel_mod = importlib.import_module("parallel_pipeline")
                     action = parallel_mod.select_parallel_action(
-                        wake_active=state["g1"]["active"] and not suppressed and wrms >= floor,
-                        intent=intent, intent_confidence=intent_conf,
-                        threshold=g2_threshold, specialists=branch_summary, routing=ROUTING)
-                    triggered = (not suppressed) and wrms >= floor and activations.action_ready(monotonic_now)
+                        wake_active=state["g1"]["active"]
+                        and not suppressed
+                        and wrms >= floor,
+                        intent=intent,
+                        intent_confidence=intent_conf,
+                        threshold=g2_threshold,
+                        specialists=branch_summary,
+                        routing=ROUTING,
+                    )
+                    triggered = (
+                        (not suppressed)
+                        and wrms >= floor
+                        and activations.action_ready(monotonic_now)
+                    )
                     action["light"] = bool(triggered)
                     action["triggered"] = bool(triggered)
                     if triggered:
                         activations.consume_action()
-                    await ws.send_json({
-                        "type": "parallel", "ts": ts, "stage": "wake active - branches scored concurrently",
-                        "g1": g1_state,
-                        "gate2": {"model": outputs["model"], "intent": current_intent,
-                                  "conf": current_conf, "threshold": g2_threshold,
-                                  "active": state["g2"]["active"], "probs": g2_result["probs"]},
-                        "specialists": outputs["specialists"], "action": action})
+                    await ws.send_json(
+                        {
+                            "type": "parallel",
+                            "ts": ts,
+                            "stage": "wake active - branches scored concurrently",
+                            "g1": g1_state,
+                            "gate2": {
+                                "model": outputs["model"],
+                                "intent": current_intent,
+                                "conf": current_conf,
+                                "threshold": g2_threshold,
+                                "active": state["g2"]["active"],
+                                "probs": g2_result["probs"],
+                            },
+                            "specialists": outputs["specialists"],
+                            "action": action,
+                        }
+                    )
                 else:  # pipe: G1 wake on the latest 6-second frame → Gate 2 only while latched → specialists → LIGHT-first action
                     wake_ack = None
                     # Frame memory: store continuous audio; slice all accumulated audio into 1s frames
@@ -1503,12 +2150,18 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                         pending_audio = np.concatenate(frame_pending)
                         frame_pending.clear()
                         while pending_audio.size >= SR:
-                            pframes.append_second_frame(frame_mem, pending_audio[:SR], SR)
+                            pframes.append_second_frame(
+                                frame_mem, pending_audio[:SR], SR
+                            )
                             pending_audio = pending_audio[SR:]
                         if pending_audio.size > 0:
                             frame_pending.append(pending_audio)
                     win_frame = pframes.frame_window(frame_mem, WIN_SAMPLES)
-                    win = win_frame if win_frame is not None else stream_acc[-WIN_SAMPLES:]
+                    win = (
+                        win_frame
+                        if win_frame is not None
+                        else stream_acc[-WIN_SAMPLES:]
+                    )
                     g3_win = pframes.frame_window(frame_mem, 8 * SR)
                     specialist_win = g3_win if g3_win is not None else win
                     wrms = _level_rms(win)
@@ -1528,8 +2181,12 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                             # means interval-length audio windows that no tick
                             # evaluated. Log the wall-clock moment + the overrun
                             # so the operator can pick a saner cadence.
-                            skip_log.append({"wall": datetime.now().strftime("%H:%M:%S"),
-                                             "gap": round(elapsed_s, 2)})
+                            skip_log.append(
+                                {
+                                    "wall": datetime.now().strftime("%H:%M:%S"),
+                                    "gap": round(elapsed_s, 2),
+                                }
+                            )
                             drift_s += elapsed_s - tick_interval
                     else:
                         skipped_ticks = 0
@@ -1539,40 +2196,92 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                     # interval reports late=true and eval_ms so the dashboard can
                     # warn the operator in real time.
                     tick_late = elapsed_s > tick_interval
-                    memory_state = {"seconds": len(frame_mem), "max": mem_max,
-                                    "window_frames": min(pframes.FRAME_WINDOW_FRAMES, len(frame_mem)),
-                                    "source": "frames" if win_frame is not None else "rolling",
-                                    "scheduler": {"interval_s": tick_interval, "skipped_ticks": skipped_ticks,
-                                                  "skip_ticks_enabled": skip_ticks_enabled,
-                                                  "eval_ms": round(elapsed_s * 1000.0), "late": tick_late,
-                                                  "drift_s": round(drift_s, 2), "skipped_log": list(skip_log)},
-                                    "noise_canceller": {"enabled": nc["enabled"], "ready": nc["profile"] is not None}}
+                    memory_state = {
+                        "seconds": len(frame_mem),
+                        "max": mem_max,
+                        "window_frames": min(
+                            pframes.FRAME_WINDOW_FRAMES, len(frame_mem)
+                        ),
+                        "source": "frames" if win_frame is not None else "rolling",
+                        "scheduler": {
+                            "interval_s": tick_interval,
+                            "skipped_ticks": skipped_ticks,
+                            "skip_ticks_enabled": skip_ticks_enabled,
+                            "eval_ms": round(elapsed_s * 1000.0),
+                            "late": tick_late,
+                            "drift_s": round(drift_s, 2),
+                            "skipped_log": list(skip_log),
+                        },
+                        "noise_canceller": {
+                            "enabled": nc["enabled"],
+                            "ready": nc["profile"] is not None,
+                        },
+                    }
                     if wrms < floor and not (time.time() < guard["calib_end"]):
                         reset_gate2_pid()
                         # Silence cannot create new activations, but existing
                         # 8s/4s windows keep running and may still overlap.
                         guard["recent"].append(None)
                         guard["last_wake_event"] = None
-                        activations.observe_gate2(None, 0.0, thr["gate2MinConf"], monotonic_now)
+                        activations.observe_gate2(
+                            None, 0.0, thr["gate2MinConf"], monotonic_now
+                        )
                         state = activations.snapshot(monotonic_now)
                         g1_state = dict(state["g1"])
-                        g1_state.update({"probs": [], "wake": g1_state["activation_label"],
-                                         "label": "gated (room " + str(round(wrms, 5)) + " < floor " + str(round(floor, 5)) + ")", "votes": 0,
-                                         "rms": round(wrms, 5), "floor": round(floor, 5)})
+                        g1_state.update(
+                            {
+                                "probs": [],
+                                "wake": g1_state["activation_label"],
+                                "label": "gated (room "
+                                + str(round(wrms, 5))
+                                + " < floor "
+                                + str(round(floor, 5))
+                                + ")",
+                                "votes": 0,
+                                "rms": round(wrms, 5),
+                                "floor": round(floor, 5),
+                            }
+                        )
                         g2_state = dict(state["g2"])
-                        g2_state.update({"intent": g2_state["activation_intent"], "conf": g2_state["activation_conf"],
-                                         "current_intent": None, "current_conf": 0.0, "probs": [],
-                                         "model": gates.gate2_active_model(),
-                                         "labels": [], "waiting": True})
-                        payload = {"type": "pipe", "ts": ts, "memory": memory_state, "g1": g1_state, "g2": g2_state,
-                                   "action_gate": state["action_gate"]}
+                        g2_state.update(
+                            {
+                                "intent": g2_state["activation_intent"],
+                                "conf": g2_state["activation_conf"],
+                                "current_intent": None,
+                                "current_conf": 0.0,
+                                "probs": [],
+                                "model": gates.gate2_active_model(),
+                                "labels": [],
+                                "waiting": True,
+                            }
+                        )
+                        payload = {
+                            "type": "pipe",
+                            "ts": ts,
+                            "memory": memory_state,
+                            "g1": g1_state,
+                            "g2": g2_state,
+                            "action_gate": state["action_gate"],
+                        }
                         attach_action_result(payload, specialist_win, monotonic_now)
-                        payload["path"] = pframes.pipe_path_steps(g1=g1_state, g2=g2_state, spec=payload.get("spec"),
-                                                                  action_gate=payload.get("action_gate"), g2_ran=False)
+                        payload["path"] = pframes.pipe_path_steps(
+                            g1=g1_state,
+                            g2=g2_state,
+                            spec=payload.get("spec"),
+                            action_gate=payload.get("action_gate"),
+                            g2_ran=False,
+                        )
                         payload["path_text"] = pframes.pipe_path_text(payload["path"])
-                        diag_write(conn_id, "tick_gated", {"tick": tick_n, "rms": round(wrms, 5),
-                                                           "floor": round(floor, 5),
-                                                           "drift_s": round(drift_s, 2)})
+                        diag_write(
+                            conn_id,
+                            "tick_gated",
+                            {
+                                "tick": tick_n,
+                                "rms": round(wrms, 5),
+                                "floor": round(floor, 5),
+                                "drift_s": round(drift_s, 2),
+                            },
+                        )
                         _publish_room(payload)
                         await ws.send_json(payload)
                         continue
@@ -1594,48 +2303,106 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                     # Calibration records only ambient Gate1 scores; it cannot
                     # create or consume Action Gate activations.
                     if time.time() < guard["calib_end"]:
-                        activations.observe_gate2(None, 0.0, thr["gate2MinConf"], monotonic_now)
+                        activations.observe_gate2(
+                            None, 0.0, thr["gate2MinConf"], monotonic_now
+                        )
                         guard["calib_max"] = max(guard["calib_max"], p1[0], p1[1])
                         if time.time() + 1.0 >= guard["calib_end"]:
                             new_thr = min(0.95, max(0.5, guard["calib_max"] + 0.05))
                             thr["Nova"] = new_thr
                             thr["Piattos"] = new_thr
                             guard["calib_end"] = 0.0
-                            await ws.send_json({"type": "calibrated", "thr": {"Nova": new_thr, "Piattos": new_thr}})
+                            await ws.send_json(
+                                {
+                                    "type": "calibrated",
+                                    "thr": {"Nova": new_thr, "Piattos": new_thr},
+                                }
+                            )
                         state = activations.snapshot(monotonic_now)
-                        g1_calib = {**state["g1"], "probs": p1, "wake": None, "label": "calibrating…"}
-                        g2_calib = {**state["g2"], "intent": None, "conf": 0.0,
-                                    "current_intent": None, "current_conf": 0.0, "probs": [],
-                                    "model": gates.gate2_active_model(), "labels": [], "waiting": True}
-                        payload = {"type": "pipe", "ts": ts, "memory": memory_state, "g1": g1_calib, "g2": g2_calib,
-                                   "action_gate": state["action_gate"]}
-                        payload["path"] = pframes.pipe_path_steps(g1=g1_calib, g2=g2_calib, spec=None,
-                                                                  action_gate=payload.get("action_gate"), g2_ran=False)
+                        g1_calib = {
+                            **state["g1"],
+                            "probs": p1,
+                            "wake": None,
+                            "label": "calibrating…",
+                        }
+                        g2_calib = {
+                            **state["g2"],
+                            "intent": None,
+                            "conf": 0.0,
+                            "current_intent": None,
+                            "current_conf": 0.0,
+                            "probs": [],
+                            "model": gates.gate2_active_model(),
+                            "labels": [],
+                            "waiting": True,
+                        }
+                        payload = {
+                            "type": "pipe",
+                            "ts": ts,
+                            "memory": memory_state,
+                            "g1": g1_calib,
+                            "g2": g2_calib,
+                            "action_gate": state["action_gate"],
+                        }
+                        payload["path"] = pframes.pipe_path_steps(
+                            g1=g1_calib,
+                            g2=g2_calib,
+                            spec=None,
+                            action_gate=payload.get("action_gate"),
+                            g2_ran=False,
+                        )
                         payload["path_text"] = pframes.pipe_path_text(payload["path"])
-                        diag_write(conn_id, "tick_calib", {"tick": tick_n, "calib_max": round(guard.get("calib_max", 0), 4)})
+                        diag_write(
+                            conn_id,
+                            "tick_calib",
+                            {
+                                "tick": tick_n,
+                                "calib_max": round(guard.get("calib_max", 0), 4),
+                            },
+                        )
                         _publish_room(payload)
                         await ws.send_json(payload)
                         continue
 
                     # Gate1 requires 2-of-3 agreement, then latches for 8s.
                     guard["recent"].append(wake)
-                    votes = sum(1 for w in guard["recent"] if w == wake and wake is not None)
+                    votes = sum(
+                        1 for w in guard["recent"] if w == wake and wake is not None
+                    )
                     if wake is not None and votes >= 2:
-                        if wake != guard["last_wake_event"] and time.time() >= guard["cooldown_until"]:
+                        if (
+                            wake != guard["last_wake_event"]
+                            and time.time() >= guard["cooldown_until"]
+                        ):
                             wake_index = 1 if wake == "Piattos" else 0
-                            activations.activate_gate1(monotonic_now, wake, p1[wake_index])
+                            activations.activate_gate1(
+                                monotonic_now, wake, p1[wake_index]
+                            )
                             guard["last_wake_event"] = wake
                             guard["cooldown_until"] = time.time() + 5.0
-                            diag_write(conn_id, "wake", {"tick": tick_n, "wake": wake,
-                                                         "conf": round(float(p1[wake_index]), 4),
-                                                         "votes": votes})
+                            diag_write(
+                                conn_id,
+                                "wake",
+                                {
+                                    "tick": tick_n,
+                                    "wake": wake,
+                                    "conf": round(float(p1[wake_index]), 4),
+                                    "votes": votes,
+                                },
+                            )
                             # One wake-ack clip per latch: the dashboard plays it
                             # instead of the full-bank reply's placeholder beeps.
                             ack = assistant_clip(wake, "wake")
                             if ack is not None:
-                                guard["wake_ack_seq"] = int(guard.get("wake_ack_seq", 0)) + 1
-                                wake_ack = {"intent": "wake", "event_id": guard["wake_ack_seq"],
-                                            "room_active": bool(_ROOM_QUEUES), **ack}
+                                guard["wake_ack_seq"] = (
+                                    int(guard.get("wake_ack_seq", 0)) + 1
+                                )
+                                wake_ack = {
+                                    "intent": "wake",
+                                    "event_id": guard["wake_ack_seq"],
+                                    "room_active": bool(_ROOM_QUEUES),
+                                    **ack,
+                                }
                     else:
                         guard["last_wake_event"] = None
 
@@ -1655,14 +2422,21 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                     else:
                         g2_ran = True
                         current_intent, current_conf = _g2_candidate_intent(
-                            p2, gates.gate2_labels(), thr["g2thr"], thr["gate2MinConf"])
-                        g2_threshold = thr["g2thr"].get(current_intent, thr["gate2MinConf"])
+                            p2, gates.gate2_labels(), thr["g2thr"], thr["gate2MinConf"]
+                        )
+                        g2_threshold = thr["g2thr"].get(
+                            current_intent, thr["gate2MinConf"]
+                        )
                         if arch == 2:
                             # Architecture v3: intent vote — arm the command latch only
                             # after the SAME qualifying intent repeats on two consecutive
                             # ticks (single-tick blips die here, like the recording lab).
-                            v3_qualified = (bool(current_intent) and current_intent != "NEGATIVE"
-                                            and np.isfinite(current_conf) and current_conf >= g2_threshold)
+                            v3_qualified = (
+                                bool(current_intent)
+                                and current_intent != "NEGATIVE"
+                                and np.isfinite(current_conf)
+                                and current_conf >= g2_threshold
+                            )
                             if v3_qualified:
                                 if guard["v3_intent"] == current_intent:
                                     guard["v3_streak"] = int(guard["v3_streak"]) + 1
@@ -1670,11 +2444,18 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                                     guard["v3_intent"] = current_intent
                                     guard["v3_streak"] = 1
                                 if int(guard["v3_streak"]) >= 2:
-                                    activations.observe_gate2(current_intent, current_conf, g2_threshold, monotonic_now)
+                                    activations.observe_gate2(
+                                        current_intent,
+                                        current_conf,
+                                        g2_threshold,
+                                        monotonic_now,
+                                    )
                             else:
                                 guard["v3_intent"] = None
                                 guard["v3_streak"] = 0
-                                activations.observe_gate2(None, 0.0, g2_threshold, monotonic_now)
+                                activations.observe_gate2(
+                                    None, 0.0, g2_threshold, monotonic_now
+                                )
                         else:
                             # Gate 1 is latched here, so the speaker addressed the assistant
                             # and the trailing window is a real wake+command pair. Score Gate 2
@@ -1684,49 +2465,101 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                             # Idle safety is already layered: NEGATIVE never latches, the
                             # per-class threshold rejects weak audio, the quiet gate resets on
                             # silence, and the wake-grace ordering blocks cross-pair staleness.
-                            activations.observe_gate2(current_intent, current_conf, g2_threshold, monotonic_now)
+                            activations.observe_gate2(
+                                current_intent,
+                                current_conf,
+                                g2_threshold,
+                                monotonic_now,
+                            )
                     state = activations.snapshot(monotonic_now)
                     g1_state = dict(state["g1"])
-                    g1_state.update({"probs": p1,
-                                     "wake": g1_state["activation_label"] if g1_state["active"] else None,
-                                     "label": g1_state["activation_label"] if g1_state["active"] else (wake or "scanning…"),
-                                     "votes": votes,
-                                     "rms": round(wrms, 5), "floor": round(floor, 5)})
+                    g1_state.update(
+                        {
+                            "probs": p1,
+                            "wake": g1_state["activation_label"]
+                            if g1_state["active"]
+                            else None,
+                            "label": g1_state["activation_label"]
+                            if g1_state["active"]
+                            else (wake or "scanning…"),
+                            "votes": votes,
+                            "rms": round(wrms, 5),
+                            "floor": round(floor, 5),
+                        }
+                    )
                     g2_state = dict(state["g2"])
-                    g2_state.update({"intent": g2_state["activation_intent"] if g2_state["active"] else current_intent,
-                                     "conf": g2_state["activation_conf"] if g2_state["active"] else current_conf,
-                                     "current_intent": current_intent, "current_conf": current_conf,
-                                     "probs": [] if p2 is None else p2,
-                                     "model": gates.gate2_active_model(),
-                                     "labels": gates.gate2_labels(),
-                                     "threshold": g2_threshold,
-                                     "waiting": p2 is None})
-                    payload = {"type": "pipe", "ts": ts, "memory": memory_state, "g1": g1_state, "g2": g2_state,
-                               "action_gate": state["action_gate"]}
+                    g2_state.update(
+                        {
+                            "intent": g2_state["activation_intent"]
+                            if g2_state["active"]
+                            else current_intent,
+                            "conf": g2_state["activation_conf"]
+                            if g2_state["active"]
+                            else current_conf,
+                            "current_intent": current_intent,
+                            "current_conf": current_conf,
+                            "probs": [] if p2 is None else p2,
+                            "model": gates.gate2_active_model(),
+                            "labels": gates.gate2_labels(),
+                            "threshold": g2_threshold,
+                            "waiting": p2 is None,
+                        }
+                    )
+                    payload = {
+                        "type": "pipe",
+                        "ts": ts,
+                        "memory": memory_state,
+                        "g1": g1_state,
+                        "g2": g2_state,
+                        "action_gate": state["action_gate"],
+                    }
                     if wake_ack is not None:
                         payload["wake_response"] = wake_ack
                     attach_action_result(payload, specialist_win, monotonic_now)
-                    payload["path"] = pframes.pipe_path_steps(g1=g1_state, g2=g2_state, spec=payload.get("spec"),
-                                                              action_gate=payload.get("action_gate"), g2_ran=g2_ran)
+                    payload["path"] = pframes.pipe_path_steps(
+                        g1=g1_state,
+                        g2=g2_state,
+                        spec=payload.get("spec"),
+                        action_gate=payload.get("action_gate"),
+                        g2_ran=g2_ran,
+                    )
                     payload["path_text"] = pframes.pipe_path_text(payload["path"])
                     g1d = payload.get("g1") or {}
                     g2d = payload.get("g2") or {}
                     agd = payload.get("action_gate") or {}
-                    diag_write(conn_id, "tick", {
-                        "tick": tick_n, "eval_ms": round(elapsed_s * 1000.0), "late": tick_late,
-                        "drift_s": round(drift_s, 2),
-                        "g1_active": bool(g1d.get("active")), "g1_label": g1d.get("activation_label") or g1d.get("wake"),
-                        "g2_active": bool(g2d.get("active")),
-                        "g2_intent": g2d.get("activation_intent") or g2d.get("current_intent"),
-                        "g2_conf": g2d.get("current_conf"), "triggered": bool(agd.get("triggered"))})
+                    diag_write(
+                        conn_id,
+                        "tick",
+                        {
+                            "tick": tick_n,
+                            "eval_ms": round(elapsed_s * 1000.0),
+                            "late": tick_late,
+                            "drift_s": round(drift_s, 2),
+                            "g1_active": bool(g1d.get("active")),
+                            "g1_label": g1d.get("activation_label") or g1d.get("wake"),
+                            "g2_active": bool(g2d.get("active")),
+                            "g2_intent": g2d.get("activation_intent")
+                            or g2d.get("current_intent"),
+                            "g2_conf": g2d.get("current_conf"),
+                            "triggered": bool(agd.get("triggered")),
+                        },
+                    )
                     if agd.get("triggered") and agd.get("intent"):
                         # Action gate fired: log the full outcome for troubleshooting.
-                        diag_write(conn_id, "action", {
-                            "tick": tick_n, "intent": agd["intent"], "conf": g2d.get("conf"),
-                            "final": payload.get("final"), "g1_label": activations.g1_label,
-                            "event_id": agd.get("event_id"),
-                            "specialists": payload.get("specialists", {}),
-                            "g3to5p": payload.get("g3to5p", False)})
+                        diag_write(
+                            conn_id,
+                            "action",
+                            {
+                                "tick": tick_n,
+                                "intent": agd["intent"],
+                                "conf": g2d.get("conf"),
+                                "final": payload.get("final"),
+                                "g1_label": activations.g1_label,
+                                "event_id": agd.get("event_id"),
+                                "specialists": payload.get("specialists", {}),
+                                "g3to5p": payload.get("g3to5p", False),
+                            },
+                        )
                     _publish_room(payload)
                     await ws.send_json(payload)
         except asyncio.CancelledError:
@@ -1757,13 +2590,21 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                 arr = np.frombuffer(msg.data, dtype="<f4")
                 capture_chunks.append(arr)
                 capture_samples += arr.shape[0]
-                while capture_chunks and capture_samples - capture_chunks[0].shape[0] >= CAPTURE_SAMPLES:
+                while (
+                    capture_chunks
+                    and capture_samples - capture_chunks[0].shape[0] >= CAPTURE_SAMPLES
+                ):
                     capture_samples -= capture_chunks[0].shape[0]
                     capture_chunks.pop(0)
 
                 received += arr.shape[0]
                 if received // 16000 != (received - arr.shape[0]) // 16000:
-                    line = "[ws] received samples: " + str(received) + " at " + datetime.now().strftime("%H:%M:%S")
+                    line = (
+                        "[ws] received samples: "
+                        + str(received)
+                        + " at "
+                        + datetime.now().strftime("%H:%M:%S")
+                    )
                     print(line, flush=True)
                     await asyncio.to_thread(_append_ws_received, line)
                 stream_acc = np.concatenate([stream_acc, arr])[-WIN_SAMPLES:]
@@ -1772,7 +2613,12 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
             elif msg.type == WSMsgType.TEXT:
                 try:
                     data = json.loads(msg.data)
-                    if data.get("type") == "mode" and data.get("mode") in ("gate1", "gate2", "both", "parallel"):
+                    if data.get("type") == "mode" and data.get("mode") in (
+                        "gate1",
+                        "gate2",
+                        "both",
+                        "parallel",
+                    ):
                         next_mode = data["mode"]
                         if next_mode != mode:
                             mode = next_mode
@@ -1788,8 +2634,13 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                             tick_interval_changed.set()
                     elif data.get("type") == "noise_canceller":
                         nc["enabled"] = bool(data.get("enabled"))
-                        await ws.send_json({"type": "noise_canceller", "enabled": nc["enabled"],
-                                            "ready": nc["profile"] is not None})
+                        await ws.send_json(
+                            {
+                                "type": "noise_canceller",
+                                "enabled": nc["enabled"],
+                                "ready": nc["profile"] is not None,
+                            }
+                        )
                     elif data.get("type") == "thr":
                         t = data.get("thr", {})
                         for k in ("Nova", "Piattos", "gate2MinConf"):
@@ -1799,18 +2650,32 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                         if isinstance(g2thr_in, dict):
                             for intent_key, value in g2thr_in.items():
                                 with contextlib.suppress(TypeError, ValueError):
-                                    thr["g2thr"][str(intent_key)] = min(0.95, max(0.05, float(value)))
+                                    thr["g2thr"][str(intent_key)] = min(
+                                        0.95, max(0.05, float(value))
+                                    )
                     elif data.get("type") == "save_capture":
                         label = str(data.get("label") or "live-30s")
-                        audio = np.concatenate(capture_chunks) if capture_chunks else np.zeros(0, dtype=np.float32)
+                        audio = (
+                            np.concatenate(capture_chunks)
+                            if capture_chunks
+                            else np.zeros(0, dtype=np.float32)
+                        )
                         if audio.size < SR:
-                            await ws.send_json({"type": "capture_saved",
-                                                "error": "less than 1 s captured - is the mic streaming?"})
+                            await ws.send_json(
+                                {
+                                    "type": "capture_saved",
+                                    "error": "less than 1 s captured - is the mic streaming?",
+                                }
+                            )
                         else:
                             entry = request.app["lab"].store.save(audio, label)
-                            await ws.send_json({"type": "capture_saved", "recording": entry})
+                            await ws.send_json(
+                                {"type": "capture_saved", "recording": entry}
+                            )
                     elif data.get("type") == "calibrate":
-                        guard["calib_end"] = time.time() + float(data.get("seconds", 10))
+                        guard["calib_end"] = time.time() + float(
+                            data.get("seconds", 10)
+                        )
                         guard["calib_max"] = 0.0
                         guard["recent"].clear()
                         guard["last_wake_event"] = None
@@ -1828,17 +2693,29 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                         await ws.send_json({"type": "memory", "seconds": mem_max})
                     elif data.get("type") == "interval":
                         req_int = data.get("interval_s")
-                        if isinstance(req_int, (int, float)) and not isinstance(req_int, bool) and req_int in (1, 2, 3, 6, 1.0, 2.0, 3.0, 6.0):
+                        if (
+                            isinstance(req_int, (int, float))
+                            and not isinstance(req_int, bool)
+                            and req_int in (1, 2, 3, 6, 1.0, 2.0, 3.0, 6.0)
+                        ):
                             next_tick_interval = float(req_int)
                             if next_tick_interval != tick_interval:
                                 tick_interval = next_tick_interval
                                 tick_interval_changed.set()
-                            await ws.send_json({"type": "interval", "interval_s": tick_interval})
+                            await ws.send_json(
+                                {"type": "interval", "interval_s": tick_interval}
+                            )
                     elif data.get("type") == "skip_ticks":
                         skip_ticks_enabled = bool(data.get("enabled", False))
                         if not skip_ticks_enabled:
                             skipped_ticks = 0
-                        await ws.send_json({"type": "skip_ticks", "enabled": skip_ticks_enabled, "skipped_ticks": skipped_ticks})
+                        await ws.send_json(
+                            {
+                                "type": "skip_ticks",
+                                "enabled": skip_ticks_enabled,
+                                "skipped_ticks": skipped_ticks,
+                            }
+                        )
                     elif data.get("type") == "reset":
                         stream_acc = np.zeros(0, dtype=np.float32)
                         frame_pending.clear()
@@ -1853,7 +2730,13 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                         drift_s = 0.0
                         skip_log.clear()
                         tick_interval_changed.set()
-                        await ws.send_json({"type": "reset", "status": "ok", "text": "pipeline reset complete"})
+                        await ws.send_json(
+                            {
+                                "type": "reset",
+                                "status": "ok",
+                                "text": "pipeline reset complete",
+                            }
+                        )
                     elif data.get("type") == "manual_stop":
                         # Manual Stop: cancel the pending action and clear active
                         # latches; microphone capture and the dashboard keep running.
@@ -1861,7 +2744,9 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                         reset_gate2_pid()
                         guard["recent"].clear()
                         guard["last_wake_event"] = None
-                        await ws.send_json({"type": "manual_stop", "ok": True, "ts": now()})
+                        await ws.send_json(
+                            {"type": "manual_stop", "ok": True, "ts": now()}
+                        )
                     elif data.get("type") == "model":
                         model_name = str(data.get("model", ""))
                         if model_name in gates.g1_variants and model_name != g1_model:
@@ -1874,20 +2759,41 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                         g2_model_name = str(data.get("model", ""))
                         if not g2_model_name:
                             # Query: report the active gate2 model without switching.
-                            await ws.send_json({"type": "g2model", "model": gates.gate2_active_model()})
+                            await ws.send_json(
+                                {"type": "g2model", "model": gates.gate2_active_model()}
+                            )
                         else:
-                            await ws.send_json({"type": "status", "text": "loading gate2 model " + g2_model_name + "..."})
+                            await ws.send_json(
+                                {
+                                    "type": "status",
+                                    "text": "loading gate2 model "
+                                    + g2_model_name
+                                    + "...",
+                                }
+                            )
                             try:
                                 active_g2 = gates.set_gate2_model(g2_model_name)
                             except (ValueError, RuntimeError) as exc:
-                                await ws.send_json({"type": "status", "text": "gate2 model error: " + str(exc)})
+                                await ws.send_json(
+                                    {
+                                        "type": "status",
+                                        "text": "gate2 model error: " + str(exc),
+                                    }
+                                )
                             else:
                                 activations.reset()
                                 guard["recent"].clear()
                                 guard["last_wake_event"] = None
                                 guard["cooldown_until"] = 0.0
-                                await ws.send_json({"type": "g2model", "model": active_g2})
-                                await ws.send_json({"type": "status", "text": "gate2 model set to " + active_g2})
+                                await ws.send_json(
+                                    {"type": "g2model", "model": active_g2}
+                                )
+                                await ws.send_json(
+                                    {
+                                        "type": "status",
+                                        "text": "gate2 model set to " + active_g2,
+                                    }
+                                )
                     elif data.get("type") == "arch":
                         try:
                             next_arch = int(data.get("arch", 0))
@@ -1902,9 +2808,17 @@ async def ws_handler(request: web.Request) -> web.WebSocketResponse:
                         guard["v3_streak"] = 0
                         reset_gate2_pid()
                         await ws.send_json({"type": "arch", "arch": arch})
-                        await ws.send_json({"type": "status", "text": "architecture set to v" + str(arch + 1)})
+                        await ws.send_json(
+                            {
+                                "type": "status",
+                                "text": "architecture set to v" + str(arch + 1),
+                            }
+                        )
                 except json.JSONDecodeError as exc:
-                    print("[ws] ignored malformed JSON control frame: " + str(exc), flush=True)
+                    print(
+                        "[ws] ignored malformed JSON control frame: " + str(exc),
+                        flush=True,
+                    )
             elif msg.type in (WSMsgType.ERROR, WSMsgType.CLOSE):
                 break
     finally:
@@ -1947,10 +2861,16 @@ async def gate1_page(request: web.Request) -> web.FileResponse:
 
 async def pipeline_all_in_one_page(request: web.Request) -> web.FileResponse:
     """Serve the standalone all-pipelines page (no monitor tabs)."""
-    target = "pipeline_all_in_one.thml" if request.path.endswith(".thml") else "pipeline_all_in_one.html"
+    target = (
+        "pipeline_all_in_one.thml"
+        if request.path.endswith(".thml")
+        else "pipeline_all_in_one.html"
+    )
     if not _asset(target).is_file():
         target = "pipeline_all_in_one.html"
-    return web.FileResponse(_asset(target), headers={"Content-Type": "text/html; charset=utf-8"})
+    return web.FileResponse(
+        _asset(target), headers={"Content-Type": "text/html; charset=utf-8"}
+    )
 
 
 OWNER_VOICE_DIR = GATE2V6_PKG / "owner_voice_test"
@@ -1961,7 +2881,10 @@ async def owner_voice_evaluate(request: web.Request) -> web.Response:
     ove = importlib.import_module("owner_voice_eval")
     gates = request.app["gates"]
     if not (OWNER_VOICE_DIR / "manifest.csv").is_file():
-        return web.json_response({"error": "manifest.csv not found under " + str(OWNER_VOICE_DIR)}, status=404)
+        return web.json_response(
+            {"error": "manifest.csv not found under " + str(OWNER_VOICE_DIR)},
+            status=404,
+        )
     entries = ove.load_manifest(OWNER_VOICE_DIR / "manifest.csv")
 
     def run_batch() -> dict[str, Any]:
@@ -1969,7 +2892,9 @@ async def owner_voice_evaluate(request: web.Request) -> web.Response:
             audio, _ = librosa.load(str(OWNER_VOICE_DIR / path), sr=SR, mono=True)
             return np.asarray(audio, dtype=np.float32)
 
-        def predict_fn(waveform: np.ndarray, entry: dict[str, str]) -> tuple[str, float]:
+        def predict_fn(
+            waveform: np.ndarray, entry: dict[str, str]
+        ) -> tuple[str, float]:
             probs = gates.infer_gate2(waveform)
             labels = gates.gate2_labels()
             top = int(np.argmax(probs))
@@ -2005,7 +2930,9 @@ def diag_write(conn_id: str, kind: str, data: dict) -> None:
         with _DIAG_LOCK:
             _DIAG_RING.append(entry)
             LOGS_DIR.mkdir(parents=True, exist_ok=True)
-            path = LOGS_DIR / ("live_" + datetime.now(UTC).strftime("%Y%m%d") + ".jsonl")
+            path = LOGS_DIR / (
+                "live_" + datetime.now(UTC).strftime("%Y%m%d") + ".jsonl"
+            )
             with open(path, "a", encoding="utf-8") as handle:
                 handle.write(json.dumps(entry, default=str) + "\n")
     except OSError:
@@ -2015,7 +2942,7 @@ def diag_write(conn_id: str, kind: str, data: dict) -> None:
 def diag_ring(last: int = 120) -> list[dict]:
     with _DIAG_LOCK:
         items = list(_DIAG_RING)
-    return items[-max(1, min(last, len(items))):]
+    return items[-max(1, min(last, len(items))) :]
 
 
 class RecordingLabRunner:
@@ -2025,8 +2952,13 @@ class RecordingLabRunner:
     runner is created for every test job, so no state leaks between runs.
     """
 
-    def __init__(self, gates: Any, g1_model: str, thresholds: dict[str, float] | None = None,
-                 gate2_thresholds: dict[str, float] | None = None) -> None:
+    def __init__(
+        self,
+        gates: Any,
+        g1_model: str,
+        thresholds: dict[str, float] | None = None,
+        gate2_thresholds: dict[str, float] | None = None,
+    ) -> None:
         self.gates = gates
         self.g1_model = g1_model
         self.thresholds = dict(thresholds or {})
@@ -2039,13 +2971,19 @@ class RecordingLabRunner:
 
     def wake_probs(self, window: np.ndarray) -> tuple[np.ndarray, list[str]]:
         probs, labels, _ = self.gates.infer_g1_variant(self.g1_model, window)
-        return np.asarray(probs, dtype=np.float32)[:2], [str(label) for label in labels[:2]]
+        return np.asarray(probs, dtype=np.float32)[:2], [
+            str(label) for label in labels[:2]
+        ]
 
     def wake_thresholds(self) -> dict[str, float]:
-        return {"Nova": float(self.thresholds.get("Nova", 0.5)),
-                "Piattos": float(self.thresholds.get("Piattos", 0.5))}
+        return {
+            "Nova": float(self.thresholds.get("Nova", 0.5)),
+            "Piattos": float(self.thresholds.get("Piattos", 0.5)),
+        }
 
-    def score_gate2(self, model: str, window: np.ndarray) -> tuple[np.ndarray, list[str], float]:
+    def score_gate2(
+        self, model: str, window: np.ndarray
+    ) -> tuple[np.ndarray, list[str], float]:
         pid_state = None
         if model in GATE2_PID_CONFIGS:
             state = self._pid.get(model)
@@ -2056,7 +2994,11 @@ class RecordingLabRunner:
         started = time.perf_counter()
         probs = self.gates.score_gate2_model(model, window, pid_state=pid_state)
         ms = (time.perf_counter() - started) * 1000.0
-        return np.asarray(probs, dtype=np.float32), self.gates.gate2_labels_for(model), ms
+        return (
+            np.asarray(probs, dtype=np.float32),
+            self.gates.gate2_labels_for(model),
+            ms,
+        )
 
     def reset_pid(self, model: str) -> None:
         """Drop the PID controller state so the next lane starts fresh."""
@@ -2077,13 +3019,19 @@ class RecordingLabRunner:
             return None
         scores = self.gates.infer(routed, window)
         best = int(np.argmax(scores))
-        return {"gate": routed, "label": str(self.gates.labels[routed][best]), "conf": scores[best]}
+        return {
+            "gate": routed,
+            "label": str(self.gates.labels[routed][best]),
+            "conf": scores[best],
+        }
 
 
 async def recording_lab_page(request: web.Request) -> web.FileResponse:
     """Serve the recording lab page (record minutes, replay through every Gate 2 model)."""
-    return web.FileResponse(_asset("recording_lab.html"),
-                            headers={"Content-Type": "text/html; charset=utf-8"})
+    return web.FileResponse(
+        _asset("recording_lab.html"),
+        headers={"Content-Type": "text/html; charset=utf-8"},
+    )
 
 
 async def api_recordings(request: web.Request) -> web.Response:
@@ -2102,16 +3050,22 @@ async def api_recording_save(request: web.Request) -> web.Response:
     try:
         raw = base64.b64decode(raw_b64, validate=True)
     except (ValueError, TypeError) as exc:
-        return web.json_response({"error": "bad base64 payload: " + str(exc)}, status=400)
+        return web.json_response(
+            {"error": "bad base64 payload: " + str(exc)}, status=400
+        )
     try:
         audio = recording_lab.decode_wav_bytes(raw)
     except ValueError as exc:
         return web.json_response({"error": str(exc)}, status=400)
     if audio.size < recording_lab.SR // 4:
-        return web.json_response({"error": "recording is shorter than 0.25 s"}, status=400)
+        return web.json_response(
+            {"error": "recording is shorter than 0.25 s"}, status=400
+        )
     entry = request.app["lab"].store.save(
-        audio, str(body.get("label", "recording")),
-        meta={"wake_word": body.get("wake_word", ""), "action": body.get("action", "")})
+        audio,
+        str(body.get("label", "recording")),
+        meta={"wake_word": body.get("wake_word", ""), "action": body.get("action", "")},
+    )
     return web.json_response({"recording": entry})
 
 
@@ -2134,12 +3088,21 @@ async def api_recording_item(request: web.Request) -> web.Response:
         if buffer is None:
             return web.json_response({"error": "recording audio missing"}, status=404)
         first = max(0, int(float(start_s or 0.0) * recording_lab.SR))
-        last = min(buffer.size, int(float(end_s) * recording_lab.SR)) if end_s is not None else buffer.size
+        last = (
+            min(buffer.size, int(float(end_s) * recording_lab.SR))
+            if end_s is not None
+            else buffer.size
+        )
         if last - first < recording_lab.SR // 4:
-            return web.json_response({"error": "trim would leave less than 0.25 s"}, status=400)
+            return web.json_response(
+                {"error": "trim would leave less than 0.25 s"}, status=400
+            )
         audio = buffer[first:last]
-    meta = ({k: body[k] for k in ("wake_word", "action") if k in body}
-            if any(k in body for k in ("wake_word", "action")) else None)
+    meta = (
+        {k: body[k] for k in ("wake_word", "action") if k in body}
+        if any(k in body for k in ("wake_word", "action"))
+        else None
+    )
     updated = lab.store.update(rec_id, label=body.get("label"), audio=audio, meta=meta)
     if updated is None:
         return web.json_response({"error": "update failed"}, status=400)
@@ -2187,41 +3150,72 @@ async def api_recording_test(request: web.Request) -> web.Response:
     else:
         models = [str(name) for name in requested if str(name) in testable]
     if not models:
-        return web.json_response({"error": "no testable Gate 2 models requested"}, status=400)
+        return web.json_response(
+            {"error": "no testable Gate 2 models requested"}, status=400
+        )
     combos = [(g1, g2) for g1 in g1_models for g2 in models]
 
     def runner_factory(g1_model: str) -> RecordingLabRunner:
         # One runner per Gate 1 variant: fresh PID state per combination, and
         # the live dashboard's own runner selection is never touched.
-        return RecordingLabRunner(gates, g1_model,
-                                  thresholds=body.get("thresholds") or {},
-                                  gate2_thresholds=body.get("gate2_thresholds") or {})
+        return RecordingLabRunner(
+            gates,
+            g1_model,
+            thresholds=body.get("thresholds") or {},
+            gate2_thresholds=body.get("gate2_thresholds") or {},
+        )
 
     # NC axis: nc_modes [False]/[True]/[False, True] (both = A/B every pair),
     # falling back to the single "nc" flag for older callers.
     raw_modes = body.get("nc_modes")
-    nc_modes = ([bool(m) for m in raw_modes] if isinstance(raw_modes, list) and raw_modes
-                else [bool(body.get("nc", False))])
+    nc_modes = (
+        [bool(m) for m in raw_modes]
+        if isinstance(raw_modes, list) and raw_modes
+        else [bool(body.get("nc", False))]
+    )
     raw_gated = body.get("gated_modes")
-    gated_modes = ([bool(m) for m in raw_gated] if isinstance(raw_gated, list) and raw_gated
-                   else [bool(body.get("gated", False))])
+    gated_modes = (
+        [bool(m) for m in raw_gated]
+        if isinstance(raw_gated, list) and raw_gated
+        else [bool(body.get("gated", False))]
+    )
     raw_arch = body.get("architectures")
-    architectures = sorted({int(a) for a in raw_arch}) if isinstance(raw_arch, list) and raw_arch else None
+    architectures = (
+        sorted({int(a) for a in raw_arch})
+        if isinstance(raw_arch, list) and raw_arch
+        else None
+    )
     try:
         workers = max(0, int(body.get("workers", 0) or 0))
     except (TypeError, ValueError):
         workers = 0
     try:
-        job = lab.start_test(rec_id, combos, runner_factory, hop_s=float(body.get("hop_s", 1.0) or 1.0),
-                             nc_modes=nc_modes, gated_modes=gated_modes, architectures=architectures,
-                             workers=workers)
+        job = lab.start_test(
+            rec_id,
+            combos,
+            runner_factory,
+            hop_s=float(body.get("hop_s", 1.0) or 1.0),
+            nc_modes=nc_modes,
+            gated_modes=gated_modes,
+            architectures=architectures,
+            workers=workers,
+        )
     except (KeyError, ValueError) as exc:
         diag_write("lab", "test-job-error", {"rec_id": rec_id, "error": str(exc)[:300]})
         return web.json_response({"error": str(exc)}, status=400)
-    diag_write("lab", "test-job-start", {"job_id": job.get("id"), "recording": rec_id,
-                                         "combos": len(combos), "g1": g1_models, "models": models,
-                                         "hop_s": float(body.get("hop_s", 1.0) or 1.0),
-                                         "nc_modes": nc_modes})
+    diag_write(
+        "lab",
+        "test-job-start",
+        {
+            "job_id": job.get("id"),
+            "recording": rec_id,
+            "combos": len(combos),
+            "g1": g1_models,
+            "models": models,
+            "hop_s": float(body.get("hop_s", 1.0) or 1.0),
+            "nc_modes": nc_modes,
+        },
+    )
     return web.json_response({"job": job})
 
 
@@ -2235,17 +3229,28 @@ async def api_job(request: web.Request) -> web.Response:
 def _g3_pack_available() -> bool:
     """Gate3-5P pack loads when TensorFlow is installed and every model file exists."""
     import importlib.util
+
     if importlib.util.find_spec("tensorflow") is None:
         return False
-    return all((G3TO5P_DIR / "models" / f"{fname}.keras").is_file() for fname in G3TO5P_MAP.values())
+    return all(
+        (G3TO5P_DIR / "models" / f"{fname}.keras").is_file()
+        for fname in G3TO5P_MAP.values()
+    )
 
 
 async def api_lab_models(request: web.Request) -> web.Response:
     """Gate 1 variants, Gate 2 models and Gate 3 specialists the lab can replay."""
-    return web.json_response({"g1_models": sorted(request.app["gates"].g1_variants),
-                              "models": sorted(GATE2_PACKAGE_RUNNERS),
-                              "g3": {"dir": str(G3TO5P_DIR), "routes": dict(G3TO5P_MAP),
-                                     "available": _g3_pack_available()}})
+    return web.json_response(
+        {
+            "g1_models": sorted(request.app["gates"].g1_variants),
+            "models": sorted(GATE2_PACKAGE_RUNNERS),
+            "g3": {
+                "dir": str(G3TO5P_DIR),
+                "routes": dict(G3TO5P_MAP),
+                "available": _g3_pack_available(),
+            },
+        }
+    )
 
 
 async def api_results(request: web.Request) -> web.Response:
@@ -2270,12 +3275,17 @@ async def api_client_log(request: web.Request) -> web.Response:
         body = await request.json()
     except Exception:
         body = {}
-    diag_write("ui", str(body.get("kind") or "client-error"), {
-        "message": str(body.get("message") or "")[:500],
-        "source": str(body.get("source") or "")[:200],
-        "line": body.get("line"), "col": body.get("col"),
-        "url": str(body.get("url") or "")[:200],
-    })
+    diag_write(
+        "ui",
+        str(body.get("kind") or "client-error"),
+        {
+            "message": str(body.get("message") or "")[:500],
+            "source": str(body.get("source") or "")[:200],
+            "line": body.get("line"),
+            "col": body.get("col"),
+            "url": str(body.get("url") or "")[:200],
+        },
+    )
     return web.json_response({"ok": True})
 
 
@@ -2289,7 +3299,9 @@ async def api_job_log(request: web.Request) -> web.StreamResponse:
 async def api_job_cancel(request: web.Request) -> web.Response:
     job_id = request.match_info["job_id"]
     cancelled = request.app["lab"].cancel(job_id)
-    diag_write("lab", "test-job-cancel", {"job_id": job_id, "cancelled": bool(cancelled)})
+    diag_write(
+        "lab", "test-job-cancel", {"job_id": job_id, "cancelled": bool(cancelled)}
+    )
     return web.json_response({"cancelled": cancelled, "id": job_id})
 
 
@@ -2323,8 +3335,10 @@ def build_app() -> web.Application:
     slot_app = importlib.import_module("Gate3to5SlotSpecialistApp.app")
     # The recording lab uploads multi-minute WAV takes (base64), so the limit
     # must clear the slot app's default as well.
-    app = web.Application(middlewares=[_fresh_html],
-                          client_max_size=max(int(slot_app.REQUEST_LIMIT), 96 * 1024 * 1024))
+    app = web.Application(
+        middlewares=[_fresh_html],
+        client_max_size=max(int(slot_app.REQUEST_LIMIT), 96 * 1024 * 1024),
+    )
     app["gates"] = Gates()
     app["lab"] = recording_lab.RecordingLab(HERE / "recordings")
     analysis_added = app["lab"].backfill_analysis()
@@ -2379,6 +3393,10 @@ def build_app() -> web.Application:
     app.router.add_static("/vendor/", path=str(HERE / "gate1_web" / "vendor"))
     app.router.add_static("/data/", path=str(HERE / "gate1_web" / "data"))
     slot_app.register_routes(app, prefix="/gate3to5")
+    # One-shot architecture (separate page): the wake word gates a single 5 s Gate 2 capture.
+    # Additive only - it registers /oneshot.html and /ws/oneshot and touches no existing route.
+    oneshot = importlib.import_module("oneshot_pipeline")
+    oneshot.register_routes(app)
     return app
 
 
@@ -2401,7 +3419,9 @@ async def api_analysis(request: web.Request) -> web.Response:
 
 def main() -> None:
     app = build_app()
-    print("VCM unified monitor on http://127.0.0.1:8765/ (Gate1/Gate2 + Gate3-Gate5 candidates) - Ctrl+C to stop")
+    print(
+        "VCM unified monitor on http://127.0.0.1:8765/ (Gate1/Gate2 + Gate3-Gate5 candidates) - Ctrl+C to stop"
+    )
     web.run_app(app, host="127.0.0.1", port=PORT, print=None)
 
 

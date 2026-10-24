@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>VCM One-Shot - wake gates a single 5 s Gate 2 capture</title>
+<style>
+  :root { --bg:#0e1116; --panel:#161b22; --line:#232a35; --ink:#e6edf3; --mut:#8b949e;
+           --red:#e5484d; --grn:#3fb950; --amb:#d29922; --blu:#4493f8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:14px/1.5 "Segoe UI",system-ui,Arial,sans-serif; }
+  header { padding:14px 20px 10px; border-bottom:1px solid var(--line); }
+  h1 { margin:0 0 2px; font-size:19px; font-weight:600; }
+  .sub { color:var(--mut); font-size:12.5px; }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .chip { background:var(--panel); border:1px solid var(--line); border-radius:999px;
+          padding:3px 11px; font-size:12px; color:var(--mut); }
+  .chip b { color:var(--ink); font-weight:600; }
+  main { display:grid; grid-template-columns:340px 1fr; gap:18px; padding:18px 20px 28px; }
+  @media (max-width:900px){ main { grid-template-columns:1fr; } }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .stage { display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .ring { position:relative; width:190px; height:190px; }
+  .ring svg { transform:rotate(-90deg); }
+  .ring .track { stroke:#20262f; }
+  .ring .prog { stroke:var(--red); stroke-linecap:round;
+                transition:stroke-dashoffset 5s linear; }
+  .dot { position:absolute; inset:0; margin:auto; width:74px; height:74px; border-radius:50%;
+         background:#2a2f36; border:2px solid #39414c; transition:background .15s, box-shadow .15s; }
+  body.recording .dot { background:var(--red); border-color:#ff7b7f;
+         animation:pulse 1s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(229,72,77,.55); }
+                     50%{ box-shadow:0 0 0 22px rgba(229,72,77,0); } }
+  .stage .label { font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:var(--mut); }
+  body.recording .stage .label { color:var(--red); font-weight:700; }
+  .count { font-size:26px; font-variant-numeric:tabular-nums; }
+  .bar { height:7px; background:#20262f; border-radius:4px; overflow:hidden; margin-top:4px; }
+  .bar > i { display:block; height:100%; width:0; background:var(--blu); transition:width .12s; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:12px; }
+  .row .k { color:var(--mut); font-size:12.5px; }
+  .btns { display:flex; gap:8px; margin-top:16px; }
+  button { background:#21262d; color:var(--ink); border:1px solid #30363d; border-radius:8px;
+           padding:9px 15px; font-size:13.5px; cursor:pointer; }
+  button:hover { background:#2a313a; }
+  button.primary { background:#1f6feb; border-color:#1f6feb; }
+  button.primary:hover { background:#2b7cf0; }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  .result { font-size:15px; }
+  .result .big { font-size:30px; font-weight:700; margin:2px 0 6px; }
+  .result .none { color:var(--mut); }
+  table { width:100%; border-collapse:collapse; margin-top:10px; font-size:12.5px; }
+  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); }
+  th { color:var(--mut); font-weight:600; }
+  .mut { color:var(--mut); }
+  .ok { color:var(--grn); } .warn { color:var(--amb); } .bad { color:var(--red); }
+  select { background:#21262d; color:var(--ink); border:1px solid #30363d; border-radius:8px;
+           padding:7px 9px; font-size:13px; width:100%; }
+  select:disabled { opacity:.5; }
+  audio { display:none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>VCM One-Shot Dashboard</h1>
+  <div class="sub">Wake word gates everything: no Gate 2 inference runs before it, then exactly
+    <b>one</b> 5&nbsp;s capture and <b>one</b> intent decision.</div>
+  <div class="chips">
+    <span class="chip">state <b id="c-state">idle</b></span>
+    <span class="chip">Gate 1 <b id="c-g1">-</b></span>
+    <span class="chip">Gate 2 <b id="c-g2">-</b></span>
+    <span class="chip">shots <b id="c-shots">0</b></span>
+    <span class="chip">mic <b id="c-mic">off</b></span>
+    <span class="chip">link <b id="c-link">connecting</b></span>
+  </div>
+</header>
+
+<main>
+  <section class="panel stage">
+    <div class="ring">
+      <svg width="190" height="190" viewBox="0 0 190 190">
+        <circle class="track" cx="95" cy="95" r="84" fill="none" stroke-width="7"></circle>
+        <circle id="prog" class="prog" cx="95" cy="95" r="84" fill="none" stroke-width="7"
+                stroke-dasharray="527.8" stroke-dashoffset="527.8"></circle>
+      </svg>
+      <div class="dot"></div>
+    </div>
+    <div class="label" id="stage-label">idle - press Arm</div>
+    <div class="count" id="countdown">5.0 s</div>
+
+    <div style="width:100%">
+      <div class="row"><span class="k">Nova</span><span class="k" id="p-nova">0.00</span></div>
+      <div class="bar"><i id="b-nova"></i></div>
+      <div class="row"><span class="k">Piattos</span><span class="k" id="p-piattos">0.00</span></div>
+      <div class="bar"><i id="b-piattos"></i></div>
+      <div class="row"><span class="k">wake vote</span><span class="k" id="p-vote">0 / 2</span></div>
+      <div class="row"><span class="k">persona / reply</span><span class="k" id="p-persona">-</span></div>
+      <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
+        <span class="k">Gate 2 model - sorted by holdout accuracy</span>
+        <select id="sel-g2"></select>
+        <span class="k" id="sel-g2-note" style="font-size:11.5px">loading ranking...</span>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button id="btn-arm" class="primary">Arm + start mic</button>
+      <button id="btn-disarm">Disarm</button>
+    </div>
+    <div class="sub" style="text-align:center">Re-arm after each shot - one capture per arm, by design.</div>
+  </section>
+
+  <section class="panel">
+    <div class="result">
+      <div class="k mut">Gate 2 result (one decision from the 5 s capture)</div>
+      <div class="big" id="r-intent"><span class="none">no shot yet</span></div>
+      <div class="mut" id="r-detail">Arm, then say the wake word followed by a command.</div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>#</th><th>wake</th><th>intent</th><th>conf</th><th>at</th><th>windows</th><th>latency</th><th>when</th></tr>
+      </thead>
+      <tbody id="log"><tr><td colspan="8" class="mut">no shots yet</td></tr></tbody>
+    </table>
+  </section>
+</main>
+
+<audio id="player"></audio>
+
+<script>
+(function () {
+  "use strict";
+  var SAMPLE_RATE = 16000;
+  var CAPTURE_SECONDS = 5.0;
+  var RING = 527.8;
+  var ws = null, actx = null, micStream = null, processor = null;
+  var shots = 0, recording = false, captureStart = 0, rafId = 0;
+
+  var el = function (id) { return document.getElementById(id); };
+
+  function setState(s) {
+    el("c-state").textContent = s;
+    var rec = (s === "recording");
+    recording = rec;
+    document.body.classList.toggle("recording", rec);
+    if (rec) {
+      el("stage-label").textContent = "Gate 2 recording";
+      captureStart = performance.now();
+      el("prog").style.transition = "none";
+      el("prog").style.strokeDashoffset = String(RING);
+      void el("prog").getBoundingClientRect();
+      el("prog").style.transition = "stroke-dashoffset " + CAPTURE_SECONDS + "s linear";
+      el("prog").style.strokeDashoffset = "0";
+      tick();
+    } else {
+      el("stage-label").textContent = (s === "armed") ? "listening for the wake word"
+                                   : (s === "done") ? "shot complete - press Arm to again"
+                                   : "idle - press Arm";
+      cancelAnimationFrame(rafId);
+    }
+  }
+
+  function tick() {
+    var left = Math.max(0, CAPTURE_SECONDS - (performance.now() - captureStart) / 1000);
+    el("countdown").textContent = left.toFixed(1) + " s";
+    if (left > 0 && recording) { rafId = requestAnimationFrame(tick); }
+  }
+
+  function to16k(samples) {
+    var data = (samples instanceof Float32Array) ? samples : new Float32Array(samples);
+    var ctxRate = actx ? actx.sampleRate : SAMPLE_RATE;
+    if (ctxRate === SAMPLE_RATE) return data;
+    var ratio = ctxRate / SAMPLE_RATE;
+    var outLength = Math.floor(data.length / ratio);
+    var output = new Float32Array(outLength);
+    for (var i = 0; i < outLength; i++) {
+      var pos = i * ratio;
+      var left = Math.floor(pos);
+      var right = Math.min(left + 1, data.length - 1);
+      var fraction = pos - left;
+      output[i] = data[left] * (1 - fraction) + data[right] * fraction;
+    }
+    return output;
+  }
+
+  async function startMic() {
+    if (actx) return;
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 }
+    });
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    actx = new Ctx({ sampleRate: SAMPLE_RATE });
+    if (actx.state === "suspended") { await actx.resume(); }
+    var source = actx.createMediaStreamSource(micStream);
+    processor = actx.createScriptProcessor(4096, 1, 1);
+    processor.onaudioprocess = function (event) {
+      if (!ws || ws.readyState !== 1) return;
+      var samples = to16k(event.inputBuffer.getChannelData(0));
+      ws.send(samples.buffer);
+    };
+    source.connect(processor);
+    processor.connect(actx.destination);
+    el("c-mic").textContent = "on";
+  }
+
+  function send(obj) { if (ws && ws.readyState === 1) { ws.send(JSON.stringify(obj)); } }
+
+  function onMessage(msg) {
+    if (msg.type === "hello") {
+      el("c-g1").textContent = msg.g1_model || "-";
+      el("c-g2").textContent = msg.gate2_model || "-";
+      setState(msg.state || "idle");
+      // The dropdown is the source of truth for this session: align the server if it differs.
+      var sel = el("sel-g2");
+      if (sel && sel.value && sel.value !== msg.gate2_model) {
+        send({ type: "gate2_model", model: sel.value });
+      }
+    } else if (msg.type === "model") {
+      if (msg.gate2_model) { el("c-g2").textContent = msg.gate2_model; }
+      if (msg.g1_model) { el("c-g1").textContent = msg.g1_model; }
+    } else if (msg.type === "state") {
+      setState(msg.state || "idle");
+    } else if (msg.type === "g1") {
+      if (msg.nova !== null && msg.nova !== undefined) {
+        el("p-nova").textContent = Number(msg.nova).toFixed(2);
+        el("b-nova").style.width = Math.round(100 * msg.nova) + "%";
+      }
+      if (msg.piattos !== null && msg.piattos !== undefined) {
+        el("p-piattos").textContent = Number(msg.piattos).toFixed(2);
+        el("b-piattos").style.width = Math.round(100 * msg.piattos) + "%";
+      }
+      el("p-vote").textContent = (msg.votes || 0) + " / 2";
+    } else if (msg.type === "wake") {
+      shots = msg.shot || (shots + 1);
+      el("c-shots").textContent = String(shots);
+      el("p-persona").textContent = (msg.persona || "-") + (msg.text ? (" - " + msg.text) : "");
+      if (msg.response_url) { el("player").src = msg.response_url; el("player").play().catch(function () {}); }
+      setState("recording");
+      el("r-intent").textContent = "capturing " + CAPTURE_SECONDS.toFixed(1) + " s...";
+      el("r-intent").className = "big mut";
+      el("r-detail").textContent = "Gate 2 is recording now; it will run once when the window closes.";
+    } else if (msg.type === "intent") {
+      setState(msg.state || "done");
+      var none = (msg.intent === null || msg.intent === undefined);
+      // textContent, not innerHTML: the intent and clip text come from the server.
+      el("r-intent").textContent = none ? "no command in the window"
+                                       : String(msg.intent).replace(/_/g, " ");
+      el("r-intent").className = none ? "big none" : "big ok";
+      el("r-detail").textContent = none
+        ? "The single Gate 2 pass rejected the clip (NEGATIVE). Captured " + msg.capture_seconds + " s."
+        : ("confidence " + Number(msg.conf).toFixed(3) + " at " + msg.at_s + " s into the capture"
+           + " - " + msg.windows_scored + " window(s) scored with " + msg.gate2_model
+           + ", " + msg.latency_ms + " ms");
+      var row = document.createElement("tr");
+      var persona = (el("p-persona").textContent.split(" ")[0] || "-");
+      var cells = [[msg.shot, ""], [persona, ""],
+                   [none ? "NEGATIVE" : String(msg.intent), none ? "bad" : "ok"],
+                   [none ? "-" : Number(msg.conf).toFixed(3), ""],
+                   [none ? "-" : msg.at_s + " s", ""],
+                   [msg.windows_scored, ""], [msg.latency_ms + " ms", ""],
+                   [new Date().toLocaleTimeString(), ""]];
+      cells.forEach(function (spec) {
+        var td = document.createElement("td");
+        td.textContent = String(spec[0]);
+        if (spec[1]) { td.className = spec[1]; }
+        row.appendChild(td);
+      });
+      var body = el("log");
+      if (body.firstChild && body.firstChild.children.length === 1) { body.textContent = ""; }
+      body.insertBefore(row, body.firstChild);
+    }
+  }
+
+  function populateGate2(rows, note) {
+    var sel = el("sel-g2");
+    sel.textContent = "";
+    rows.forEach(function (row) {
+      var opt = document.createElement("option");
+      opt.value = row.model;
+      opt.textContent = (typeof row.acc === "number")
+        ? row.model + " - " + (100 * row.acc).toFixed(1) + "%"
+        : row.model;
+      sel.appendChild(opt);
+    });
+    el("sel-g2-note").textContent = note;
+    if (rows.length) { send({ type: "gate2_model", model: rows[0].model }); }
+  }
+
+  function loadGate2Ranking() {
+    fetch("/data/gate2_holdout.json", { cache: "no-store" }).then(function (res) {
+      if (!res.ok) { throw new Error("no ranking file"); }
+      return res.json();
+    }).then(function (data) {
+      var rows = (data.models || []).slice().sort(function (a, b) {
+        return (b.acc || 0) - (a.acc || 0) || String(a.model).localeCompare(String(b.model));
+      });
+      var ds = data.dataset || {};
+      populateGate2(rows, "holdout: " + ds.commands + " commands + " + ds.oos + " OOS - measured "
+        + String(data.generated || "").replace("T", " ").replace("Z", " UTC"));
+    }).catch(function () {
+      fetch("/api/lab/models", { cache: "no-store" }).then(function (r) { return r.json(); })
+        .then(function (d) {
+          var rows = (d.models || []).map(function (m) { return { model: m, acc: null }; });
+          populateGate2(rows, "no held-out ranking yet - alphabetical from the registry");
+        }).catch(function () { el("sel-g2-note").textContent = "model list unavailable"; });
+    });
+  }
+
+  function connect() {
+    var proto = (location.protocol === "https:") ? "wss://" : "ws://";
+    ws = new WebSocket(proto + location.host + "/ws/oneshot");
+    ws.onopen = function () { el("c-link").textContent = "ok"; };
+    ws.onmessage = function (event) {
+      if (typeof event.data !== "string") return;
+      var msg = null;
+      try { msg = JSON.parse(event.data); } catch (e) { return; }
+      onMessage(msg);
+    };
+    ws.onclose = function () {
+      el("c-link").textContent = "closed";
+      setTimeout(connect, 2000);
+    };
+    ws.onerror = function () { el("c-link").textContent = "error"; };
+  }
+
+  el("btn-arm").addEventListener("click", async function () {
+    try { await startMic(); } catch (e) { el("c-mic").textContent = "denied"; return; }
+    send({ type: "arm" });
+  });
+  el("btn-disarm").addEventListener("click", function () { send({ type: "disarm" }); });
+  el("sel-g2").addEventListener("change", function (event) {
+    send({ type: "gate2_model", model: event.target.value });
+  });
+
+  loadGate2Ranking();
+  connect();
+  setState("idle");
+})();
+</script>
+</body>
+</html>
