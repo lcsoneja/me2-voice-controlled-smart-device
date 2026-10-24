@@ -1,7 +1,9 @@
 # VCM Pipeline Dashboard — Raspberry Pi Handoff
 
 Updated: 2026-10-24  
-Device: Raspberry Pi at 192.168.1.75 (`lcsoneja`)  
+Device: Raspberry Pi (`raspberrypi`, aarch64) as user `lcsoneja`. The address is DHCP-assigned -
+read it on the Pi with `hostname -I` (it was 10.158.33.96 on the 2026-10-24 demo network, and
+192.168.1.75 on the previous one).  
 Dashboard: http://127.0.0.1:8765/
 
 ## What was wrong

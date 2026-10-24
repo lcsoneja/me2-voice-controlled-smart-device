@@ -50,4 +50,5 @@ Click **restart_vcm.sh** on the Desktop, or from a terminal:
 
 ---
 
-*SSH access: key-based (ED25519, no password) from the laptop via `ssh lcsoneja@192.168.1.75`*
+*SSH access: key-based (ED25519, no password) from the laptop as `lcsoneja`. The address is
+DHCP-assigned, so read it on the Pi with `hostname -I` instead of reusing an old one.*

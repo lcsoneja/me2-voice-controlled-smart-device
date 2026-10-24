@@ -16,12 +16,10 @@ Values come from the corrected source of truth
 Nothing is invented: unmeasured fields read "pending" or "n/a".
 """
 
-import importlib
 import pathlib
 from typing import Any, cast
 
-# Imported dynamically: the linter's resolver cannot see this interpreter's site-packages.
-pymupdf = importlib.import_module("pymupdf")
+import pymupdf  # resolved by the repo-local pymupdf.pyi stub; the real package is installed
 
 HERE = pathlib.Path(__file__).resolve().parent
 TEMPLATE = HERE / "me2-deck.pdf"

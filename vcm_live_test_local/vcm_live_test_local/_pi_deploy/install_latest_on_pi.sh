@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# DEPRECATED - superseded 2026-10-24 by deploy_safe.sh.
+#
+# Its move-then-restore rollback was not re-entrant: when the ERR trap fired inside
+# rollback, the app directory was moved twice and left EMPTY, and the dashboard served
+# 500s until it was restored from a backup. deploy_safe.sh copies over the top and never
+# moves or deletes the app.
 set -Eeuo pipefail
 
 HOME_DIR="$HOME"
