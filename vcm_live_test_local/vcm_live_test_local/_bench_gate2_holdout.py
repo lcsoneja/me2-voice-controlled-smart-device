@@ -6,13 +6,20 @@ locally, so this measures the ranking directly:
 
   202 clips: 186 labeled commands (all 19 classes) + 16 out-of-scope clips
 
+The command clips come in two tiers, and the ranking uses the real ones only:
+  * real        86 clips recorded by real voices (labelled "ME2 cmd (real)")
+  * syn        100 synthetic clips (labelled "ME2 cmd (syn)")
+  * oos         16 out-of-scope clips, used only for the rejection column
+
 For each model in the server's Gate 2 registry it reports:
-  * acc        fraction of the 186 commands whose top-1 class matches the label
+  * acc_real   fraction of the 86 REAL command clips whose top-1 class matches the label
                (NEGATIVE is masked, so a rejection is never counted as a hit)
+  * acc_syn    the same over the 100 synthetic clips, for reference only
+  * acc        both tiers together, kept so older numbers stay comparable
   * oos_reject fraction of the 16 OOS clips that the model rejects
   * ms_clip    mean inference time per clip on this machine
 
-Writes gate1_web/data/gate2_holdout.json, sorted by accuracy descending, which the one-shot
+Writes gate1_web/data/gate2_holdout.json sorted by REAL-voice accuracy, which the one-shot
 dashboard reads to build its model dropdown.
 """
 
@@ -138,11 +145,22 @@ def main() -> int:
     ]
     commands = [r for r in holdout if str(r.get("action") or "").strip()]
     oos = [r for r in holdout if not str(r.get("action") or "").strip()]
+
+    def is_real(rec: dict) -> bool:
+        """Real-voice clip? The ingest labels them "ME2 cmd (real)" vs "(syn)"."""
+        return "(real)" in str(rec.get("label") or "").lower()
+
+    real = [r for r in commands if is_real(r)]
+    syn = [r for r in commands if not is_real(r)]
     print(
         "holdout clips="
         + str(len(holdout))
         + " commands="
         + str(len(commands))
+        + " real="
+        + str(len(real))
+        + " syn="
+        + str(len(syn))
         + " oos="
         + str(len(oos))
     )
@@ -165,6 +183,7 @@ def main() -> int:
             continue
         labels = list(runner.labels)
         correct = rejected_ok = seen_cmd = seen_oos = 0
+        correct_real = correct_syn = seen_real = seen_syn = 0
         elapsed = 0.0
         for rec, clip in clips:
             started = time.perf_counter()
@@ -177,13 +196,24 @@ def main() -> int:
             expected = rec.get("action")
             if str(expected or "").strip():
                 seen_cmd += 1
-                if same_command(top_intent(labels, probs), expected):
+                hit = same_command(top_intent(labels, probs), expected)
+                if hit:
                     correct += 1
+                if is_real(rec):
+                    seen_real += 1
+                    if hit:
+                        correct_real += 1
+                else:
+                    seen_syn += 1
+                    if hit:
+                        correct_syn += 1
             else:
                 seen_oos += 1
                 if rejected(labels, probs):
                     rejected_ok += 1
         acc = round(correct / seen_cmd, 4) if seen_cmd else 0.0
+        acc_real = round(correct_real / seen_real, 4) if seen_real else 0.0
+        acc_syn = round(correct_syn / seen_syn, 4) if seen_syn else 0.0
         oos_reject = round(rejected_ok / seen_oos, 4) if seen_oos else None
         rows.append(
             {
@@ -191,6 +221,12 @@ def main() -> int:
                 "acc": acc,
                 "correct": correct,
                 "n": seen_cmd,
+                "acc_real": acc_real,
+                "correct_real": correct_real,
+                "n_real": seen_real,
+                "acc_syn": acc_syn,
+                "correct_syn": correct_syn,
+                "n_syn": seen_syn,
                 "oos_reject": oos_reject,
                 "ms_clip": round(elapsed / max(1, len(clips)), 2),
             }
@@ -201,13 +237,16 @@ def main() -> int:
             + str(len(names))
             + " "
             + name.ljust(30)
-            + " acc="
-            + str(round(100 * acc, 1))
+            + " real="
+            + str(round(100 * acc_real, 1))
             + "% ("
-            + str(correct)
+            + str(correct_real)
             + "/"
-            + str(seen_cmd)
+            + str(seen_real)
             + ")"
+            + " syn="
+            + str(round(100 * acc_syn, 1))
+            + "%"
             + " oos_reject="
             + str(None if oos_reject is None else round(100 * oos_reject, 1))
             + " ms="
@@ -216,15 +255,18 @@ def main() -> int:
         del runner
         gc.collect()
 
-    rows.sort(key=lambda r: (-r["acc"], -(r["oos_reject"] or 0), r["model"]))
+    rows.sort(key=lambda r: (-r["acc_real"], -r["acc"], -(r["oos_reject"] or 0), r["model"]))
     payload = {
-        "schema": 1,
+        "schema": 2,
         "generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "dataset": {
             "name": "ME2 class holdout",
             "clips": len(clips),
             "commands": len(commands),
+            "real": len(real),
+            "syn": len(syn),
             "oos": len(oos),
+            "ranked_by": "acc_real - real voices only, synthetic and OOS excluded",
             "note": "top-1 over 19 command classes with NEGATIVE/NEG masked",
         },
         "models": rows,
@@ -232,8 +274,8 @@ def main() -> int:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, indent=1), encoding="utf-8")
     print(
-        "TOP5 "
-        + ", ".join(r["model"] + "=" + str(round(100 * r["acc"], 1)) for r in rows[:5])
+        "TOP5 real-voice "
+        + ", ".join(r["model"] + "=" + str(round(100 * r["acc_real"], 1)) for r in rows[:5])
     )
     print("wrote " + str(OUT))
     return 0

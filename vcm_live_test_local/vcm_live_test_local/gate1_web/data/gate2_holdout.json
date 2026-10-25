@@ -1,11 +1,14 @@
 {
- "schema": 1,
- "generated": "2026-10-24T14:50:20Z",
+ "schema": 2,
+ "generated": "2026-10-25T01:11:39Z",
  "dataset": {
   "name": "ME2 class holdout",
   "clips": 202,
   "commands": 186,
+  "real": 86,
+  "syn": 100,
   "oos": 16,
+  "ranked_by": "acc_real - real voices only, synthetic and OOS excluded",
   "note": "top-1 over 19 command classes with NEGATIVE/NEG masked"
  },
  "models": [
@@ -14,432 +17,756 @@
    "acc": 0.9624,
    "correct": 179,
    "n": 186,
+   "acc_real": 0.9186,
+   "correct_real": 79,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.375,
-   "ms_clip": 6.28
+   "ms_clip": 3.69
   },
   {
    "model": "gate2v64p_paired_owner",
    "acc": 0.9624,
    "correct": 179,
    "n": 186,
+   "acc_real": 0.9186,
+   "correct_real": 79,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.25,
-   "ms_clip": 6.01
+   "ms_clip": 4.1
   },
   {
    "model": "gate2v56_v54",
    "acc": 0.9624,
    "correct": 179,
    "n": 186,
+   "acc_real": 0.9186,
+   "correct_real": 79,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 24.55
+   "ms_clip": 16.8
   },
   {
    "model": "gate2v76_v64d_tr",
    "acc": 0.957,
    "correct": 178,
    "n": 186,
+   "acc_real": 0.907,
+   "correct_real": 78,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.5625,
-   "ms_clip": 2.79
+   "ms_clip": 3.88
   },
   {
    "model": "gate2v64_paired_negatives",
    "acc": 0.957,
    "correct": 178,
    "n": 186,
+   "acc_real": 0.907,
+   "correct_real": 78,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.25,
-   "ms_clip": 6.04
+   "ms_clip": 4.69
   },
   {
    "model": "gate2v65_stoch15k",
    "acc": 0.957,
    "correct": 178,
    "n": 186,
+   "acc_real": 0.907,
+   "correct_real": 78,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.125,
-   "ms_clip": 6.35
+   "ms_clip": 4.9
   },
   {
    "model": "gate2v77_speech_neg",
    "acc": 0.9516,
    "correct": 177,
    "n": 186,
+   "acc_real": 0.8953,
+   "correct_real": 77,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.625,
-   "ms_clip": 2.79
+   "ms_clip": 3.59
   },
   {
    "model": "gate2v22",
    "acc": 0.9516,
    "correct": 177,
    "n": 186,
+   "acc_real": 0.8953,
+   "correct_real": 77,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.3125,
-   "ms_clip": 9.12
+   "ms_clip": 5.93
   },
   {
    "model": "gate2v64c_stochmel",
    "acc": 0.9516,
    "correct": 177,
    "n": 186,
+   "acc_real": 0.8953,
+   "correct_real": 77,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.1875,
-   "ms_clip": 6.37
+   "ms_clip": 4.58
   },
   {
    "model": "gate2v56_v54b",
    "acc": 0.9516,
    "correct": 177,
    "n": 186,
+   "acc_real": 0.8953,
+   "correct_real": 77,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 23.87
+   "ms_clip": 15.51
   },
   {
    "model": "gate2v46_impwarp",
    "acc": 0.9516,
    "correct": 177,
    "n": 186,
+   "acc_real": 0.8953,
+   "correct_real": 77,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.26
+   "ms_clip": 3.81
   },
   {
    "model": "gate2v72_v64d_pid",
    "acc": 0.9462,
    "correct": 176,
    "n": 186,
+   "acc_real": 0.8837,
+   "correct_real": 76,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.25,
-   "ms_clip": 21.43
+   "ms_clip": 13.73
   },
   {
    "model": "gate2v61_keyword_mix",
    "acc": 0.9462,
    "correct": 176,
    "n": 186,
+   "acc_real": 0.8837,
+   "correct_real": 76,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.0
+   "ms_clip": 4.64
   },
   {
    "model": "gate2v21",
    "acc": 0.9355,
    "correct": 174,
    "n": 186,
+   "acc_real": 0.8605,
+   "correct_real": 74,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.375,
-   "ms_clip": 4.75
-  },
-  {
-   "model": "gate2v22s",
-   "acc": 0.9301,
-   "correct": 173,
-   "n": 186,
-   "oos_reject": 0.375,
-   "ms_clip": 9.26
+   "ms_clip": 2.74
   },
   {
    "model": "gate2v21p",
    "acc": 0.9301,
    "correct": 173,
    "n": 186,
+   "acc_real": 0.8605,
+   "correct_real": 74,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.1875,
-   "ms_clip": 4.69
+   "ms_clip": 2.76
+  },
+  {
+   "model": "gate2v22s",
+   "acc": 0.9301,
+   "correct": 173,
+   "n": 186,
+   "acc_real": 0.8488,
+   "correct_real": 73,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.375,
+   "ms_clip": 5.79
   },
   {
    "model": "gate2v20_aux",
    "acc": 0.9301,
    "correct": 173,
    "n": 186,
+   "acc_real": 0.8488,
+   "correct_real": 73,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 4.97
-  },
-  {
-   "model": "gate2v19",
-   "acc": 0.9247,
-   "correct": 172,
-   "n": 186,
-   "oos_reject": 0.0,
-   "ms_clip": 2.15
+   "ms_clip": 2.89
   },
   {
    "model": "gate2v19p",
    "acc": 0.9194,
    "correct": 171,
    "n": 186,
+   "acc_real": 0.8488,
+   "correct_real": 73,
+   "n_real": 86,
+   "acc_syn": 0.98,
+   "correct_syn": 98,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 4.38
+   "ms_clip": 2.34
   },
   {
-   "model": "gate2v24_crnn148x60",
-   "acc": 0.9194,
-   "correct": 171,
+   "model": "gate2v19",
+   "acc": 0.9247,
+   "correct": 172,
    "n": 186,
+   "acc_real": 0.8372,
+   "correct_real": 72,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 10.75
+   "ms_clip": 2.62
   },
   {
    "model": "gate2v36_17win",
    "acc": 0.9194,
    "correct": 171,
    "n": 186,
+   "acc_real": 0.8372,
+   "correct_real": 72,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 7.74
+   "ms_clip": 4.36
   },
   {
    "model": "gate2v41_specaugmix",
    "acc": 0.9194,
    "correct": 171,
    "n": 186,
+   "acc_real": 0.8372,
+   "correct_real": 72,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.28
+   "ms_clip": 4.58
+  },
+  {
+   "model": "gate2v24_crnn148x60",
+   "acc": 0.9194,
+   "correct": 171,
+   "n": 186,
+   "acc_real": 0.8256,
+   "correct_real": 71,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 6.91
   },
   {
    "model": "gate2v42_reverb",
    "acc": 0.9194,
    "correct": 171,
    "n": 186,
+   "acc_real": 0.8256,
+   "correct_real": 71,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.38
+   "ms_clip": 4.28
   },
   {
    "model": "gate2v18",
    "acc": 0.914,
    "correct": 170,
    "n": 186,
+   "acc_real": 0.814,
+   "correct_real": 70,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.09
+   "ms_clip": 2.79
   },
   {
    "model": "gate2v29b_wide9",
    "acc": 0.914,
    "correct": 170,
    "n": 186,
+   "acc_real": 0.814,
+   "correct_real": 70,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 9.19
+   "ms_clip": 7.02
   },
   {
    "model": "gate2v50_channelshuffle",
    "acc": 0.914,
    "correct": 170,
    "n": 186,
+   "acc_real": 0.814,
+   "correct_real": 70,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.09
+   "ms_clip": 3.79
   },
   {
    "model": "gate2v38_crnn9",
    "acc": 0.9086,
    "correct": 169,
    "n": 186,
+   "acc_real": 0.8023,
+   "correct_real": 69,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 13.2
+   "ms_clip": 9.59
   },
   {
    "model": "gate2v57_pidgate",
    "acc": 0.9032,
    "correct": 168,
    "n": 186,
+   "acc_real": 0.7907,
+   "correct_real": 68,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.26
+   "ms_clip": 3.5
   },
   {
    "model": "gate2v28a_5win",
    "acc": 0.8978,
    "correct": 167,
    "n": 186,
+   "acc_real": 0.7907,
+   "correct_real": 68,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 5.55
-  },
-  {
-   "model": "gate2v28b_9win",
-   "acc": 0.8978,
-   "correct": 167,
-   "n": 186,
-   "oos_reject": 0.0,
-   "ms_clip": 6.01
+   "ms_clip": 4.24
   },
   {
    "model": "gate2v29_deep9",
    "acc": 0.8978,
    "correct": 167,
    "n": 186,
+   "acc_real": 0.7907,
+   "correct_real": 68,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 7.63
+   "ms_clip": 4.97
   },
   {
    "model": "gate2v52_adjswap",
    "acc": 0.8978,
    "correct": 167,
    "n": 186,
+   "acc_real": 0.7907,
+   "correct_real": 68,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 5.98
+   "ms_clip": 4.02
+  },
+  {
+   "model": "gate2v28b_9win",
+   "acc": 0.8978,
+   "correct": 167,
+   "n": 186,
+   "acc_real": 0.7791,
+   "correct_real": 67,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 4.81
   },
   {
    "model": "gate2v62_speechtrim",
    "acc": 0.8978,
    "correct": 167,
    "n": 186,
+   "acc_real": 0.7791,
+   "correct_real": 67,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.24
-  },
-  {
-   "model": "gate2v49_warpdilatedneg",
-   "acc": 0.8925,
-   "correct": 166,
-   "n": 186,
-   "oos_reject": 0.3125,
-   "ms_clip": 10.02
+   "ms_clip": 4.89
   },
   {
    "model": "gate2v16",
    "acc": 0.8925,
    "correct": 166,
    "n": 186,
+   "acc_real": 0.7791,
+   "correct_real": 67,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 7.07
+   "ms_clip": 10.9
   },
   {
    "model": "gate2v53_melbin_dropout",
    "acc": 0.8925,
    "correct": 166,
    "n": 186,
+   "acc_real": 0.7791,
+   "correct_real": 67,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.08
+   "ms_clip": 3.61
+  },
+  {
+   "model": "gate2v49_warpdilatedneg",
+   "acc": 0.8925,
+   "correct": 166,
+   "n": 186,
+   "acc_real": 0.7674,
+   "correct_real": 66,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.3125,
+   "ms_clip": 5.9
   },
   {
    "model": "gate2v67_timeshift_only",
    "acc": 0.8871,
    "correct": 165,
    "n": 186,
+   "acc_real": 0.7558,
+   "correct_real": 65,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.45
-  },
-  {
-   "model": "gate2v48_audiopack",
-   "acc": 0.8817,
-   "correct": 164,
-   "n": 186,
-   "oos_reject": 0.0,
-   "ms_clip": 6.22
+   "ms_clip": 3.85
   },
   {
    "model": "gate2v58_smooth_pidgate",
    "acc": 0.8817,
    "correct": 164,
    "n": 186,
+   "acc_real": 0.7558,
+   "correct_real": 65,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.35
+   "ms_clip": 5.11
+  },
+  {
+   "model": "gate2v48_audiopack",
+   "acc": 0.8817,
+   "correct": 164,
+   "n": 186,
+   "acc_real": 0.7442,
+   "correct_real": 64,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 3.83
   },
   {
    "model": "gate2v37_9win_neg",
    "acc": 0.8763,
    "correct": 163,
    "n": 186,
+   "acc_real": 0.7326,
+   "correct_real": 63,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.1875,
-   "ms_clip": 6.27
-  },
-  {
-   "model": "gate2v68_timeshift_neg",
-   "acc": 0.8656,
-   "correct": 161,
-   "n": 186,
-   "oos_reject": 0.0625,
-   "ms_clip": 6.11
+   "ms_clip": 4.08
   },
   {
    "model": "gate2v47_windrop_melwarp",
    "acc": 0.8656,
    "correct": 161,
    "n": 186,
+   "acc_real": 0.7209,
+   "correct_real": 62,
+   "n_real": 86,
+   "acc_syn": 0.99,
+   "correct_syn": 99,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.13
+   "ms_clip": 3.87
+  },
+  {
+   "model": "gate2v68_timeshift_neg",
+   "acc": 0.8656,
+   "correct": 161,
+   "n": 186,
+   "acc_real": 0.7093,
+   "correct_real": 61,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.0625,
+   "ms_clip": 4.5
   },
   {
    "model": "gate2v63_pca_frontend",
    "acc": 0.8656,
    "correct": 161,
    "n": 186,
+   "acc_real": 0.7093,
+   "correct_real": 61,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 5.6
+   "ms_clip": 4.17
   },
   {
    "model": "gate2v23_crnn50x30",
    "acc": 0.8602,
    "correct": 160,
    "n": 186,
+   "acc_real": 0.6977,
+   "correct_real": 60,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.54
+   "ms_clip": 3.91
   },
   {
    "model": "gate2v40b_9win_attention",
    "acc": 0.8548,
    "correct": 159,
    "n": 186,
+   "acc_real": 0.686,
+   "correct_real": 59,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.26
+   "ms_clip": 4.41
   },
   {
    "model": "gate2v59_focal_warp",
    "acc": 0.8387,
    "correct": 156,
    "n": 186,
+   "acc_real": 0.6512,
+   "correct_real": 56,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.08
+   "ms_clip": 4.53
   },
   {
    "model": "gate2v60_phone_warp",
    "acc": 0.8333,
    "correct": 155,
    "n": 186,
+   "acc_real": 0.6395,
+   "correct_real": 55,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 6.47
-  },
-  {
-   "model": "gate2v34a_std",
-   "acc": 0.7204,
-   "correct": 134,
-   "n": 186,
-   "oos_reject": 0.0,
-   "ms_clip": 5.75
-  },
-  {
-   "model": "gate2v66_clean_only",
-   "acc": 0.6828,
-   "correct": 127,
-   "n": 186,
-   "oos_reject": 0.0,
-   "ms_clip": 5.99
+   "ms_clip": 5.05
   },
   {
    "model": "gate2v34b_finehop",
    "acc": 0.672,
    "correct": 125,
    "n": 186,
+   "acc_real": 0.5116,
+   "correct_real": 44,
+   "n_real": 86,
+   "acc_syn": 0.81,
+   "correct_syn": 81,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 18.88
+   "ms_clip": 12.2
+  },
+  {
+   "model": "gate2v34a_std",
+   "acc": 0.7204,
+   "correct": 134,
+   "n": 186,
+   "acc_real": 0.4767,
+   "correct_real": 41,
+   "n_real": 86,
+   "acc_syn": 0.93,
+   "correct_syn": 93,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 3.92
+  },
+  {
+   "model": "gate2v66_clean_only",
+   "acc": 0.6828,
+   "correct": 127,
+   "n": 186,
+   "acc_real": 0.4767,
+   "correct_real": 41,
+   "n_real": 86,
+   "acc_syn": 0.86,
+   "correct_syn": 86,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 4.37
   },
   {
    "model": "gate2v26_phraseconcat_neg",
    "acc": 0.5699,
    "correct": 106,
    "n": 186,
+   "acc_real": 0.314,
+   "correct_real": 27,
+   "n_real": 86,
+   "acc_syn": 0.79,
+   "correct_syn": 79,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 4.57
+   "ms_clip": 2.35
   },
   {
    "model": "gate2v25_phraseconcat",
    "acc": 0.4785,
    "correct": 89,
    "n": 186,
+   "acc_real": 0.2326,
+   "correct_real": 20,
+   "n_real": 86,
+   "acc_syn": 0.69,
+   "correct_syn": 69,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 4.89
+   "ms_clip": 3.02
   },
   {
    "model": "gate2v26",
    "acc": 0.1667,
    "correct": 31,
    "n": 186,
+   "acc_real": 0.1395,
+   "correct_real": 12,
+   "n_real": 86,
+   "acc_syn": 0.19,
+   "correct_syn": 19,
+   "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 4.8
+   "ms_clip": 2.49
   },
   {
    "model": "gate2v25",
    "acc": 0.1398,
    "correct": 26,
    "n": 186,
+   "acc_real": 0.1047,
+   "correct_real": 9,
+   "n_real": 86,
+   "acc_syn": 0.17,
+   "correct_syn": 17,
+   "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 4.7
+   "ms_clip": 3.51
   }
  ]
 }

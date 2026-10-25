@@ -97,7 +97,7 @@
       <div class="row"><span class="k">wake vote</span><span class="k" id="p-vote">0 / 2</span></div>
       <div class="row"><span class="k">persona / reply</span><span class="k" id="p-persona">-</span></div>
       <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
-        <span class="k">Gate 2 model - sorted by holdout accuracy</span>
+        <span class="k">Gate 2 model - sorted by real-voice holdout accuracy</span>
         <select id="sel-g2"></select>
         <span class="k" id="sel-g2-note" style="font-size:11.5px">loading ranking...</span>
       </div>
@@ -277,8 +277,10 @@
     rows.forEach(function (row) {
       var opt = document.createElement("option");
       opt.value = row.model;
-      opt.textContent = (typeof row.acc === "number")
-        ? row.model + " - " + (100 * row.acc).toFixed(1) + "%"
+      var acc = (typeof row.acc_real === "number") ? row.acc_real : row.acc;
+      opt.textContent = (typeof acc === "number")
+        ? row.model + " - " + (100 * acc).toFixed(1) + "% real"
+          + (typeof row.n_real === "number" ? " (" + row.correct_real + "/" + row.n_real + ")" : "")
         : row.model;
       sel.appendChild(opt);
     });
@@ -291,11 +293,19 @@
       if (!res.ok) { throw new Error("no ranking file"); }
       return res.json();
     }).then(function (data) {
+      // The file already ranks by acc_real, then combined accuracy, then OOS rejection.
+      // Array.prototype.sort is stable, so sorting on acc_real alone preserves that tie order
+      // and the first option stays the benchmark's top pick.
       var rows = (data.models || []).slice().sort(function (a, b) {
-        return (b.acc || 0) - (a.acc || 0) || String(a.model).localeCompare(String(b.model));
+        var ra = (typeof a.acc_real === "number") ? a.acc_real : (a.acc || 0);
+        var rb = (typeof b.acc_real === "number") ? b.acc_real : (b.acc || 0);
+        return rb - ra;
       });
       var ds = data.dataset || {};
-      populateGate2(rows, "holdout: " + ds.commands + " commands + " + ds.oos + " OOS - measured "
+      var tier = (typeof ds.real === "number")
+        ? ds.real + " real-voice clips only (synthetic " + ds.syn + " and OOS " + ds.oos + " ignored)"
+        : ds.commands + " commands + " + ds.oos + " OOS";
+      populateGate2(rows, "holdout: " + tier + " - measured "
         + String(data.generated || "").replace("T", " ").replace("Z", " UTC"));
     }).catch(function () {
       fetch("/api/lab/models", { cache: "no-store" }).then(function (r) { return r.json(); })
