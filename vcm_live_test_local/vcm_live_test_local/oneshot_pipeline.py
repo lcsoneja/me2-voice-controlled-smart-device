@@ -30,7 +30,9 @@ Served at ``/oneshot.html`` (page) and ``/ws/oneshot`` (socket).
 from __future__ import annotations
 
 import importlib
+import re
 import time
+import wave
 from collections import deque
 from pathlib import Path
 from typing import Any
@@ -63,6 +65,209 @@ def register_routes(app: web.Application) -> None:
     """Attach the one-shot page and socket without disturbing existing routes."""
     app.router.add_get("/oneshot.html", page)
     app.router.add_get("/ws/oneshot", ws_oneshot)
+    app.router.add_get("/api/oneshot/recordings", api_recordings)
+    app.router.add_post("/api/oneshot/recordings/score", api_recordings_score)
+    app.router.add_post("/api/oneshot/recordings/delete", api_recordings_delete)
+
+
+# Recordings lab for this page: score saved takes against every Gate 2 model, and delete takes.
+# The holdout clips the ranking benchmark measures (me2h*) are never deleted from here.
+MAX_SCORE_RECORDINGS = 12
+HOLDOUT_PREFIX = "me2h"
+
+# Shipped models use compact class names (lightson) while take labels use underscored ones
+# (LIGHT_ON). bag() ignores word order and separators, and the map covers the rest, so a correct
+# hit is never reported as a miss.
+_INTENT_ALIASES = {
+    "settimer": "timer",
+    "alarmset": "alarm",
+    "tempup": "temperature",
+    "tempdown": "temperature",
+    "lightsdim": "brightness",
+    "lightsbright": "brightness",
+    "lightson": "lighton",
+    "lightsoff": "lightoff",
+    "reminderset": "createreminder",
+    "remindercheck": "listreminders",
+    "checkreminders": "listreminders",
+    "mediaplay": "playmusic",
+    "mediapause": "pause",
+    "medianext": "next",
+    "silence": "stop",
+}
+
+
+def _bag(value: Any) -> str:
+    parts = [p for p in re.split(r"[^a-z]+", str(value or "").lower()) if p]
+    return "".join(sorted(parts))
+
+
+def _same_command(predicted: Any, expected: Any) -> bool:
+    if not str(expected or "").strip():
+        return False
+    left, right = _bag(predicted), _bag(expected)
+    return _INTENT_ALIASES.get(left, left) == _INTENT_ALIASES.get(right, right)
+
+
+def _load_clip(path: Path) -> np.ndarray:
+    """16 kHz mono WAV as float32, exactly what the runners expect."""
+    with wave.open(str(path), "rb") as handle:
+        width = handle.getsampwidth()
+        raw = handle.readframes(handle.getnframes())
+    if width == 2:
+        return np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
+    if width == 4:
+        return np.frombuffer(raw, dtype=np.float32).copy()
+    raise RuntimeError("unsupported sample width " + str(width))
+
+
+def _recording_rows(store: Any) -> list[dict[str, Any]]:
+    """Saved takes, newest first, with the holdout clips flagged."""
+    rows = []
+    for entry in store.list():
+        rec_id = str(entry.get("id") or "")
+        rows.append(
+            {
+                "id": rec_id,
+                "file": str(entry.get("file") or ""),
+                "label": entry.get("label") or "",
+                "action": str(entry.get("action") or ""),
+                "wake_word": entry.get("wake_word") or "",
+                "duration_s": entry.get("duration_s"),
+                "created": str(entry.get("created") or ""),
+                "holdout": rec_id.startswith(HOLDOUT_PREFIX),
+            }
+        )
+    rows.sort(key=lambda row: row["created"], reverse=True)
+    return rows
+
+
+async def api_recordings(request: web.Request) -> web.Response:
+    """Takes for the recordings pane."""
+    rows = _recording_rows(request.app["lab"].store)
+    return web.json_response({"recordings": rows, "count": len(rows)})
+
+
+async def api_recordings_delete(request: web.Request) -> web.Response:
+    """Delete takes by id, or every take with {"all": true}.
+
+    Holdout clips are refused rather than deleted: the Gate 2 ranking is measured on them.
+    """
+    store = request.app["lab"].store
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    wanted = [str(i) for i in body.get("ids") or []] if isinstance(body.get("ids"), list) else []
+    if body.get("all"):
+        wanted = [row["id"] for row in _recording_rows(store)]
+    deleted: list[str] = []
+    refused: list[str] = []
+    missing: list[str] = []
+    for rec_id in wanted:
+        if rec_id.startswith(HOLDOUT_PREFIX):
+            refused.append(rec_id)
+        elif store.delete(rec_id):
+            deleted.append(rec_id)
+        else:
+            missing.append(rec_id)
+    return web.json_response(
+        {
+            "deleted": deleted,
+            "refused_holdout": refused,
+            "missing": missing,
+            "remaining": len(_recording_rows(store)),
+        }
+    )
+
+
+async def api_recordings_score(request: web.Request) -> web.Response:
+    """Score takes against Gate 2 models: one row per take, one result per model.
+
+    Body: {"ids": "all" | [...], "models": "all" | [...]}. Returns the matrix plus a per-model
+    summary; both the batch button and the per-recording view read the same response.
+    """
+    gs = importlib.import_module("gate1_server")
+    gates = request.app["gates"]
+    store = request.app["lab"].store
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+
+    labelled = [row for row in _recording_rows(store) if row["action"].strip()]
+    by_id = {row["id"]: row for row in labelled}
+    wanted = body.get("ids")
+    if isinstance(wanted, str) and wanted == "all":
+        selected = labelled
+    elif isinstance(wanted, list) and wanted:
+        selected = [by_id[str(i)] for i in wanted if str(i) in by_id]
+    else:
+        selected = labelled[:MAX_SCORE_RECORDINGS]
+    capped = len(selected) > MAX_SCORE_RECORDINGS
+    selected = selected[:MAX_SCORE_RECORDINGS]
+
+    requested = body.get("models")
+    known = sorted(gs.GATE2_PACKAGE_RUNNERS)
+    models = (
+        known
+        if (not requested or requested == "all")
+        else [str(name) for name in requested if str(name) in known]
+    )
+    if not selected:
+        return web.json_response({"error": "no takes with an intent label"}, status=400)
+    if not models:
+        return web.json_response({"error": "no known Gate 2 models requested"}, status=400)
+
+    takes = []
+    tally: dict[str, list[int]] = {name: [0, 0] for name in models}
+    for take in selected:
+        # Resolve against the recordings folder and reject anything that escapes it: the index
+        # is a file on disk, so a bad entry must not turn into reading an arbitrary path.
+        candidate = (store.root / take["file"]).resolve()
+        try:
+            candidate.relative_to(store.root.resolve())
+        except ValueError:
+            continue
+        if not candidate.is_file():
+            continue
+        clip = _load_clip(candidate)
+        results = []
+        for name in models:
+            runner = _load_runner(gs, gates, name)
+            probs = _gate2_probs(gs, gates, name, runner, clip)
+            intent, conf = gs._g2_candidate_intent(probs, list(runner.labels), {}, 0.0)
+            hit = _same_command(intent, take["action"])
+            if conf is not None and np.isfinite(conf):
+                tally[name][1] += 1
+                tally[name][0] += 1 if hit else 0
+            results.append(
+                {
+                    "model": name,
+                    "intent": str(intent or ""),
+                    "conf": None if conf is None or not np.isfinite(conf) else round(float(conf), 4),
+                    "match": bool(hit),
+                }
+            )
+        takes.append({**take, "results": results})
+
+    summary = [
+        {
+            "model": name,
+            "correct": tally[name][0],
+            "scored": tally[name][1],
+            "acc": round(tally[name][0] / tally[name][1], 4) if tally[name][1] else None,
+        }
+        for name in models
+    ]
+    summary.sort(key=lambda row: (-(row["acc"] or 0.0), row["model"]))
+    return web.json_response(
+        {"takes": takes, "summary": summary, "capped": capped, "limit": MAX_SCORE_RECORDINGS}
+    )
 
 
 async def page(_request: web.Request) -> web.FileResponse:

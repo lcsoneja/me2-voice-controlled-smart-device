@@ -62,6 +62,8 @@ def _log(message: str) -> None:
             handle.write(line + "\n")
     except OSError:
         pass
+
+
 PAGE = "http://127.0.0.1:8765/oneshot.html"
 HEALTH = "http://127.0.0.1:8765/oneshot.html"
 TITLE = "VCM One-Shot - wake gates a single 5 s Gate 2 capture"
@@ -117,8 +119,28 @@ def _server_command() -> list[str]:
     raise SystemExit(3)
 
 
-def start_server() -> subprocess.Popen | None:
-    """Start the pipeline server when nothing is listening, and wait until it answers."""
+def _watch_server(handle: subprocess.Popen) -> None:
+    """Log when the server becomes ready (or dies) without blocking the window."""
+    deadline = time.time() + START_TIMEOUT
+    while time.time() < deadline:
+        if healthy():
+            _log("[app] server ready")
+            return
+        if handle.poll() is not None:
+            _log("[app] server exited early, code " + str(handle.returncode))
+            return
+        time.sleep(0.5)
+    _log("[app] server did not answer within " + str(START_TIMEOUT) + " s")
+
+
+def start_server(wait: bool = True) -> subprocess.Popen | None:
+    """Start the pipeline server when nothing is listening.
+
+    With wait=False the caller gets the handle immediately: loading 66 Gate 2 packages takes about
+    twenty seconds, which is far too long to show nothing after a double-click. The window opens at
+    once and the page attaches when the server answers (its socket retries every 2 s); readiness is
+    still reported from the watcher thread.
+    """
     if healthy():
         print("[app] server already running")
         return None
@@ -140,6 +162,9 @@ def start_server() -> subprocess.Popen | None:
         PID_FILE.write_text(str(handle.pid), encoding="utf-8")
     except OSError:
         pass
+    if not wait:
+        threading.Thread(target=_watch_server, args=(handle,), daemon=True).start()
+        return handle
     deadline = time.time() + START_TIMEOUT
     while time.time() < deadline:
         if healthy():
@@ -173,7 +198,9 @@ def window_open(hint: str = WINDOW_TITLE_HINT) -> bool:
 
         user32 = ctypes.windll.user32
         found: list[int] = []
-        callback_type = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+        callback_type = ctypes.WINFUNCTYPE(
+            wintypes.BOOL, wintypes.HWND, wintypes.LPARAM
+        )
 
         def visit(handle: int, _param: int) -> bool:
             if user32.IsWindowVisible(handle):
@@ -234,6 +261,7 @@ def fitted_rect(
     height = max(540, min(desired_h, avail_h - margin))
     return (left + max(0, (avail_w - width) // 2), top + 8, width, height)
 
+
 def profile_dir() -> Path:
     """Browser profile for the app window, deliberately OUTSIDE the project folder.
 
@@ -256,20 +284,35 @@ def open_browser_app() -> subprocess.Popen | None:
     profile = profile_dir()
     profile.mkdir(parents=True, exist_ok=True)
     pos_x, pos_y, width, height = fitted_rect()
-    _log("[app] app window " + str(width) + "x" + str(height) + " at " + str((pos_x, pos_y))
-         + " work area " + str(work_area()))
+    _log(
+        "[app] app window "
+        + str(width)
+        + "x"
+        + str(height)
+        + " at "
+        + str((pos_x, pos_y))
+        + " work area "
+        + str(work_area())
+    )
     for exe in BROWSERS:
         if Path(exe).is_file():
-            _log("[app] opening the app window with " + Path(exe).name + " profile=" + str(profile))
-            return subprocess.Popen([
-                exe,
-                "--app=" + PAGE,
-                f"--window-size={width},{height}",
-                f"--window-position={pos_x},{pos_y}",
-                "--user-data-dir=" + str(profile),
-                "--no-first-run",
-                "--no-default-browser-check",
-            ])
+            _log(
+                "[app] opening the app window with "
+                + Path(exe).name
+                + " profile="
+                + str(profile)
+            )
+            return subprocess.Popen(
+                [
+                    exe,
+                    "--app=" + PAGE,
+                    f"--window-size={width},{height}",
+                    f"--window-position={pos_x},{pos_y}",
+                    "--user-data-dir=" + str(profile),
+                    "--no-first-run",
+                    "--no-default-browser-check",
+                ]
+            )
     return None
 
 
@@ -287,11 +330,18 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    server = start_server()
+    # --selftest still waits for a ready server; the interactive window does not.
+    server = start_server(wait=args.selftest)
     try:
         frozen = bool(getattr(sys, "frozen", False))
-        _log("[app] mode frozen=" + str(frozen) + " native=" + str(args.native)
-             + " root=" + str(HERE))
+        _log(
+            "[app] mode frozen="
+            + str(frozen)
+            + " native="
+            + str(args.native)
+            + " root="
+            + str(HERE)
+        )
 
         if frozen and not args.native:
             # pywebview's native window cannot initialise inside a onefile bundle: it blocks with
@@ -319,12 +369,22 @@ def main() -> int:
         try:
             import webview  # optional dependency, imported late so a missing GUI does not break --selftest
         except ImportError:
-            _fatal("pywebview is not installed. Run the packaged .exe, or install pywebview.")
+            _fatal(
+                "pywebview is not installed. Run the packaged .exe, or install pywebview."
+            )
             return 2
 
         pos_x, pos_y, width, height = fitted_rect()
-        _log("[app] native window " + str(width) + "x" + str(height) + " at "
-             + str((pos_x, pos_y)) + " work area " + str(work_area()))
+        _log(
+            "[app] native window "
+            + str(width)
+            + "x"
+            + str(height)
+            + " at "
+            + str((pos_x, pos_y))
+            + " work area "
+            + str(work_area())
+        )
         created = webview.create_window(
             TITLE,
             PAGE,

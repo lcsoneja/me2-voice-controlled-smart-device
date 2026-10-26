@@ -104,24 +104,43 @@
   .count { font-size:14px; }
   .result .big { font-size:21px; }
   table { font-size:11.5px; }
-  /* Phrase list: a multi-column flow only splits into columns when its height is bounded, so the
-     list is a flex child of the pane with its own scroll; 31 items then balance into two columns
-     that fit without scrolling. overflow-wrap keeps long phrases from clipping mid-word. */
-  .phrases { display:flex; flex-direction:column; overflow:auto; }
-  .phrases summary { flex:0 0 auto; }
-  .phrases .plist { flex:1 1 auto; min-height:0; overflow:auto; margin:6px 0 0; padding:0;
-                    list-style:none; column-count:2; column-gap:16px; }
-  .phrases .plist li { display:block; padding:2px 5px; border-radius:6px; cursor:pointer;
-                       break-inside:avoid; font-size:12px; line-height:1.25;
-                       overflow-wrap:break-word; }
-  .phrases .plist li .pint { display:block; font-size:9.5px; color:var(--mut); letter-spacing:.03em; }
-  .phrases summary { cursor:pointer; color:var(--blu); font-size:12.5px; position:sticky; top:-12px;
-                     background:var(--panel); padding:2px 0; }
-  .phrases .plist li.pick { cursor:pointer; }
-  .phrases .plist li.pick:hover { background:#1c2230; }
-  .phrases .plist li.sel { background:#1d2b3a; }
-  .phrases .plist li.sel .pint { color:var(--blu); }
-  /* (superseded rules removed - the phrase list is a two-column flow, see above) */
+  /* Right column: two tabbed panes (phrases, recordings). One visible at a time, each scrolls
+     on its own, so the page still never scrolls. */
+  .rightcol { display:flex; flex-direction:column; gap:8px; overflow:hidden; }
+  .tabs { display:flex; gap:6px; flex:0 0 auto; }
+  .tab { flex:1 1 auto; background:#1b2028; border:1px solid var(--line); color:var(--mut);
+         padding:5px 8px; border-radius:7px; font-size:12px; cursor:pointer; }
+  .tab.on { background:#22303f; color:var(--ink); border-color:var(--blu); }
+  .pane { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:6px; }
+  .pane[hidden] { display:none; }
+  /* Phrase list: a multi-column flow only splits when its height is bounded, so it is a flex
+     child with its own scroll; 31 items balance into two columns that fit without scrolling. */
+  /* Two explicit grid columns rather than a multi-column flow: multicol balancing kept pushing
+     items into an implicit third column (374 px pane, 569 px of content) and clipped the text. */
+  .plist { flex:1 1 auto; min-height:0; overflow:auto; margin:2px 0 0; padding:0; list-style:none;
+           display:grid; grid-template-columns:1fr 1fr; gap:1px 12px; align-content:start; }
+  .plist li { display:block; padding:1px 4px; border-radius:6px; cursor:pointer;
+              font-size:11.5px; line-height:1.2; overflow-wrap:break-word; }
+  .plist li .pint { display:block; font-size:9px; color:var(--mut); letter-spacing:.03em; }
+  .plist li.pick:hover { background:#1c2230; }
+  .plist li.sel { background:#1d2b3a; }
+  .plist li.sel .pint { color:var(--blu); }
+  /* Recordings pane */
+  .takebar { display:flex; gap:6px; align-items:center; flex-wrap:wrap; flex:0 0 auto; }
+  .takebar input[type=search] { flex:1 1 110px; min-width:80px; font-size:11.5px; }
+  .tk-btns { display:flex; gap:6px; flex-wrap:wrap; flex:0 0 auto; }
+  .tk-btns button { font-size:11.5px; padding:4px 8px; }
+  .tk-list { flex:1 1 auto; min-height:0; overflow:auto; margin:0; padding:0; list-style:none; }
+  .tk-list li.tk { display:flex; gap:6px; align-items:baseline; padding:2px 4px; font-size:11.5px;
+                   border-bottom:1px solid var(--line); }
+  .tk-list .tk-label { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis;
+                       white-space:nowrap; }
+  .tk-list .tk-meta { color:var(--mut); font-size:10px; flex:0 0 auto; }
+  .score { flex:0 0 auto; max-height:44%; overflow:auto; border-top:1px solid var(--line);
+           padding-top:6px; }
+  .score table { font-size:11px; margin-top:4px; }
+  .score details { font-size:11px; margin-top:4px; }
+  .score summary { cursor:pointer; color:var(--blu); }
   select:disabled { opacity:.5; }
   audio { display:none; }
 </style>
@@ -201,10 +220,33 @@
     </section>
   </div>
 
-  <details class="panel phrases">
-    <summary id="ph-sum">Phrases to read / pick</summary>
-    <ul class="plist" id="ph-list"></ul>
-  </details>
+  <div class="panel rightcol">
+    <div class="tabs">
+      <button class="tab on" id="tab-phrases" type="button">Phrases</button>
+      <button class="tab" id="tab-takes" type="button">Recordings</button>
+    </div>
+
+    <section class="pane" id="pane-phrases">
+      <p class="note" id="ph-sum">Phrases to read / pick</p>
+      <ul class="plist" id="ph-list"></ul>
+    </section>
+
+    <section class="pane" id="pane-takes" hidden>
+      <div class="takebar">
+        <label class="k"><input type="checkbox" id="tk-all"> all</label>
+        <input type="search" id="tk-filter" placeholder="filter id / label / intent">
+      </div>
+      <div class="tk-btns">
+        <button id="tk-score" class="primary" type="button">Score selected x all models</button>
+        <button id="tk-each" type="button">All intents per take</button>
+        <button id="tk-delete" type="button">Delete selected</button>
+        <button id="tk-delete-all" type="button">Delete all takes</button>
+      </div>
+      <p class="note" id="tk-count">loading recordings...</p>
+      <ul class="tk-list" id="tk-list"></ul>
+      <div class="score" id="tk-result" hidden></div>
+    </section>
+  </div>
 </main>
 
 <audio id="player"></audio>
@@ -354,6 +396,212 @@
     });
   }
 
+
+  // ---- right column tabs ----
+  function showTab(which) {
+    var phrases = (which === "phrases");
+    el("tab-phrases").classList.toggle("on", phrases);
+    el("tab-takes").classList.toggle("on", !phrases);
+    el("pane-phrases").hidden = !phrases;
+    el("pane-takes").hidden = phrases;
+    if (!phrases && !takesLoaded) { loadTakes(); }
+  }
+  el("tab-phrases").addEventListener("click", function () { showTab("phrases"); });
+  el("tab-takes").addEventListener("click", function () { showTab("takes"); });
+
+  // ---- recordings: select, score, delete ----
+  var takes = [], takeSel = {}, takesLoaded = false;
+
+  function selectedIds() {
+    return Object.keys(takeSel).filter(function (id) { return takeSel[id]; });
+  }
+
+  function updateTakeCount(shown, matching) {
+    var label = el("tk-count");
+    if (label) {
+      var prefix = (shown === undefined || matching === undefined)
+        ? "" : (shown + " of " + matching + " matching, ");
+      label.textContent = prefix + takes.length + " recordings, " + selectedIds().length + " selected";
+    }
+  }
+
+  function renderTakes() {
+    var filter = (el("tk-filter").value || "").toLowerCase();
+    var rows = takes.filter(function (r) {
+      return !filter || (r.id + " " + r.label + " " + r.action).toLowerCase().indexOf(filter) >= 0;
+    });
+    var host = el("tk-list");
+    host.textContent = "";
+    var visible = rows.slice(0, 300);   // render cap only; the filter is the way to reach the rest
+    visible.forEach(function (r) {
+      var li = document.createElement("li");
+      li.className = "tk";
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!takeSel[r.id];
+      cb.disabled = !!r.holdout;
+      cb.title = r.holdout ? "holdout clip - kept for the ranking benchmark" : "select " + r.id;
+      cb.addEventListener("change", function () { takeSel[r.id] = cb.checked; updateTakeCount(rows.length); });
+      var label = document.createElement("span");
+      label.className = "tk-label";
+      label.textContent = (r.label || r.id) + (r.action ? "  [" + r.action + "]" : "");
+      label.title = r.id + (r.label ? " - " + r.label : "");
+      var meta = document.createElement("span");
+      meta.className = "tk-meta";
+      meta.textContent = r.holdout ? "holdout" : (r.duration_s ? r.duration_s + " s" : "");
+      var one = document.createElement("button");
+      one.type = "button";
+      one.textContent = "score";
+      one.style.fontSize = "10.5px";
+      one.title = "score this take against every model";
+      one.disabled = !r.action;
+      one.addEventListener("click", function () {
+        scoreTakes([r.id], "Take " + r.id + " against every model");
+      });
+      li.appendChild(cb);
+      li.appendChild(label);
+      li.appendChild(meta);
+      li.appendChild(one);
+      host.appendChild(li);
+    });
+    updateTakeCount(visible.length, rows.length);
+  }
+
+  function loadTakes() {
+    takesLoaded = true;
+    fetch("/api/oneshot/recordings", { cache: "no-store" }).then(function (r) { return r.json(); })
+      .then(function (d) {
+        takes = d.recordings || [];
+        renderTakes();
+      })
+      .catch(function () { el("tk-count").textContent = "recordings unavailable"; });
+  }
+
+  el("tk-filter").addEventListener("input", renderTakes);
+  el("tk-all").addEventListener("change", function () {
+    var on = el("tk-all").checked;
+    takes.forEach(function (r) { if (!r.holdout) { takeSel[r.id] = on; } });
+    renderTakes();
+  });
+
+  function postJson(path, payload, what) {
+    el("tk-count").textContent = what + " ...";
+    return fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (r) { return r.json(); });
+  }
+
+  el("tk-delete").addEventListener("click", function () {
+    var ids = selectedIds();
+    if (!ids.length) { el("tk-count").textContent = "nothing selected"; return; }
+    postJson("/api/oneshot/recordings/delete", { ids: ids }, "deleting " + ids.length + " take(s)")
+      .then(function () {
+        ids.forEach(function (id) { delete takeSel[id]; });
+        el("tk-result").hidden = true;
+        loadTakes();
+      });
+  });
+
+  el("tk-delete-all").addEventListener("click", function () {
+    var mine = takes.filter(function (r) { return !r.holdout; }).length;
+    if (!window.confirm("Delete all " + mine + " of your takes? Holdout clips are kept.")) { return; }
+    postJson("/api/oneshot/recordings/delete", { all: true }, "deleting all takes")
+      .then(function (res) {
+        takeSel = {};
+        el("tk-result").hidden = true;
+        loadTakes();
+        el("tk-count").textContent = "deleted " + res.deleted.length + " take(s); holdout kept: "
+          + res.refused_holdout.length;
+      });
+  });
+
+  function scoreTakes(ids, headline) {
+    postJson("/api/oneshot/recordings/score", { ids: ids, models: "all" }, "scoring")
+      .then(function (d) { renderScore(d, headline); })
+      .catch(function () { el("tk-count").textContent = "scoring failed"; });
+  }
+
+  el("tk-score").addEventListener("click", function () {
+    var ids = selectedIds();
+    if (!ids.length) {
+      el("tk-count").textContent = "select takes first (holdout clips are protected)";
+      return;
+    }
+    scoreTakes(ids, "Batch: " + ids.length + " take(s) against every model");
+  });
+
+  el("tk-each").addEventListener("click", function () {
+    var ids = selectedIds();
+    if (!ids.length) {
+      el("tk-count").textContent = "select takes first, or press score on one row";
+      return;
+    }
+    scoreTakes(ids, "Per take: every model's answer for each recording");
+  });
+
+  function renderScore(d, headline) {
+    var host = el("tk-result");
+    host.hidden = false;
+    host.textContent = "";
+    var head = document.createElement("p");
+    head.className = "note";
+    head.textContent = headline + " - " + d.summary.length + " models, " + d.takes.length
+      + " take(s)" + (d.capped ? " (limited to " + d.limit + " takes per run)" : "");
+    host.appendChild(head);
+
+    var table = document.createElement("table");
+    var head_row = document.createElement("tr");
+    ["model", "hit", "acc"].forEach(function (name) {
+      var th = document.createElement("th");
+      th.textContent = name;
+      head_row.appendChild(th);
+    });
+    var thead = document.createElement("thead");
+    thead.appendChild(head_row);
+    table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    d.summary.slice(0, 12).forEach(function (row) {
+      var tr = document.createElement("tr");
+      var td1 = document.createElement("td");
+      td1.textContent = String(row.model).replace(/^gate2/, "");
+      var td2 = document.createElement("td");
+      td2.textContent = row.correct + "/" + row.scored;
+      var td3 = document.createElement("td");
+      td3.textContent = (row.acc === null) ? "-" : (100 * row.acc).toFixed(1) + "%";
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    host.appendChild(table);
+
+    d.takes.forEach(function (take) {
+      var box = document.createElement("details");
+      var summary = document.createElement("summary");
+      var hits = take.results.filter(function (r) { return r.match; }).length;
+      // A take much longer than the model window is scored on its final window only, which is the
+      // known wake+command alignment limit rather than a model failure - say so instead of
+      // letting a low score look like a bug.
+      var long_take = (typeof take.duration_s === "number" && take.duration_s > 8);
+      summary.textContent = take.id + " - " + take.action + " - " + hits + "/"
+        + take.results.length + " models agree"
+        + (long_take ? "  (long take " + take.duration_s + " s: only the final window is scored)" : "");
+      box.appendChild(summary);
+      var lines = document.createElement("div");
+      lines.style.whiteSpace = "pre-wrap";
+      lines.textContent = take.results.map(function (r) {
+        return String(r.model).replace(/^gate2/, "") + ": " + (r.intent || "none")
+          + (r.conf === null ? "" : " (" + r.conf.toFixed(2) + ")") + (r.match ? "  ok" : "  x");
+      }).join("\n");
+      box.appendChild(lines);
+      host.appendChild(box);
+    });
+    el("tk-count").textContent = "scored " + d.takes.length + " take(s) against "
+      + d.summary.length + " models";
+  }
 
   function setState(s) {
     el("c-state").textContent = s;

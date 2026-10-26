@@ -6,7 +6,7 @@ URL = "http://127.0.0.1:8765/oneshot.html"
 
 PROBE = """() => {
   const el = (id) => document.getElementById(id);
-  const pane = document.querySelector('details.phrases');
+  const pane = document.querySelector('#tk-list');
   return {
     innerH: window.innerHeight, innerW: window.innerWidth,
     pageScrollH: document.scrollingElement.scrollHeight,
@@ -45,7 +45,7 @@ def main() -> int:
             + str(m["pageScrollW"] <= m["innerW"] + 1)
         )
 
-        page.click("details.phrases summary")
+        page.click("#tab-takes")
         page.wait_for_timeout(400)
         m2 = page.evaluate(PROBE)
         panes = m2["pane"]
@@ -86,6 +86,7 @@ def main() -> int:
         m4 = page.evaluate(PROBE)
         print("PHRASE_SELECT note=[" + str(m4["notePhrase"]) + "]")
 
+        page.click("#tab-phrases")   # the recordings tab took over the pane; go back first
         page.click("#ph-list li:nth-child(4)")
         page.wait_for_timeout(300)
         m5 = page.evaluate(PROBE)
