@@ -36,7 +36,7 @@
   .col-mid { display:flex; flex-direction:column; gap:12px; min-height:0; }
   .setup { flex:0 0 auto; }
   .panel-result { flex:1 1 auto; }
-  .stage { display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .stage { display:flex; flex-direction:column; align-items:center; gap:6px; overflow-x:hidden; }
   .wake { width:100%; }
   h2.ph { margin:0 0 4px; font-size:11.5px; text-transform:uppercase; letter-spacing:.07em;
           color:var(--mut); font-weight:600; }
@@ -62,7 +62,7 @@
     body.recording .dot { animation:none; }
     .ring .prog { transition:none !important; }
   }
-  .stage { display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .stage { display:flex; flex-direction:column; align-items:center; gap:6px; overflow-x:hidden; }
   .ring { position:relative; width:190px; height:190px; }
   .ring svg { transform:rotate(-90deg); }
   .ring .track { stroke:#20262f; }
@@ -79,9 +79,9 @@
   .count { font-size:26px; font-variant-numeric:tabular-nums; }
   .bar { height:7px; background:#20262f; border-radius:4px; overflow:hidden; margin-top:4px; }
   .bar > i { display:block; height:100%; width:0; background:var(--blu); transition:width .12s; }
-  .row { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:12px; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:5px; }
   .row .k { color:var(--mut); font-size:12.5px; }
-  .btns { display:flex; gap:8px; margin-top:16px; }
+  .btns { display:flex; gap:8px; margin-top:8px; }
   button { background:#21262d; color:var(--ink); border:1px solid #30363d; border-radius:8px;
            padding:9px 15px; font-size:13.5px; cursor:pointer; }
   button:hover { background:#2a313a; }
@@ -92,7 +92,7 @@
   .result .big { font-size:30px; font-weight:700; margin:2px 0 6px; }
   .result .none { color:var(--mut); }
   table { width:100%; border-collapse:collapse; margin-top:10px; font-size:12.5px; }
-  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); }
+  th,td { text-align:left; padding:4px 6px; border-bottom:1px solid var(--line); }
   th { color:var(--mut); font-weight:600; }
   .mut { color:var(--mut); }
   .ok { color:var(--grn); } .warn { color:var(--amb); } .bad { color:var(--red); }
@@ -119,9 +119,9 @@
      items into an implicit third column (374 px pane, 569 px of content) and clipped the text. */
   .plist { flex:1 1 auto; min-height:0; overflow:auto; margin:2px 0 0; padding:0; list-style:none;
            display:grid; grid-template-columns:1fr 1fr; gap:1px 12px; align-content:start; }
-  .plist li { display:block; padding:1px 4px; border-radius:6px; cursor:pointer;
-              font-size:11.5px; line-height:1.2; overflow-wrap:break-word; }
-  .plist li .pint { display:block; font-size:9px; color:var(--mut); letter-spacing:.03em; }
+  .plist li { display:block; padding:0 3px; border-radius:6px; cursor:pointer;
+              font-size:10.5px; line-height:1.0; overflow-wrap:break-word; }
+  .plist li .pint { display:inline; margin-right:4px; font-size:8.5px; color:var(--mut); letter-spacing:.03em; }
   .plist li.pick:hover { background:#1c2230; }
   .plist li.sel { background:#1d2b3a; }
   .plist li.sel .pint { color:var(--blu); }
@@ -129,7 +129,7 @@
   .takebar { display:flex; gap:6px; align-items:center; flex-wrap:wrap; flex:0 0 auto; }
   /* Running ranking: continuous scoring accumulates here; it owns its own short scroll so the
     page still never scrolls. */
-  .rank { flex:0 1 auto; max-height:190px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
+  .rank { flex:0 1 auto; max-height:170px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
   .rank table { width:100%; border-collapse:collapse; }
   .rank th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
   .rank td.n, .rank th.n { text-align:right; font-variant-numeric:tabular-nums; }
@@ -144,13 +144,14 @@
   tr.trial-actions td { border-top:none; padding:0 6px 6px 6px; font-size:11px; }
   tr.trial-actions button, tr.trial-actions select { font-size:11px; }
   /* Voice chart: is my voice actually reaching the mic? */
-  canvas#vu { width:100%; height:56px; background:#1b1f26; border:1px solid #39414c; margin-top:6px; }
+  canvas#vu { width:100%; height:34px; background:#1b1f26; border:1px solid #39414c; margin-top:4px; }
   /* Live scoreboard: auto-scores every new take against all models. */
-  .scoreboard { margin-top:8px; border-top:1px solid #2a2f36; max-height:148px; overflow:auto; }
-  .scoreboard table { width:100%; border-collapse:collapse; font-size:10.5px; }
+  .scoreboard { flex:0 0 auto; margin-top:6px; border-top:1px solid #2a2f36; max-height:104px; overflow:auto; }
+  .scoreboard table { width:100%; border-collapse:collapse; font-size:10px; }
   .scoreboard th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
   .scoreboard td.n, .scoreboard th.n { text-align:right; font-variant-numeric:tabular-nums; }
   .scoreboard tr.top td { color:var(--blu); font-weight:700; }
+  .rank td, .rank th, .scoreboard td, .scoreboard th { padding:1px 6px; }
   .takebar input[type=search] { flex:1 1 110px; min-width:80px; font-size:11.5px; }
   .tk-btns { display:flex; gap:6px; flex-wrap:wrap; flex:0 0 auto; }
   .tk-btns button { font-size:11.5px; padding:4px 8px; }
@@ -623,7 +624,7 @@
     if (!box || !body) { return; }
     box.hidden = ranking.length === 0;
     body.textContent = "";
-    ranking.slice(0, 15).forEach(function (row, index) {
+    ranking.slice(0, 5).forEach(function (row, index) {
       var tr = document.createElement("tr");
       if (index === 0) { tr.className = "top"; }
       tr.title = row.model;
@@ -655,7 +656,7 @@
     var body = el("sb-body");
     if (!body) { return; }
     body.textContent = "";
-    ranking.slice(0, 5).forEach(function (row, index) {
+    ranking.slice(0, 3).forEach(function (row, index) {
       var tr = document.createElement("tr");
       if (index === 0) { tr.className = "top"; }
       tr.title = row.model;

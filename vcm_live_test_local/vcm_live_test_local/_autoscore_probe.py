@@ -16,22 +16,33 @@ APP = pathlib.Path(__file__).resolve().parent
 def call(path: str, payload: dict | None = None) -> dict:
     data = json.dumps(payload).encode() if payload is not None else None
     request = urllib.request.Request(
-        BASE + path, data=data, method="POST" if data else "GET",
+        BASE + path,
+        data=data,
+        method="POST" if data else "GET",
         headers={"Content-Type": "application/json"} if data else {},
     )
     try:
         with urllib.request.urlopen(request, timeout=600) as response:
             return json.loads(response.read().decode())
     except (urllib.error.URLError, OSError, ValueError) as exc:
-        raise SystemExit("call failed " + path + ": " + type(exc).__name__ + " " + str(exc)[:150])
+        raise SystemExit(
+            "call failed " + path + ": " + type(exc).__name__ + " " + str(exc)[:150]
+        )
 
 
 def main() -> int:
     archives = sorted(APP.glob("recordings/_archive_me2h_holdout_*"))
-    subprocess.run([sys.executable, "_archive_recordings.py", "--restore", archives[-1].name],
-                   cwd=APP, check=True, capture_output=True)
-    take_id = next(r["id"] for r in call("/api/oneshot/recordings")["recordings"]
-                   if (r.get("action") or "").strip())
+    subprocess.run(
+        [sys.executable, "_archive_recordings.py", "--restore", archives[-1].name],
+        cwd=APP,
+        check=True,
+        capture_output=True,
+    )
+    take_id = next(
+        r["id"]
+        for r in call("/api/oneshot/recordings")["recordings"]
+        if (r.get("action") or "").strip()
+    )
     print("TAKE=" + take_id)
     try:
         with sync_playwright() as playwright:
@@ -43,18 +54,29 @@ def main() -> int:
             page.evaluate("tid => window.__oneshot.scoreNewTake(tid)", take_id)
             page.wait_for_function(
                 "() => document.getElementById('sb-title').textContent.includes('scored take')",
-                timeout=240000)
+                timeout=240000,
+            )
             print("AUTO_TITLE=" + page.inner_text("#sb-title"))
-            print("AUTO_ROWS=" + str(page.eval_on_selector_all(
-                "#sb-body tr", "els => els.length")))
+            print(
+                "AUTO_ROWS="
+                + str(page.eval_on_selector_all("#sb-body tr", "els => els.length"))
+            )
             print("AUTO_RANK=" + str(len(call("/api/oneshot/leaderboard")["ranking"])))
             browser.close()
     finally:
-        subprocess.run([sys.executable, "_archive_recordings.py"], cwd=APP,
-                       capture_output=True, check=False)
+        subprocess.run(
+            [sys.executable, "_archive_recordings.py"],
+            cwd=APP,
+            capture_output=True,
+            check=False,
+        )
         call("/api/oneshot/leaderboard/reset", {})
-    print("FINAL RECORDINGS=" + str(len(call("/api/oneshot/recordings")["recordings"]))
-          + " RANKING=" + str(len(call("/api/oneshot/leaderboard")["ranking"])))
+    print(
+        "FINAL RECORDINGS="
+        + str(len(call("/api/oneshot/recordings")["recordings"]))
+        + " RANKING="
+        + str(len(call("/api/oneshot/leaderboard")["ranking"]))
+    )
     return 0
 
 
