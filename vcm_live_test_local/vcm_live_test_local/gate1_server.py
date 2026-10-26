@@ -442,6 +442,64 @@ GATE2_PACKAGE_RUNNERS = {
         "tflite/gate2v77_speech_neg_float16.tflite",
         None,
     ),
+    # 2026-10-25/26 DGX batch: V64d-derived experiments that ship TFLite but no spec/labels.json.
+    # Their manifests record "base: V64d weights" and their tensors are identical to V64d's
+    # (1x148x60x9 -> 20 classes), so they reuse the V64d package's spec and label order.
+    "gate2v81_timeshift_add": (
+        SHIP_DIR / "Gate2V81_TimeShiftAdd_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v81_timeshift_add_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v82_speechoos2": (
+        SHIP_DIR / "Gate2V82_SpeechOOS2_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v82_speechoos2_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v82b_speechoos2_w035": (
+        SHIP_DIR / "Gate2V82B_SpeechOOS2_w035_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v82b_speechoos2_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v84_phonemeaux2": (
+        SHIP_DIR / "Gate2V84_PhonemeAux2_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v84_phoneme_aux_intent_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v85_keywordsonly": (
+        SHIP_DIR / "Gate2V85_KeywordsOnly_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v85_keywords_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v96a_confweight2x": (
+        SHIP_DIR / "Gate2V96A_ConfWeight2x_ship_EXPERIMENTAL_20261026",
+        "tflite/gate2v96a_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v96c_v93b_rerun": (
+        SHIP_DIR / "Gate2V96C_V93bReRun_ship_EXPERIMENTAL_20261026",
+        "tflite/gate2v96c_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v97d_warmuplr": (
+        SHIP_DIR / "Gate2V97D_WarmupLR_ship_EXPERIMENTAL_20261026",
+        "tflite/gate2v97d_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v108_ownerft_v93b": (
+        SHIP_DIR / "Gate2V108_OwnerFT_V93b_ship_EXPERIMENTAL_20261026",
+        "tflite/gate2v108_v93b_owner_ft_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v109_ownerft_v96c": (
+        SHIP_DIR / "Gate2V109_OwnerFT_V96c_ship_EXPERIMENTAL_20261026",
+        "tflite/gate2v109_v96c_owner_ft_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v110_ownerft_aggr": (
+        SHIP_DIR / "Gate2V110_OwnerFT_Aggr_ship_EXPERIMENTAL_20261026",
+        "tflite/gate2v110_v93b_owner_ft_high_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
 }
 
 GATE2_DISABLED_CANDIDATES = {
@@ -460,6 +518,22 @@ GATE2_DISABLED_CANDIDATES = {
     "gate2v64dlc_partial": "Partial run (no preprocessing_spec.json).",
     "gate2v64pt_tempscaled": "Temperature-scaling calibration artefact, not a standalone model.",
     "gate2v55_sarimax_prior": "SARIMAX prior artefact, not a standalone model.",
+    "gate2v80_conv3d": "Rank-5 input (1x148x60x9x1); needs a Conv3D adapter.",
+    "gate2v83_oosbinarycascade": "Single binary output: a cascade rejection head, not a 19-class classifier.",
+    "gate2v90_phonememultihot": "167 outputs (phoneme multi-hot aux head); the package ships no decoding spec.",
+    "gate2v91_v77binary": "Single binary output derived from V77; no command labels to score.",
+    "gate2v92a_graded": "167 outputs (graded/phoneme targets); no decoding spec shipped.",
+    "gate2v92b_graded": "167 outputs (graded/phoneme targets); no decoding spec shipped.",
+    "gate2v93a_depthonly": "No TFLite exported (keras/report only).",
+    "gate2v93b_depthdetail": "No TFLite exported (keras/report only).",
+    "gate2v94_sarimax_v93b": "No TFLite exported (keras/report only).",
+    "gate2v95_cascadev93b": "No TFLite exported (keras/report only).",
+    "gate2v98_fineoffset41": "No TFLite exported (keras/report only).",
+    "gate2v100_attngap": "No TFLite: export blocked by Lambda layer serialization.",
+    "gate2v101_crnn_v93b": "No TFLite exported; its own report records FAIL 87.14%.",
+    "gate2v102_distancechannels": "18-channel frontend (distance-from-peak channels); the recipe is not shipped.",
+    "gate2v106_pairdiscriminators": "Ships a training script and report only (per-confusion-pair discriminators), not a deployable model.",
+    "gate2v107_distcompact": "148x549 compact feature layout whose recipe is not shipped; its own report records FAIL val 5.60%.",
 }
 
 GATE2_PID_CONFIGS = {
@@ -930,15 +1004,19 @@ class Gate2PackageRunner:
             raise RuntimeError(
                 f"Gate2 package has no valid normalization stats: {spec_path}"
             )
+        labels_path = pkg_dir / "labels.json"
+        if not labels_path.is_file() and spec_dir is not None:
+            # Fine-tunes inherit their base package's head and ship without their own
+            # labels.json, exactly like the spec fallback above. The output-size check below
+            # fails loudly if the base label order does not actually match the model.
+            labels_path = spec_dir / "labels.json"
         try:
             self.labels = list(
-                json.loads((pkg_dir / "labels.json").read_text(encoding="utf-8"))[
-                    "labels"
-                ]
+                json.loads(labels_path.read_text(encoding="utf-8"))["labels"]
             )
         except (OSError, json.JSONDecodeError) as exc:
             raise RuntimeError(
-                f"Cannot load Gate2 package labels {pkg_dir / 'labels.json'}: {exc}"
+                f"Cannot load Gate2 package labels {labels_path}: {exc}"
             ) from exc
         self.interp = _make_interpreter(tflite_path)
         input_details = self.interp.get_input_details()
@@ -953,6 +1031,20 @@ class Gate2PackageRunner:
         if len(shape) != 4:
             raise RuntimeError(
                 f"Gate2 package input must be rank 4, got {shape}: {tflite_path}"
+            )
+        out_details = self.interp.get_output_details()
+        if len(out_details) != 1:
+            raise RuntimeError(
+                f"Gate2 package expects {len(out_details)} output tensors; adapter supports "
+                f"one: {tflite_path}"
+            )
+        out_scores = int(np.prod(out_details[0]["shape"]))
+        if out_scores != len(self.labels):
+            # Catches a package registered against the wrong base: without this the mismatched
+            # head would silently score near zero instead of failing.
+            raise RuntimeError(
+                f"Gate2 package outputs {out_scores} scores for {len(self.labels)} labels: "
+                f"{tflite_path}"
             )
         self.frames = shape[1]
         self.n_mels = shape[2]
