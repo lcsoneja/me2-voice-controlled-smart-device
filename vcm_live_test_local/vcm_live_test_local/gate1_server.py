@@ -401,14 +401,14 @@ GATE2_PACKAGE_RUNNERS = {
         "tflite/gate2v66_clean_only_float16.tflite",
         None,
     ),
-    "gate2v66a_3extra": (
-        SHIP_DIR / "Gate2V66a_3extra_ship_EXPERIMENTAL_20261022",
-        "tflite/gate2v66a_float16.tflite",
-        None,
-    ),
-    "gate2v66d_2extra": (
-        SHIP_DIR / "Gate2V66d_2extra_ship_EXPERIMENTAL_20261022",
-        "tflite/gate2v66d_float16.tflite",
+    # v66a_3extra / v66d_2extra / v66c_4extra are NOT listed here: their specs declare 12-, 11-
+    # and 13-channel frontends (9 slide views plus AR(1) / log-cumulative-energy channels built by
+    # the DGX-side extra_channels_a / _d / _c configs, which the packages do not ship). Feeding them
+    # anything else would silently produce meaningless scores, so they are documented in
+    # GATE2_DISABLED_CANDIDATES until those definitions arrive.
+    "gate2v66m_mutation": (
+        SHIP_DIR / "Gate2V66M_Mutation_ship_EXPERIMENTAL_20261022",
+        "tflite/gate2v66m_mutation_float16.tflite",
         None,
     ),
     "gate2v67_timeshift_only": (
@@ -453,6 +453,13 @@ GATE2_DISABLED_CANDIDATES = {
     "gate2v40c_18ch_deriv_attention": "18-channel derivative/attention frontend needs derived-stat handling.",
     "gate2v45_keywordpairs": "Package is missing labels.json and preprocessing_spec.json.",
     "gate2v51_realchannel": "Package is missing preprocessing_spec.json; channel recipe is unverified.",
+    "gate2v66a_3extra": "12-channel frontend: 9 slide views plus 3 AR(1) coefficient channels from the DGX extra_channels_a config, which the package does not ship.",
+    "gate2v66c_4extra": "13-channel frontend: 9 slide views plus 4 channels from the DGX extra_channels_c config, which the package does not ship.",
+    "gate2v66d_2extra": "11-channel frontend: 9 slide views plus 2 log-cumulative-energy channels from the DGX extra_channels_d config, which the package does not ship.",
+    "gate2v66c_partial": "Partial training run; package has no usable preprocessing spec.",
+    "gate2v64dlc_partial": "Partial run (no preprocessing_spec.json).",
+    "gate2v64pt_tempscaled": "Temperature-scaling calibration artefact, not a standalone model.",
+    "gate2v55_sarimax_prior": "SARIMAX prior artefact, not a standalone model.",
 }
 
 GATE2_PID_CONFIGS = {
