@@ -18,9 +18,29 @@
   .chip { background:var(--panel); border:1px solid var(--line); border-radius:999px;
           padding:3px 11px; font-size:12px; color:var(--mut); }
   .chip b { color:var(--ink); font-weight:600; }
-  main { display:grid; grid-template-columns:340px 1fr; gap:18px; padding:18px 20px 28px; }
-  @media (max-width:900px){ main { grid-template-columns:1fr; } }
-  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  /* The page itself never scrolls; individual panes do. body is a fixed-height flex column,
+     main takes the leftover height, and grid tracks are minmax(0,1fr) so children can shrink
+     instead of pushing the page taller. */
+  html, body { height:100%; }
+  body { display:flex; flex-direction:column; overflow:hidden; }
+  header { flex:0 0 auto; }
+  main { flex:1 1 auto; min-height:0; display:grid; grid-template-columns:340px 1fr;
+         grid-template-rows:minmax(0, 1fr) auto; gap:14px; padding:14px 18px 16px; }
+  @media (max-width:900px){
+    main { grid-template-columns:1fr; grid-template-rows:auto; overflow:auto; }
+    .stage, .panel-result, .phrases { grid-column:1 !important; grid-row:auto !important; }
+  }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px;
+           min-height:0; overflow:auto; }
+  /* Left column is two panes: the stage keeps the ring, wake bars and the Arm/Disarm row
+     always visible, while the model + phrase pickers get their own scrollable pane. */
+  .col-left { grid-column:1; grid-row:1 / span 2; display:flex; flex-direction:column;
+              gap:12px; min-height:0; }
+  .stage { flex:0 0 auto; }
+  .pickers { flex:1 1 auto; min-height:0; overflow:auto; }
+  .pickers .row + .row { margin-top:8px; }
+  .panel-result { grid-column:2; grid-row:1; }
+  .phrases { grid-column:2; grid-row:2; max-height:44%; margin-top:0; }
   .stage { display:flex; flex-direction:column; align-items:center; gap:12px; }
   .ring { position:relative; width:190px; height:190px; }
   .ring svg { transform:rotate(-90deg); }
@@ -93,8 +113,12 @@
   @media (min-width:1000px) {
     .phrases .plist { column-count:2; column-gap:20px; }
   }
-  .phrases { margin-top:14px; }
-  .phrases summary { cursor:pointer; color:var(--blu); font-size:13px; }
+  .phrases summary { cursor:pointer; color:var(--blu); font-size:13px; position:sticky; top:-14px;
+                     background:var(--panel); padding:2px 0; }
+  .phrases .plist li.pick { cursor:pointer; }
+  .phrases .plist li.pick:hover { background:#1c2230; }
+  .phrases .plist li.sel { background:#1d2b3a; }
+  .phrases .plist li.sel .pint { color:var(--blu); }
   .phrases .plist { margin:8px 0 0; padding:0; list-style:none; }
   .phrases .plist li { display:flex; gap:8px; align-items:baseline; padding:3px 0;
                        border-top:1px solid var(--line); font-size:12.5px; }
@@ -120,6 +144,7 @@
 </header>
 
 <main>
+  <div class="col-left">
   <section class="panel stage">
     <div class="ring">
       <svg width="190" height="190" viewBox="0 0 190 190">
@@ -139,11 +164,6 @@
       <div class="bar"><i id="b-piattos"></i></div>
       <div class="row"><span class="k">wake vote</span><span class="k" id="p-vote">0 / 2</span></div>
       <div class="row"><span class="k">persona / reply</span><span class="k" id="p-persona">-</span></div>
-      <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
-        <span class="k">Gate 2 model - sorted by real-voice holdout accuracy</span>
-        <select id="sel-g2"></select>
-        <span class="k" id="sel-g2-note" style="font-size:11.5px">loading ranking...</span>
-      </div>
     </div>
 
     <div class="btns">
@@ -153,7 +173,26 @@
     <div class="sub" style="text-align:center">Re-arm after each shot - one capture per arm, by design.</div>
   </section>
 
-  <section class="panel">
+  <section class="panel pickers">
+    <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
+      <span class="k">Gate 2 model - real-voice ranked</span>
+      <select id="sel-g2"></select>
+      <span class="k" id="sel-g2-note" style="font-size:11px">loading ranking...</span>
+    </div>
+    <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
+      <span class="k">Gate 1 wake model - measured best first</span>
+      <select id="sel-g1"></select>
+      <span class="k" id="sel-g1-note" style="font-size:11px">loading wake models...</span>
+    </div>
+    <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
+      <span class="k">Phrase I will speak</span>
+      <select id="sel-phrase"></select>
+      <span class="k" id="sel-phrase-note" style="font-size:11px">expecting: nothing</span>
+    </div>
+  </section>
+  </div>
+
+  <section class="panel panel-result">
     <div class="result">
       <div class="k mut">Gate 2 result (one decision from the 5 s capture)</div>
       <div class="big" id="r-intent"><span class="none">no shot yet</span></div>
@@ -165,11 +204,12 @@
       </thead>
       <tbody id="log"><tr><td colspan="8" class="mut">no shots yet</td></tr></tbody>
     </table>
-    <details class="phrases">
-      <summary id="ph-sum">Phrases to read (click to open)</summary>
-      <ul class="plist" id="ph-list"></ul>
-    </details>
   </section>
+
+  <details class="panel phrases">
+    <summary id="ph-sum">Phrases to read / pick (click to open)</summary>
+    <ul class="plist" id="ph-list"></ul>
+  </details>
 </main>
 
 <audio id="player"></audio>
@@ -182,6 +222,8 @@
   var RING = 527.8;
   var ws = null, actx = null, micStream = null, processor = null;
   var shots = 0, recording = false, captureStart = 0, rafId = 0;
+  var expectIntent = null;   // what the picked phrase should produce, or null for a free test
+  var wakeModelsLoaded = false;
 
   var el = function (id) { return document.getElementById(id); };
 
@@ -193,9 +235,21 @@
     }).then(function (data) {
       var list = data.phrases || [];
       var host = el("ph-list");
+      var sel = el("sel-phrase");
       host.textContent = "";
+      if (sel) {
+        sel.textContent = "";
+        var free = document.createElement("option");
+        free.value = "";
+        free.textContent = "(free test - no expected intent)";
+        sel.appendChild(free);
+      }
+      var groups = {};
       list.forEach(function (row) {
         var li = document.createElement("li");
+        li.className = "pick";
+        li.setAttribute("data-phrase", row.phrase);
+        li.setAttribute("data-intent", row.intent || "");
         var tag = document.createElement("span");
         tag.className = "pint";
         tag.textContent = row.intent || "";
@@ -203,8 +257,30 @@
         txt.textContent = row.phrase;
         li.appendChild(tag);
         li.appendChild(txt);
+        li.addEventListener("click", function () {
+          setExpectation(row.intent || "", row.phrase);
+        });
         host.appendChild(li);
+        if (sel) {
+          var key = row.intent || "(any)";
+          if (!groups[key]) {
+            groups[key] = document.createElement("optgroup");
+            groups[key].label = key;
+            sel.appendChild(groups[key]);
+          }
+          var opt = document.createElement("option");
+          opt.value = row.phrase;
+          opt.textContent = row.phrase;
+          opt.setAttribute("data-intent", row.intent || "");
+          groups[key].appendChild(opt);
+        }
       });
+      if (sel) {
+        sel.addEventListener("change", function () {
+          var chosen = sel.options[sel.selectedIndex];
+          setExpectation(chosen ? (chosen.getAttribute("data-intent") || "") : "", sel.value);
+        });
+      }
       var sum = el("ph-sum");
       var wake = (data.wake || []).join(" or ");
       if (sum) {
@@ -217,6 +293,65 @@
     });
   }
   loadPhrases();
+
+  // Pick which phrase will be spoken: the app then judges the shot against it.
+  function setExpectation(intent, phrase) {
+    expectIntent = intent || null;
+    var note = el("sel-phrase-note");
+    var sel = el("sel-phrase");
+    if (sel && phrase && sel.value !== phrase) { sel.value = phrase; }
+    if (note) {
+      note.textContent = expectIntent
+        ? ("expecting " + expectIntent + " for \"" + phrase + "\"")
+        : "expecting: nothing (free test)";
+    }
+    var items = document.querySelectorAll("#ph-list li");
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.toggle("sel", items[i].getAttribute("data-phrase") === phrase);
+    }
+  }
+
+  // Gate 1 wake models, ordered measured-best first by the server's own preference list.
+  function loadWakeModels(active, order) {
+    var sel = el("sel-g1");
+    if (!sel) { return; }
+    if (wakeModelsLoaded) {
+      if (active && sel.value !== active) { sel.value = active; }
+      return;
+    }
+    fetch("/api/lab/models", { cache: "no-store" }).then(function (r) { return r.json(); })
+      .then(function (d) {
+        var list = (d.g1_models || []).slice();
+        var pref = (order && order.length) ? order : [];
+        list.sort(function (a, b) {
+          var ia = pref.indexOf(a); var ib = pref.indexOf(b);
+          if (ia === -1) { ia = 999; }
+          if (ib === -1) { ib = 999; }
+          return ia - ib || String(a).localeCompare(String(b));
+        });
+        sel.textContent = "";
+        list.forEach(function (m) {
+          var o = document.createElement("option");
+          o.value = m;
+          o.textContent = m + (pref.indexOf(m) === 0 ? "  (measured best)" : "");
+          sel.appendChild(o);
+        });
+        if (active) { sel.value = active; }
+        wakeModelsLoaded = true;
+        el("sel-g1-note").textContent = list.length
+          + " wake models - switching applies to this connection";
+      })
+      .catch(function () {
+        el("sel-g1-note").textContent = "wake model list unavailable";
+      });
+  }
+  var g1Sel = el("sel-g1");
+  if (g1Sel) {
+    g1Sel.addEventListener("change", function () {
+      if (el("sel-g1-note")) { el("sel-g1-note").textContent = "switching to " + g1Sel.value + " ..."; }
+      send({ type: "g1_model", model: g1Sel.value });
+    });
+  }
 
 
   function setState(s) {
@@ -296,9 +431,17 @@
       if (sel && sel.value && sel.value !== msg.gate2_model) {
         send({ type: "gate2_model", model: sel.value });
       }
+      loadWakeModels(msg.g1_model, msg.g1_order || []);
     } else if (msg.type === "model") {
       if (msg.gate2_model) { el("c-g2").textContent = msg.gate2_model; }
-      if (msg.g1_model) { el("c-g1").textContent = msg.g1_model; }
+      if (msg.g1_model) {
+        el("c-g1").textContent = msg.g1_model;
+        var g1 = el("sel-g1");
+        if (g1 && g1.value !== msg.g1_model) { g1.value = msg.g1_model; }
+        if (el("sel-g1-note")) {
+          el("sel-g1-note").textContent = "active wake model: " + msg.g1_model;
+        }
+      }
     } else if (msg.type === "state") {
       setState(msg.state || "idle");
     } else if (msg.type === "g1") {
@@ -327,6 +470,12 @@
       el("r-intent").textContent = none ? "no command in the window"
                                        : String(msg.intent).replace(/_/g, " ");
       el("r-intent").className = none ? "big none" : "big ok";
+      var verdictTag = "";
+      if (expectIntent) {
+        var matched = (!none && String(msg.intent) === expectIntent);
+        verdictTag = matched ? " [match]" : (" [MISMATCH: expected " + expectIntent + "]");
+        el("r-intent").textContent += matched ? " - match" : " - MISMATCH";
+      }
       el("r-detail").textContent = none
         ? "The single Gate 2 pass rejected the clip (NEGATIVE). Captured " + msg.capture_seconds + " s."
         : ("confidence " + Number(msg.conf).toFixed(3) + " at " + msg.at_s + " s into the capture"
@@ -335,7 +484,7 @@
       var row = document.createElement("tr");
       var persona = (el("p-persona").textContent.split(" ")[0] || "-");
       var cells = [[msg.shot, ""], [persona, ""],
-                   [none ? "NEGATIVE" : String(msg.intent), none ? "bad" : "ok"],
+                   [(none ? "NEGATIVE" : String(msg.intent)) + verdictTag, none ? "bad" : "ok"],
                    [none ? "-" : Number(msg.conf).toFixed(3), ""],
                    [none ? "-" : msg.at_s + " s", ""],
                    [msg.windows_scored, ""], [msg.latency_ms + " ms", ""],
@@ -387,7 +536,7 @@
         ? ds.real + " real-voice clips only (synthetic " + ds.syn + " and OOS " + ds.oos + " ignored)"
         : ds.commands + " commands + " + ds.oos + " OOS";
       populateGate2(rows, "holdout: " + tier + " - measured "
-        + String(data.generated || "").replace("T", " ").replace("Z", " UTC"));
+        + String(data.generated || "").slice(0, 10));
     }).catch(function () {
       fetch("/api/lab/models", { cache: "no-store" }).then(function (r) { return r.json(); })
         .then(function (d) {

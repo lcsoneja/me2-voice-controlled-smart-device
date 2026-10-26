@@ -207,6 +207,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             "state": state,
             "capture_seconds": CAPTURE_SECONDS,
             "g1_model": g1_model,
+            "g1_order": list(G1_PREFERENCE),
             "gate2_model": gate2_name,
             "g1_tick_seconds": G1_TICK_SECONDS,
         }
