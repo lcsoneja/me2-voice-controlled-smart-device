@@ -57,6 +57,49 @@
   .ok { color:var(--grn); } .warn { color:var(--amb); } .bad { color:var(--red); }
   select { background:#21262d; color:var(--ink); border:1px solid #30363d; border-radius:8px;
            padding:7px 9px; font-size:13px; width:100%; }
+  /* Short windows: this laptop's work area is only 752 px, so the whole page (including the
+     Arm/Disarm row) must fit the viewport without scrolling. The ring is resized for real rather
+     than scaled, because a CSS transform does not reduce the space it occupies in the layout. */
+  @media (max-height:780px) {
+    header { padding:8px 18px 6px; }
+    h1 { font-size:16px; }
+    .sub { font-size:11.5px; }
+    .chips { margin-top:6px; }
+    .chip { padding:2px 9px; font-size:11.5px; }
+    main { padding:10px 18px 12px; gap:12px; }
+    .panel { padding:10px 12px; }
+    .ring { width:150px; height:150px; }
+    .ring svg { width:150px; height:150px; }
+    .dot { width:56px; height:56px; }
+    .count { font-size:14px; }
+    .stage { gap:6px; }
+    .result .big { font-size:22px; }
+    table { font-size:12px; }
+  }
+  /* Even shorter windows (a 768p laptop at 125% scaling is ~614 px tall): shrink further so the
+     Arm/Disarm row stays reachable instead of sliding under the edge. */
+  @media (max-height:640px) {
+    .ring { width:120px; height:120px; }
+    .ring svg { width:120px; height:120px; }
+    .dot { width:44px; height:44px; }
+    .count { font-size:12px; }
+    .stage .label { font-size:12px; }
+    .row { font-size:12px; }
+    .bar { height:5px; }
+    table { font-size:11px; }
+    .phrases .plist li { font-size:12px; padding:2px 0; }
+  }
+  /* Read the phrase list in two columns on a wide window instead of one long scroll. */
+  @media (min-width:1000px) {
+    .phrases .plist { column-count:2; column-gap:20px; }
+  }
+  .phrases { margin-top:14px; }
+  .phrases summary { cursor:pointer; color:var(--blu); font-size:13px; }
+  .phrases .plist { margin:8px 0 0; padding:0; list-style:none; }
+  .phrases .plist li { display:flex; gap:8px; align-items:baseline; padding:3px 0;
+                       border-top:1px solid var(--line); font-size:12.5px; }
+  .phrases .plist li:first-child { border-top:0; }
+  .phrases .pint { color:var(--mut); font-size:10.5px; flex:0 0 118px; }
   select:disabled { opacity:.5; }
   audio { display:none; }
 </style>
@@ -122,6 +165,10 @@
       </thead>
       <tbody id="log"><tr><td colspan="8" class="mut">no shots yet</td></tr></tbody>
     </table>
+    <details class="phrases">
+      <summary id="ph-sum">Phrases to read (click to open)</summary>
+      <ul class="plist" id="ph-list"></ul>
+    </details>
   </section>
 </main>
 
@@ -137,6 +184,40 @@
   var shots = 0, recording = false, captureStart = 0, rafId = 0;
 
   var el = function (id) { return document.getElementById(id); };
+
+  // Phrases to read aloud. Populated from data/test_phrases.json so the list has one source.
+  function loadPhrases() {
+    fetch("/data/test_phrases.json", { cache: "no-store" }).then(function (res) {
+      if (!res.ok) { throw new Error("no phrase file"); }
+      return res.json();
+    }).then(function (data) {
+      var list = data.phrases || [];
+      var host = el("ph-list");
+      host.textContent = "";
+      list.forEach(function (row) {
+        var li = document.createElement("li");
+        var tag = document.createElement("span");
+        tag.className = "pint";
+        tag.textContent = row.intent || "";
+        var txt = document.createElement("span");
+        txt.textContent = row.phrase;
+        li.appendChild(tag);
+        li.appendChild(txt);
+        host.appendChild(li);
+      });
+      var sum = el("ph-sum");
+      var wake = (data.wake || []).join(" or ");
+      if (sum) {
+        sum.textContent = "Phrases to read - " + list.length + " phrases"
+          + (wake ? ", say \"" + wake + "\" first" : "");
+      }
+    }).catch(function () {
+      var sum = el("ph-sum");
+      if (sum) { sum.textContent = "Phrases to read: data/test_phrases.json not available"; }
+    });
+  }
+  loadPhrases();
+
 
   function setState(s) {
     el("c-state").textContent = s;

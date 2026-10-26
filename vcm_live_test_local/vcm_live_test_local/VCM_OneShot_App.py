@@ -191,6 +191,49 @@ def window_open(hint: str = WINDOW_TITLE_HINT) -> bool:
         return False
 
 
+def work_area() -> tuple[int, int, int, int] | None:
+    """Screen work area (taskbar excluded), in physical pixels, or None off Windows."""
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        class Rect(ctypes.Structure):
+            _fields_ = [
+                ("left", wintypes.LONG),
+                ("top", wintypes.LONG),
+                ("right", wintypes.LONG),
+                ("bottom", wintypes.LONG),
+            ]
+
+        rect = Rect()
+        spi_get_work_area = 0x0030
+        if not ctypes.windll.user32.SystemParametersInfoW(
+            spi_get_work_area, 0, ctypes.byref(rect), 0
+        ):
+            return None
+        return (rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top)
+    except (AttributeError, OSError):
+        return None
+
+
+def fitted_rect(
+    desired_w: int = 1280, desired_h: int = 920, margin: int = 36
+) -> tuple[int, int, int, int]:
+    """Window rectangle (x, y, w, h) that fits inside the work area.
+
+    This screen is 1280x800 with a 752 px work area, while the window used to open at a fixed
+    1280x920. It overflowed the screen, and at the toolkit's default cascade offset (127,127) its
+    bottom edge landed under the taskbar, hiding the Arm/Disarm buttons. Size it to the work area
+    and place it explicitly instead of trusting the default position.
+    """
+    area = work_area()
+    if area is None:
+        return (0, 0, desired_w, desired_h)
+    left, top, avail_w, avail_h = area
+    width = max(880, min(desired_w, avail_w - margin))
+    height = max(540, min(desired_h, avail_h - margin))
+    return (left + max(0, (avail_w - width) // 2), top + 8, width, height)
+
 def profile_dir() -> Path:
     """Browser profile for the app window, deliberately OUTSIDE the project folder.
 
@@ -212,13 +255,17 @@ def open_browser_app() -> subprocess.Popen | None:
     """
     profile = profile_dir()
     profile.mkdir(parents=True, exist_ok=True)
+    pos_x, pos_y, width, height = fitted_rect()
+    _log("[app] app window " + str(width) + "x" + str(height) + " at " + str((pos_x, pos_y))
+         + " work area " + str(work_area()))
     for exe in BROWSERS:
         if Path(exe).is_file():
             _log("[app] opening the app window with " + Path(exe).name + " profile=" + str(profile))
             return subprocess.Popen([
                 exe,
                 "--app=" + PAGE,
-                "--window-size=1280,920",
+                f"--window-size={width},{height}",
+                f"--window-position={pos_x},{pos_y}",
                 "--user-data-dir=" + str(profile),
                 "--no-first-run",
                 "--no-default-browser-check",
@@ -275,8 +322,18 @@ def main() -> int:
             _fatal("pywebview is not installed. Run the packaged .exe, or install pywebview.")
             return 2
 
+        pos_x, pos_y, width, height = fitted_rect()
+        _log("[app] native window " + str(width) + "x" + str(height) + " at "
+             + str((pos_x, pos_y)) + " work area " + str(work_area()))
         created = webview.create_window(
-            TITLE, PAGE, width=1280, height=920, min_size=(980, 720), text_select=True
+            TITLE,
+            PAGE,
+            x=pos_x,
+            y=pos_y,
+            width=width,
+            height=height,
+            min_size=(880, 540),
+            text_select=True,
         )
         if created is None:
             _fatal("could not create the application window")
