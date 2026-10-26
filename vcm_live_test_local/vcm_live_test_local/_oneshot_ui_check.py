@@ -38,23 +38,48 @@ def main() -> int:
         page.wait_for_timeout(2500)
         m = page.evaluate(PROBE)
         print("INITIAL " + str(m))
-        print("  no_page_scroll_v = " + str(m["pageScrollH"] <= m["innerH"] + 1)
-              + " no_page_scroll_h = " + str(m["pageScrollW"] <= m["innerW"] + 1))
+        print(
+            "  no_page_scroll_v = "
+            + str(m["pageScrollH"] <= m["innerH"] + 1)
+            + " no_page_scroll_h = "
+            + str(m["pageScrollW"] <= m["innerW"] + 1)
+        )
 
         page.click("details.phrases summary")
         page.wait_for_timeout(400)
         m2 = page.evaluate(PROBE)
         panes = m2["pane"]
-        print("PHRASES_OPEN pane=" + str(panes)
-              + " pane_scrolls_internally=" + str(bool(panes and panes["scrollH"] > panes["clientH"] and panes["overflow"] == "auto"))
-              + " page_still_no_scroll=" + str(m2["pageScrollH"] <= m2["innerH"] + 1))
+        print(
+            "PHRASES_OPEN pane="
+            + str(panes)
+            + " pane_scrolls_internally="
+            + str(
+                bool(
+                    panes
+                    and panes["scrollH"] > panes["clientH"]
+                    and panes["overflow"] == "auto"
+                )
+            )
+            + " page_still_no_scroll="
+            + str(m2["pageScrollH"] <= m2["innerH"] + 1)
+        )
 
-        chosen = page.evaluate("() => { const s = document.getElementById('sel-g1'); s.selectedIndex = 1; const v = s.value; s.dispatchEvent(new Event('change')); return v; }")
+        chosen = page.evaluate(
+            "() => { const s = document.getElementById('sel-g1'); s.selectedIndex = 1; const v = s.value; s.dispatchEvent(new Event('change')); return v; }"
+        )
         page.wait_for_timeout(1500)
         m3 = page.evaluate(PROBE)
-        print("G1_SWITCH chose=" + str(chosen) + " chip_now=" + str(m3["chipG1"])
-              + " server_confirmed=" + str((m3["chipG1"] or "") == chosen)
-              + " note=[" + str(m3["noteG1"]) + "]")
+        print(
+            "G1_SWITCH chose="
+            + str(chosen)
+            + " chip_now="
+            + str(m3["chipG1"])
+            + " server_confirmed="
+            + str((m3["chipG1"] or "") == chosen)
+            + " note=["
+            + str(m3["noteG1"])
+            + "]"
+        )
 
         page.select_option("#sel-phrase", "play some music")
         page.wait_for_timeout(300)
@@ -64,11 +89,30 @@ def main() -> int:
         page.click("#ph-list li:nth-child(4)")
         page.wait_for_timeout(300)
         m5 = page.evaluate(PROBE)
-        print("PHRASE_CLICK note=[" + str(m5["notePhrase"]) + "] list_selected="
-              + str(page.evaluate("() => document.querySelectorAll('#ph-list li.sel').length")))
-        print("COUNTS g1=" + str(m5["g1Options"]) + " g2=" + str(m5["g2Options"])
-              + " phrases=" + str(m5["phraseOptions"]) + " items=" + str(m5["phraseItems"])
-              + " arm_bottom=" + str(m5["armBottom"]) + " innerH=" + str(m5["innerH"]))
+        print(
+            "PHRASE_CLICK note=["
+            + str(m5["notePhrase"])
+            + "] list_selected="
+            + str(
+                page.evaluate(
+                    "() => document.querySelectorAll('#ph-list li.sel').length"
+                )
+            )
+        )
+        print(
+            "COUNTS g1="
+            + str(m5["g1Options"])
+            + " g2="
+            + str(m5["g2Options"])
+            + " phrases="
+            + str(m5["phraseOptions"])
+            + " items="
+            + str(m5["phraseItems"])
+            + " arm_bottom="
+            + str(m5["armBottom"])
+            + " innerH="
+            + str(m5["innerH"])
+        )
         browser.close()
     return 0
 

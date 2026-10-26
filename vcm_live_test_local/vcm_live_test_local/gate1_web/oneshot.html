@@ -21,26 +21,47 @@
   /* The page itself never scrolls; individual panes do. body is a fixed-height flex column,
      main takes the leftover height, and grid tracks are minmax(0,1fr) so children can shrink
      instead of pushing the page taller. */
+  /* Three columns, fixed page height: stage | setup + result | phrases. Nothing in the primary
+     loop (pick phrase -> Arm -> read result) needs scrolling; only the log and the phrase list
+     scroll inside their own panes. */
   html, body { height:100%; }
   body { display:flex; flex-direction:column; overflow:hidden; }
-  header { flex:0 0 auto; }
-  main { flex:1 1 auto; min-height:0; display:grid; grid-template-columns:340px 1fr;
-         grid-template-rows:minmax(0, 1fr) auto; gap:14px; padding:14px 18px 16px; }
-  @media (max-width:900px){
-    main { grid-template-columns:1fr; grid-template-rows:auto; overflow:auto; }
-    .stage, .panel-result, .phrases { grid-column:1 !important; grid-row:auto !important; }
-  }
-  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px;
+  header { flex:0 0 auto; padding:10px 18px 8px; }
+  main { flex:1 1 auto; min-height:0; display:grid;
+         grid-template-columns:300px minmax(0, 1fr) 400px;
+         grid-template-rows:minmax(0, 1fr);   /* bound the row so panes cannot grow past the screen */
+         gap:12px; padding:0 18px 14px; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px;
            min-height:0; overflow:auto; }
-  /* Left column is two panes: the stage keeps the ring, wake bars and the Arm/Disarm row
-     always visible, while the model + phrase pickers get their own scrollable pane. */
-  .col-left { grid-column:1; grid-row:1 / span 2; display:flex; flex-direction:column;
-              gap:12px; min-height:0; }
-  .stage { flex:0 0 auto; }
-  .pickers { flex:1 1 auto; min-height:0; overflow:auto; }
-  .pickers .row + .row { margin-top:8px; }
-  .panel-result { grid-column:2; grid-row:1; }
-  .phrases { grid-column:2; grid-row:2; max-height:44%; margin-top:0; }
+  .col-mid { display:flex; flex-direction:column; gap:12px; min-height:0; }
+  .setup { flex:0 0 auto; }
+  .panel-result { flex:1 1 auto; }
+  .stage { display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .wake { width:100%; }
+  h2.ph { margin:0 0 4px; font-size:11.5px; text-transform:uppercase; letter-spacing:.07em;
+          color:var(--mut); font-weight:600; }
+  .setup label { display:block; margin-top:9px; }
+  .setup select { width:100%; }
+  .note { margin:3px 0 0; font-size:11px; color:var(--mut);
+          white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .hint { margin:0; font-size:11px; color:var(--mut); text-align:center; }
+  .htop { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .expect { font-size:11.5px; color:var(--amb); text-align:center; max-width:100%;
+            overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  header .chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:7px; }
+  header .chip { max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  table { width:100%; border-collapse:collapse; margin-top:8px; }
+  th { position:sticky; top:-12px; background:var(--panel); z-index:1; }
+  button:focus-visible, select:focus-visible, summary:focus-visible, li.pick:focus-visible {
+    outline:2px solid var(--blu); outline-offset:2px; }
+  @media (max-width:1000px){
+    main { grid-template-columns:1fr; overflow:auto; }
+    .col-mid { min-height:auto; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    body.recording .dot { animation:none; }
+    .ring .prog { transition:none !important; }
+  }
   .stage { display:flex; flex-direction:column; align-items:center; gap:12px; }
   .ring { position:relative; width:190px; height:190px; }
   .ring svg { transform:rotate(-90deg); }
@@ -77,62 +98,40 @@
   .ok { color:var(--grn); } .warn { color:var(--amb); } .bad { color:var(--red); }
   select { background:#21262d; color:var(--ink); border:1px solid #30363d; border-radius:8px;
            padding:7px 9px; font-size:13px; width:100%; }
-  /* Short windows: this laptop's work area is only 752 px, so the whole page (including the
-     Arm/Disarm row) must fit the viewport without scrolling. The ring is resized for real rather
-     than scaled, because a CSS transform does not reduce the space it occupies in the layout. */
-  @media (max-height:780px) {
-    header { padding:8px 18px 6px; }
-    h1 { font-size:16px; }
-    .sub { font-size:11.5px; }
-    .chips { margin-top:6px; }
-    .chip { padding:2px 9px; font-size:11.5px; }
-    main { padding:10px 18px 12px; gap:12px; }
-    .panel { padding:10px 12px; }
-    .ring { width:150px; height:150px; }
-    .ring svg { width:150px; height:150px; }
-    .dot { width:56px; height:56px; }
-    .count { font-size:14px; }
-    .stage { gap:6px; }
-    .result .big { font-size:22px; }
-    table { font-size:12px; }
-  }
-  /* Even shorter windows (a 768p laptop at 125% scaling is ~614 px tall): shrink further so the
-     Arm/Disarm row stays reachable instead of sliding under the edge. */
-  @media (max-height:640px) {
-    .ring { width:120px; height:120px; }
-    .ring svg { width:120px; height:120px; }
-    .dot { width:44px; height:44px; }
-    .count { font-size:12px; }
-    .stage .label { font-size:12px; }
-    .row { font-size:12px; }
-    .bar { height:5px; }
-    table { font-size:11px; }
-    .phrases .plist li { font-size:12px; padding:2px 0; }
-  }
-  /* Read the phrase list in two columns on a wide window instead of one long scroll. */
-  @media (min-width:1000px) {
-    .phrases .plist { column-count:2; column-gap:20px; }
-  }
-  .phrases summary { cursor:pointer; color:var(--blu); font-size:13px; position:sticky; top:-14px;
+  .ring { width:132px; height:132px; }
+  .ring svg { width:132px; height:132px; }
+  .dot { width:56px; height:56px; }
+  .count { font-size:14px; }
+  .result .big { font-size:21px; }
+  table { font-size:11.5px; }
+  /* Phrase list: a multi-column flow only splits into columns when its height is bounded, so the
+     list is a flex child of the pane with its own scroll; 31 items then balance into two columns
+     that fit without scrolling. overflow-wrap keeps long phrases from clipping mid-word. */
+  .phrases { display:flex; flex-direction:column; overflow:auto; }
+  .phrases summary { flex:0 0 auto; }
+  .phrases .plist { flex:1 1 auto; min-height:0; overflow:auto; margin:6px 0 0; padding:0;
+                    list-style:none; column-count:2; column-gap:16px; }
+  .phrases .plist li { display:block; padding:2px 5px; border-radius:6px; cursor:pointer;
+                       break-inside:avoid; font-size:12px; line-height:1.25;
+                       overflow-wrap:break-word; }
+  .phrases .plist li .pint { display:block; font-size:9.5px; color:var(--mut); letter-spacing:.03em; }
+  .phrases summary { cursor:pointer; color:var(--blu); font-size:12.5px; position:sticky; top:-12px;
                      background:var(--panel); padding:2px 0; }
   .phrases .plist li.pick { cursor:pointer; }
   .phrases .plist li.pick:hover { background:#1c2230; }
   .phrases .plist li.sel { background:#1d2b3a; }
   .phrases .plist li.sel .pint { color:var(--blu); }
-  .phrases .plist { margin:8px 0 0; padding:0; list-style:none; }
-  .phrases .plist li { display:flex; gap:8px; align-items:baseline; padding:3px 0;
-                       border-top:1px solid var(--line); font-size:12.5px; }
-  .phrases .plist li:first-child { border-top:0; }
-  .phrases .pint { color:var(--mut); font-size:10.5px; flex:0 0 118px; }
+  /* (superseded rules removed - the phrase list is a two-column flow, see above) */
   select:disabled { opacity:.5; }
   audio { display:none; }
 </style>
 </head>
 <body>
 <header>
-  <h1>VCM One-Shot Dashboard</h1>
-  <div class="sub">Wake word gates everything: no Gate 2 inference runs before it, then exactly
-    <b>one</b> 5&nbsp;s capture and <b>one</b> intent decision.</div>
+  <div class="htop">
+    <h1>VCM One-Shot</h1>
+    <span class="sub">wake word gates one 5 s capture into one intent decision</span>
+  </div>
   <div class="chips">
     <span class="chip">state <b id="c-state">idle</b></span>
     <span class="chip">Gate 1 <b id="c-g1">-</b></span>
@@ -144,7 +143,6 @@
 </header>
 
 <main>
-  <div class="col-left">
   <section class="panel stage">
     <div class="ring">
       <svg width="190" height="190" viewBox="0 0 190 190">
@@ -166,48 +164,45 @@
       <div class="row"><span class="k">persona / reply</span><span class="k" id="p-persona">-</span></div>
     </div>
 
+    <div class="expect" id="stage-expect">expecting: nothing (free test)</div>
     <div class="btns">
       <button id="btn-arm" class="primary">Arm + start mic</button>
       <button id="btn-disarm">Disarm</button>
     </div>
-    <div class="sub" style="text-align:center">Re-arm after each shot - one capture per arm, by design.</div>
+    <p class="hint">Re-arm after each shot - one capture per arm.</p>
   </section>
 
-  <section class="panel pickers">
-    <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
-      <span class="k">Gate 2 model - real-voice ranked</span>
+  <div class="col-mid">
+    <section class="panel setup">
+      <h2 class="ph">Setup</h2>
+      <label class="k" for="sel-g2">Gate 2 model - real-voice ranked</label>
       <select id="sel-g2"></select>
-      <span class="k" id="sel-g2-note" style="font-size:11px">loading ranking...</span>
-    </div>
-    <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
-      <span class="k">Gate 1 wake model - measured best first</span>
+      <p class="note" id="sel-g2-note">loading ranking...</p>
+      <label class="k" for="sel-g1">Gate 1 wake model - measured best first</label>
       <select id="sel-g1"></select>
-      <span class="k" id="sel-g1-note" style="font-size:11px">loading wake models...</span>
-    </div>
-    <div class="row" style="flex-direction:column;align-items:stretch;gap:5px">
-      <span class="k">Phrase I will speak</span>
+      <p class="note" id="sel-g1-note">loading wake models...</p>
+      <label class="k" for="sel-phrase">Phrase I will speak</label>
       <select id="sel-phrase"></select>
-      <span class="k" id="sel-phrase-note" style="font-size:11px">expecting: nothing</span>
-    </div>
-  </section>
+      <p class="note" id="sel-phrase-note">expecting: nothing (free test)</p>
+    </section>
+
+    <section class="panel panel-result">
+      <h2 class="ph">Result</h2>
+      <div class="result">
+        <div class="big" id="r-intent" aria-live="polite"><span class="none">no shot yet</span></div>
+        <div class="mut" id="r-detail">Arm, then say the wake word followed by a command.</div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>#</th><th>intent</th><th>conf</th><th>latency</th><th>when</th></tr>
+        </thead>
+        <tbody id="log"><tr><td colspan="5" class="mut">no shots yet</td></tr></tbody>
+      </table>
+    </section>
   </div>
 
-  <section class="panel panel-result">
-    <div class="result">
-      <div class="k mut">Gate 2 result (one decision from the 5 s capture)</div>
-      <div class="big" id="r-intent"><span class="none">no shot yet</span></div>
-      <div class="mut" id="r-detail">Arm, then say the wake word followed by a command.</div>
-    </div>
-    <table>
-      <thead>
-        <tr><th>#</th><th>wake</th><th>intent</th><th>conf</th><th>at</th><th>windows</th><th>latency</th><th>when</th></tr>
-      </thead>
-      <tbody id="log"><tr><td colspan="8" class="mut">no shots yet</td></tr></tbody>
-    </table>
-  </section>
-
   <details class="panel phrases">
-    <summary id="ph-sum">Phrases to read / pick (click to open)</summary>
+    <summary id="ph-sum">Phrases to read / pick</summary>
     <ul class="plist" id="ph-list"></ul>
   </details>
 </main>
@@ -303,6 +298,12 @@
     if (note) {
       note.textContent = expectIntent
         ? ("expecting " + expectIntent + " for \"" + phrase + "\"")
+        : "expecting: nothing (free test)";
+    }
+    var stage = el("stage-expect");
+    if (stage) {
+      stage.textContent = expectIntent
+        ? ("expecting " + expectIntent + " - \"" + phrase + "\"")
         : "expecting: nothing (free test)";
     }
     var items = document.querySelectorAll("#ph-list li");
@@ -424,7 +425,9 @@
   function onMessage(msg) {
     if (msg.type === "hello") {
       el("c-g1").textContent = msg.g1_model || "-";
+      el("c-g1").title = msg.g1_model || "";
       el("c-g2").textContent = msg.gate2_model || "-";
+      el("c-g2").title = msg.gate2_model || "";
       setState(msg.state || "idle");
       // The dropdown is the source of truth for this session: align the server if it differs.
       var sel = el("sel-g2");
@@ -482,12 +485,12 @@
            + " - " + msg.windows_scored + " window(s) scored with " + msg.gate2_model
            + ", " + msg.latency_ms + " ms");
       var row = document.createElement("tr");
-      var persona = (el("p-persona").textContent.split(" ")[0] || "-");
-      var cells = [[msg.shot, ""], [persona, ""],
+      // Five columns: the wake scores, window count and capture offset live in the detail line,
+      // so the table stays readable in the narrower middle pane without a horizontal scrollbar.
+      var cells = [[msg.shot, ""],
                    [(none ? "NEGATIVE" : String(msg.intent)) + verdictTag, none ? "bad" : "ok"],
                    [none ? "-" : Number(msg.conf).toFixed(3), ""],
-                   [none ? "-" : msg.at_s + " s", ""],
-                   [msg.windows_scored, ""], [msg.latency_ms + " ms", ""],
+                   [msg.latency_ms + " ms", ""],
                    [new Date().toLocaleTimeString(), ""]];
       cells.forEach(function (spec) {
         var td = document.createElement("td");
@@ -501,7 +504,7 @@
     }
   }
 
-  function populateGate2(rows, note) {
+  function populateGate2(rows, note, fullNote) {
     var sel = el("sel-g2");
     sel.textContent = "";
     rows.forEach(function (row) {
@@ -515,6 +518,7 @@
       sel.appendChild(opt);
     });
     el("sel-g2-note").textContent = note;
+    el("sel-g2-note").title = fullNote || note;
     if (rows.length) { send({ type: "gate2_model", model: rows[0].model }); }
   }
 
@@ -532,11 +536,16 @@
         return rb - ra;
       });
       var ds = data.dataset || {};
-      var tier = (typeof ds.real === "number")
-        ? ds.real + " real-voice clips only (synthetic " + ds.syn + " and OOS " + ds.oos + " ignored)"
-        : ds.commands + " commands + " + ds.oos + " OOS";
-      populateGate2(rows, "holdout: " + tier + " - measured "
-        + String(data.generated || "").slice(0, 10));
+      // Short caption that fits the pane; the full provenance goes in the hover title.
+      var date = String(data.generated || "").slice(0, 10);
+      var short = (typeof ds.real === "number")
+        ? (ds.real + " real-voice clips - synthetic + OOS ignored")
+        : (ds.commands + " commands + " + ds.oos + " OOS");
+      var full = (typeof ds.real === "number")
+        ? (ds.real + " real-voice clips ranked; " + ds.syn + " synthetic and " + ds.oos
+           + " OOS clips excluded. Measured " + date + ".")
+        : short;
+      populateGate2(rows, short + " - " + date, full);
     }).catch(function () {
       fetch("/api/lab/models", { cache: "no-store" }).then(function (r) { return r.json(); })
         .then(function (d) {
