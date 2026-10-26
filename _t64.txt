@@ -1,0 +1,48 @@
+ME2 -- Voice Controlled Smart Device
+
+Always-on keyword + intent recognition at the edge · no cloud round-trip
+
+1 October 2026 · Leandro Soneja · AI 231 ME2
+
+Model                                        Dataset
+
+Mic · 16 kHz  log-mel 148 × 60                Item          Value
+                                              Source        own TTS+owner corpus
+Causal encoder × 3 · 64/128/256-dim           Hours / utts  5.8 h / 8,730
+            KV-cach                           Speakers      21 TTS + 1 owner
+                                              Labels        19 intents · 3 slots
+Intent head           Slot head
+
+Actuator              Raspberry Pi 4
+
+Item                  Value                  Training on the A100 cluster
+Parameters / weights  0.34 M · 0.70 MB
+                                             Item           Value
+Validation on the Raspberry Pi 4             Cluster        A100 ×8 shared, 1/run
+                                             Objective      CE, TC-ResNet 20-way
+Item                  Value                  Optimiser      Adam + cosine
+Keyword / intent acc  91.2% / 91.7%          Steps / loss   3,687 × 15 / 0.02
+False-accept rate     pending live test
+Latency p95 / RTF     47.9 ms / 0.005
+Runtime               TFLite f16 · 1 thread
+
+                                                                                  p. 1 / 2
+To Be Submitted
+
+GitHub repository  github.com/lcsoneja/me2-voice-controlled-smart-device
+Dataset location   HF Drewboy/ai231-vcm-v64p-training-store (private, CC-BY-NC-4.0)
+A100 cluster       8× A100-SXM4-40GB shared; seed 42
+Model weights      GitHub Release v1.0-me2 + TFLite f16 + SHA256SUMS
+
+What the reviewer will look for                 Status
+                                                done
+# Item                                          done
+1 Repo public, one-command reproduction         done
+2 Dataset licensed and citable (DOI)            pending
+3 Training logs + final checkpoint committed    done
+4 Pi 4 latency reproduced by the posted script  done
+5 Held-out test set, unseen speakers
+6 Baseline of comparable size compared
+
+                                                         p. 2 / 2
+

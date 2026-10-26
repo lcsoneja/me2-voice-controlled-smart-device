@@ -127,6 +127,30 @@
   .plist li.sel .pint { color:var(--blu); }
   /* Recordings pane */
   .takebar { display:flex; gap:6px; align-items:center; flex-wrap:wrap; flex:0 0 auto; }
+  /* Running ranking: continuous scoring accumulates here; it owns its own short scroll so the
+    page still never scrolls. */
+  .rank { flex:0 1 auto; max-height:190px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
+  .rank table { width:100%; border-collapse:collapse; }
+  .rank th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
+  .rank td.n, .rank th.n { text-align:right; font-variant-numeric:tabular-nums; }
+  .rank tr.top td { color:var(--blu); font-weight:700; }
+  #tk-live.on { background:var(--blu); border-color:var(--blu); color:#fff; }
+  /* Mismatch is red wherever a verdict is shown; hits stay default/green. */
+  .big.miss { color:var(--red); }
+  .score .rmiss { color:var(--red); font-weight:600; }
+  .score .rok { color:#7ec97e; }
+  /* A trial's number is a menu: repeat, play, delete, or re-tag it. */
+  .trial { cursor:pointer; color:var(--blu); font-weight:700; text-decoration:underline dotted; }
+  tr.trial-actions td { border-top:none; padding:0 6px 6px 6px; font-size:11px; }
+  tr.trial-actions button, tr.trial-actions select { font-size:11px; }
+  /* Voice chart: is my voice actually reaching the mic? */
+  canvas#vu { width:100%; height:56px; background:#1b1f26; border:1px solid #39414c; margin-top:6px; }
+  /* Live scoreboard: auto-scores every new take against all models. */
+  .scoreboard { margin-top:8px; border-top:1px solid #2a2f36; max-height:148px; overflow:auto; }
+  .scoreboard table { width:100%; border-collapse:collapse; font-size:10.5px; }
+  .scoreboard th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
+  .scoreboard td.n, .scoreboard th.n { text-align:right; font-variant-numeric:tabular-nums; }
+  .scoreboard tr.top td { color:var(--blu); font-weight:700; }
   .takebar input[type=search] { flex:1 1 110px; min-width:80px; font-size:11.5px; }
   .tk-btns { display:flex; gap:6px; flex-wrap:wrap; flex:0 0 auto; }
   .tk-btns button { font-size:11.5px; padding:4px 8px; }
@@ -183,12 +207,20 @@
       <div class="row"><span class="k">persona / reply</span><span class="k" id="p-persona">-</span></div>
     </div>
 
+    <canvas id="vu" width="280" height="56"></canvas>
     <div class="expect" id="stage-expect">expecting: nothing (free test)</div>
     <div class="btns">
       <button id="btn-arm" class="primary">Arm + start mic</button>
       <button id="btn-disarm">Disarm</button>
     </div>
     <p class="hint">Re-arm after each shot - one capture per arm.</p>
+    <div class="scoreboard" id="sb">
+      <p class="note" id="sb-title">Scoreboard - every new take auto-scores against all models</p>
+      <table>
+        <thead><tr><th>#</th><th>model</th><th class="n">correct</th><th class="n">acc</th></tr></thead>
+        <tbody id="sb-body"></tbody>
+      </table>
+    </div>
   </section>
 
   <div class="col-mid">
@@ -238,9 +270,19 @@
       </div>
       <div class="tk-btns">
         <button id="tk-score" class="primary" type="button">Score selected x all models</button>
+        <button id="tk-score-one" type="button">Score selected x chosen Gate 2</button>
         <button id="tk-each" type="button">All intents per take</button>
+        <button id="tk-live" type="button">Start continuous x all models</button>
+        <button id="tk-live-reset" type="button">Reset ranking</button>
         <button id="tk-delete" type="button">Delete selected</button>
         <button id="tk-delete-all" type="button">Delete all takes</button>
+      </div>
+      <div class="rank" id="tk-rank" hidden>
+        <p class="note" id="rk-title">Running ranking</p>
+        <table>
+          <thead><tr><th>#</th><th>model</th><th class="n">correct</th><th class="n">acc</th><th class="n">runs</th></tr></thead>
+          <tbody id="rk-body"></tbody>
+        </table>
       </div>
       <p class="note" id="tk-count">loading recordings...</p>
       <ul class="tk-list" id="tk-list"></ul>
@@ -258,6 +300,7 @@
   var CAPTURE_SECONDS = 5.0;
   var RING = 527.8;
   var ws = null, actx = null, micStream = null, processor = null;
+  var vuAnalyser = null, vuRaf = 0;
   var shots = 0, recording = false, captureStart = 0, rafId = 0;
   var expectIntent = null;   // what the picked phrase should produce, or null for a free test
   var wakeModelsLoaded = false;
@@ -354,6 +397,24 @@
     }
   }
 
+  // After a shot the list moves to the next phrase on its own, so recording flows without
+  // clicking back and forth.
+  function advancePhrase() {
+    var items = Array.prototype.slice.call(document.querySelectorAll("#ph-list li"));
+    if (!items.length) { return; }
+    var index = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].classList.contains("sel")) { index = i; break; }
+    }
+    var next = items[index + 1];
+    if (next) {
+      setExpectation(next.getAttribute("data-intent") || "", next.getAttribute("data-phrase"));
+    } else if (index >= 0) {
+      var note = el("sel-phrase-note");
+      if (note) { note.textContent = "phrase list complete - all " + items.length + " phrases read"; }
+    }
+  }
+
   // Gate 1 wake models, ordered measured-best first by the server's own preference list.
   function loadWakeModels(active, order) {
     var sel = el("sel-g1");
@@ -439,8 +500,10 @@
       var cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = !!takeSel[r.id];
-      cb.disabled = !!r.holdout;
-      cb.title = r.holdout ? "holdout clip - kept for the ranking benchmark" : "select " + r.id;
+      // Holdout clips stay selectable so they can be scored (that is what the ranking measures);
+      // deletion is what is refused, and the server enforces that independently.
+      cb.disabled = false;
+      cb.title = r.holdout ? "holdout clip - scoreable, never deleted" : "select " + r.id;
       cb.addEventListener("change", function () { takeSel[r.id] = cb.checked; updateTakeCount(rows.length); });
       var label = document.createElement("span");
       label.className = "tk-label";
@@ -480,7 +543,8 @@
   el("tk-filter").addEventListener("input", renderTakes);
   el("tk-all").addEventListener("change", function () {
     var on = el("tk-all").checked;
-    takes.forEach(function (r) { if (!r.holdout) { takeSel[r.id] = on; } });
+    // Holdouts are selectable too: they are scoreable, and deletion is refused server-side.
+    takes.forEach(function (r) { takeSel[r.id] = on; });
     renderTakes();
   });
 
@@ -541,6 +605,188 @@
     scoreTakes(ids, "Per take: every model's answer for each recording");
   });
 
+  // ---- running ranking: the chosen model alone, or every model on a loop ----
+  // Continuous mode scores a bounded window per round (a round over every take would outlast the
+  // interval and overlap), and skips a round while the previous one is still running.
+  var ranking = [], liveTimer = null, liveBusy = false, LIVE_MS = 15000, LIVE_TAKES = 10;
+
+  function stopLive() {
+    if (liveTimer) { window.clearInterval(liveTimer); liveTimer = null; }
+    var button = el("tk-live");
+    button.classList.remove("on");
+    button.textContent = "Start continuous x all models";
+  }
+
+  function paintRanking() {
+    var box = el("tk-rank");
+    var body = el("rk-body");
+    if (!box || !body) { return; }
+    box.hidden = ranking.length === 0;
+    body.textContent = "";
+    ranking.slice(0, 15).forEach(function (row, index) {
+      var tr = document.createElement("tr");
+      if (index === 0) { tr.className = "top"; }
+      tr.title = row.model;
+      var cells = [
+        "#" + (index + 1),
+        row.model,
+        row.correct + "/" + row.scored,
+        row.acc === null || row.acc === undefined ? "-" : (row.acc * 100).toFixed(1) + "%",
+        String(row.runs)
+      ];
+      cells.forEach(function (text, cellIndex) {
+        var cell = document.createElement("td");
+        cell.textContent = text;
+        if (cellIndex >= 2) { cell.className = "n"; }
+        tr.append(cell);
+      });
+      body.append(tr);
+    });
+    var title = el("rk-title");
+    if (title) {
+      title.textContent = "Running ranking - " + ranking.length + " model(s), "
+        + (liveTimer ? "continuous ON (every " + (LIVE_MS / 1000) + "s)" : "continuous off");
+    }
+    paintScoreboard();
+  }
+
+  // Compact live scoreboard beside the stage: the same ranking, top five only.
+  function paintScoreboard() {
+    var body = el("sb-body");
+    if (!body) { return; }
+    body.textContent = "";
+    ranking.slice(0, 5).forEach(function (row, index) {
+      var tr = document.createElement("tr");
+      if (index === 0) { tr.className = "top"; }
+      tr.title = row.model;
+      var cells = [
+        "#" + (index + 1),
+        row.model,
+        row.correct + "/" + row.scored,
+        row.acc === null || row.acc === undefined ? "-" : (row.acc * 100).toFixed(1) + "%"
+      ];
+      cells.forEach(function (text, cellIndex) {
+        var cell = document.createElement("td");
+        cell.textContent = text;
+        if (cellIndex >= 2) { cell.className = "n"; }
+        tr.append(cell);
+      });
+      body.append(tr);
+    });
+  }
+
+  function loadRanking() {
+    fetch("/api/oneshot/leaderboard", { cache: "no-store" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { ranking = d.ranking || []; paintRanking(); })
+      .catch(function () {});
+  }
+
+  el("tk-score-one").addEventListener("click", function () {
+    var ids = selectedIds();
+    var model = el("sel-g2").value;
+    if (!ids.length) { el("tk-count").textContent = "select takes first"; return; }
+    if (!model) { el("tk-count").textContent = "pick a Gate 2 model in Setup first"; return; }
+    postJson("/api/oneshot/leaderboard/score", { ids: ids, models: [model] }, "scoring " + model)
+      .then(function (d) {
+        ranking = d.ranking || [];
+        paintRanking();
+        renderScore(
+          { takes: d.takes, summary: d.summary, capped: d.capped, limit: d.limit },
+          "Chosen model " + model + " on " + ids.length + " take(s)"
+        );
+        var row = d.summary[0] || { correct: 0, scored: 0 };
+        el("tk-count").textContent = "chosen model " + row.correct + "/" + row.scored
+          + " on " + ids.length + " take(s)";
+      })
+      .catch(function () { el("tk-count").textContent = "scoring failed"; });
+  });
+
+  el("tk-live").addEventListener("click", function () {
+    if (liveTimer) { stopLive(); paintRanking(); return; }
+    var chosen = selectedIds();
+    // Only takes with an intent label are scoreable; OOS clips have none and the server would
+    // reject the whole round.
+    var scoreable = takes.filter(function (row) { return (row.action || "").trim(); });
+    var ids = chosen.length ? chosen : scoreable.slice(0, LIVE_TAKES).map(function (row) { return row.id; });
+    if (!ids.length) { el("tk-count").textContent = "no recordings to score yet"; return; }
+    el("tk-live").classList.add("on");
+    el("tk-live").textContent = "Stop continuous x all models";
+    el("tk-count").textContent = "continuous scoring: every model on "
+      + ids.length + (chosen.length ? " selected take(s)" : " newest take(s)")
+      + ", every " + (LIVE_MS / 1000) + "s";
+    var round = function () {
+      if (liveBusy) { return; }
+      liveBusy = true;
+      postJson("/api/oneshot/leaderboard/score", { ids: ids, models: "all" }, "scoring all models")
+        .then(function (d) { ranking = d.ranking || []; paintRanking(); })
+        .catch(function () {
+          stopLive();
+          el("tk-count").textContent = "continuous scoring failed - stopped";
+          paintRanking();
+        })
+        .then(function () { liveBusy = false; });
+    };
+    liveTimer = window.setInterval(round, LIVE_MS);
+    round();
+    paintRanking();
+  });
+
+  el("tk-live-reset").addEventListener("click", function () {
+    postJson("/api/oneshot/leaderboard/reset", {}, "resetting ranking").then(function () {
+      ranking = [];
+      paintRanking();
+      el("tk-count").textContent = "ranking reset";
+    });
+  });
+
+  loadRanking();
+
+  // Every saved take is scored against all models in the background, one at a time, and the
+  // scoreboard updates as each result lands.
+  var scoreQueue = [], scoreBusy = false, scoredIds = {};
+
+  function scoreNewTake(id) {
+    if (!id || scoredIds[id]) { return; }
+    scoredIds[id] = true;
+    scoreQueue.push(id);
+    pumpScore();
+  }
+
+  function pumpScore() {
+    if (scoreBusy || !scoreQueue.length) { return; }
+    scoreBusy = true;
+    var id = scoreQueue.shift();
+    fetch("/api/oneshot/leaderboard/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: [id], models: "all" })
+    }).then(function (r) { return r.json(); })
+      .then(function (d) {
+        ranking = d.ranking || [];
+        paintRanking();
+        var title = el("sb-title");
+        if (title) {
+          title.textContent = "Scoreboard - scored take " + id + " (" + scoreQueue.length + " queued)";
+        }
+      })
+      .catch(function () {
+        var title = el("sb-title");
+        if (title) { title.textContent = "background scoring failed for take " + id; }
+      })
+      .then(function () { scoreBusy = false; pumpScore(); });
+  }
+
+  // Minimal surface for automated checks; the app itself does not use it.
+  window.__oneshot = {
+    advancePhrase: advancePhrase,
+    scoreNewTake: scoreNewTake,
+    wireTrial: wireTrial,
+    toggleTrialActions: toggleTrialActions,
+    micOn: function () { return !!actx; }
+  };
+  drawVU();
+
   function renderScore(d, headline) {
     var host = el("tk-result");
     host.hidden = false;
@@ -591,11 +837,13 @@
         + (long_take ? "  (long take " + take.duration_s + " s: only the final window is scored)" : "");
       box.appendChild(summary);
       var lines = document.createElement("div");
-      lines.style.whiteSpace = "pre-wrap";
-      lines.textContent = take.results.map(function (r) {
-        return String(r.model).replace(/^gate2/, "") + ": " + (r.intent || "none")
+      take.results.forEach(function (r) {
+        var line = document.createElement("div");
+        line.className = r.match ? "rok" : "rmiss";
+        line.textContent = String(r.model).replace(/^gate2/, "") + ": " + (r.intent || "none")
           + (r.conf === null ? "" : " (" + r.conf.toFixed(2) + ")") + (r.match ? "  ok" : "  x");
-      }).join("\n");
+        lines.appendChild(line);
+      });
       box.appendChild(lines);
       host.appendChild(box);
     });
@@ -648,6 +896,37 @@
     return output;
   }
 
+  function drawVU() {
+    var canvas = el("vu");
+    if (!canvas) { return; }
+    var ctx2d = canvas.getContext("2d");
+    var width = canvas.width;
+    var height = canvas.height;
+    var data = null;
+    if (vuAnalyser) {
+      data = new Uint8Array(vuAnalyser.fftSize);
+      vuAnalyser.getByteTimeDomainData(data);
+    }
+    ctx2d.clearRect(0, 0, width, height);
+    ctx2d.strokeStyle = "#4aa3ff";
+    ctx2d.lineWidth = 1.5;
+    ctx2d.beginPath();
+    var points = data ? data.length : 128;
+    for (var i = 0; i < points; i++) {
+      var v = data ? data[i] / 255 : 0.5;
+      var x = (i / (points - 1)) * width;
+      var y = height / 2 + (v - 0.5) * height * 0.9;
+      if (i === 0) { ctx2d.moveTo(x, y); } else { ctx2d.lineTo(x, y); }
+    }
+    ctx2d.stroke();
+    if (!data) {
+      ctx2d.fillStyle = "#6b7280";
+      ctx2d.font = "11px sans-serif";
+      ctx2d.fillText("mic off - press Arm", 8, height / 2 + 4);
+    }
+    if (vuAnalyser) { vuRaf = requestAnimationFrame(drawVU); }
+  }
+
   async function startMic() {
     if (actx) return;
     micStream = await navigator.mediaDevices.getUserMedia({
@@ -657,6 +936,11 @@
     actx = new Ctx({ sampleRate: SAMPLE_RATE });
     if (actx.state === "suspended") { await actx.resume(); }
     var source = actx.createMediaStreamSource(micStream);
+    // Voice chart: a live waveform so it is obvious the mic is actually hearing you.
+    vuAnalyser = actx.createAnalyser();
+    vuAnalyser.fftSize = 512;
+    source.connect(vuAnalyser);
+    drawVU();
     processor = actx.createScriptProcessor(4096, 1, 1);
     processor.onaudioprocess = function (event) {
       if (!ws || ws.readyState !== 1) return;
@@ -720,12 +1004,15 @@
       // textContent, not innerHTML: the intent and clip text come from the server.
       el("r-intent").textContent = none ? "no command in the window"
                                        : String(msg.intent).replace(/_/g, " ");
-      el("r-intent").className = none ? "big none" : "big ok";
+      var mismatch = false;
+      if (expectIntent) {
+        mismatch = none || String(msg.intent) !== expectIntent;
+        el("r-intent").textContent += mismatch ? " - MISMATCH" : " - match";
+      }
+      el("r-intent").className = mismatch ? "big miss" : (none ? "big none" : "big ok");
       var verdictTag = "";
       if (expectIntent) {
-        var matched = (!none && String(msg.intent) === expectIntent);
-        verdictTag = matched ? " [match]" : (" [MISMATCH: expected " + expectIntent + "]");
-        el("r-intent").textContent += matched ? " - match" : " - MISMATCH";
+        verdictTag = mismatch ? (" [MISMATCH: expected " + expectIntent + "]") : " [match]";
       }
       el("r-detail").textContent = none
         ? "The single Gate 2 pass rejected the clip (NEGATIVE). Captured " + msg.capture_seconds + " s."
@@ -736,7 +1023,7 @@
       // Five columns: the wake scores, window count and capture offset live in the detail line,
       // so the table stays readable in the narrower middle pane without a horizontal scrollbar.
       var cells = [[msg.shot, ""],
-                   [(none ? "NEGATIVE" : String(msg.intent)) + verdictTag, none ? "bad" : "ok"],
+                   [(none ? "NEGATIVE" : String(msg.intent)) + verdictTag, (none || mismatch) ? "bad" : "ok"],
                    [none ? "-" : Number(msg.conf).toFixed(3), ""],
                    [msg.latency_ms + " ms", ""],
                    [new Date().toLocaleTimeString(), ""]];
@@ -749,7 +1036,105 @@
       var body = el("log");
       if (body.firstChild && body.firstChild.children.length === 1) { body.textContent = ""; }
       body.insertBefore(row, body.firstChild);
+      // The trial number becomes a small menu: repeat, play, delete, or fix the phrase. The
+      // capture phrase is read before the list advances to the next one.
+      var selected = document.querySelector("#ph-list li.sel");
+      var saidPhrase = selected ? (selected.getAttribute("data-phrase") || "") : "";
+      if (msg.take_id) {
+        wireTrial(row, String(msg.take_id), expectIntent || "", saidPhrase);
+        scoreNewTake(String(msg.take_id));
+      }
+      advancePhrase();
     }
+  }
+
+  function wireTrial(row, takeId, expectedIntent, phrase) {
+    var num = row.firstChild;
+    num.className = "trial";
+    num.title = "click: repeat / play / delete / change phrase";
+    num.addEventListener("click", function () {
+      toggleTrialActions(row, takeId, expectedIntent, phrase);
+    });
+  }
+
+  function toggleTrialActions(row, takeId, expectedIntent, phrase) {
+    var body = el("log");
+    var existing = row.nextSibling;
+    if (existing && existing.className === "trial-actions") { body.removeChild(existing); return; }
+    var act = document.createElement("tr");
+    act.className = "trial-actions";
+    var td = document.createElement("td");
+    td.colSpan = 5;
+    var repeat = document.createElement("button");
+    repeat.type = "button";
+    repeat.textContent = "repeat";
+    repeat.title = "arm again with the same phrase";
+    repeat.addEventListener("click", function () {
+      body.removeChild(act);
+      if (expectedIntent || phrase) { setExpectation(expectedIntent, phrase); }
+      var arm = el("btn-arm");
+      if (arm) { arm.click(); }
+    });
+    var play = document.createElement("button");
+    play.type = "button";
+    play.textContent = "play";
+    play.title = "listen to this take";
+    play.addEventListener("click", function () {
+      el("player").src = "/api/oneshot/recordings/audio?id=" + encodeURIComponent(takeId);
+      el("player").play().catch(function () {});
+    });
+    var del = document.createElement("button");
+    del.type = "button";
+    del.textContent = "delete";
+    del.title = "delete this take (holdout clips are refused)";
+    del.addEventListener("click", function () {
+      fetch("/api/oneshot/recordings/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [takeId] })
+      }).then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res.refused_holdout && res.refused_holdout.length) {
+            del.textContent = "delete (refused)";
+            return;
+          }
+          if (act.parentNode) { body.removeChild(act); }
+          if (row.parentNode) { body.removeChild(row); }
+          loadTakes();
+        })
+        .catch(function () {});
+    });
+    var pick = document.createElement("select");
+    pick.title = "the phrase I meant - fixes this take's intent";
+    var blank = document.createElement("option");
+    blank.value = "";
+    blank.textContent = "change phrase...";
+    pick.appendChild(blank);
+    document.querySelectorAll("#ph-list li").forEach(function (li) {
+      var opt = document.createElement("option");
+      opt.value = li.getAttribute("data-intent") || "";
+      opt.textContent = (li.getAttribute("data-intent") || "(any)")
+        + " - " + li.getAttribute("data-phrase");
+      pick.appendChild(opt);
+    });
+    pick.addEventListener("change", function () {
+      if (!pick.value) { return; }
+      fetch("/api/oneshot/recordings/tag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: takeId, action: pick.value })
+      }).then(function (r) { return r.json(); })
+        .then(function () {
+          var intentCell = row.children[1];
+          if (intentCell) { intentCell.textContent = pick.value + " [fixed]"; }
+          body.removeChild(act);
+          loadTakes();
+        })
+        .catch(function () {});
+    });
+    td.append(repeat, play, del, pick);
+    act.appendChild(td);
+    body.insertBefore(act, row.nextSibling);
   }
 
   function populateGate2(rows, note, fullNote) {
@@ -822,7 +1207,12 @@
 
   el("btn-arm").addEventListener("click", async function () {
     try { await startMic(); } catch (e) { el("c-mic").textContent = "denied"; return; }
-    send({ type: "arm" });
+    var picked = document.querySelector("#ph-list li.sel");
+    send({
+      type: "arm",
+      intent: expectIntent || "",
+      phrase: picked ? (picked.getAttribute("data-phrase") || "") : ""
+    });
   });
   el("btn-disarm").addEventListener("click", function () { send({ type: "disarm" }); });
   el("sel-g2").addEventListener("change", function (event) {

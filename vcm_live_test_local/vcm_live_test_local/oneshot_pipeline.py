@@ -29,7 +29,9 @@ Served at ``/oneshot.html`` (page) and ``/ws/oneshot`` (socket).
 
 from __future__ import annotations
 
+import contextlib
 import importlib
+import json
 import re
 import time
 import wave
@@ -68,6 +70,11 @@ def register_routes(app: web.Application) -> None:
     app.router.add_get("/api/oneshot/recordings", api_recordings)
     app.router.add_post("/api/oneshot/recordings/score", api_recordings_score)
     app.router.add_post("/api/oneshot/recordings/delete", api_recordings_delete)
+    app.router.add_get("/api/oneshot/recordings/audio", api_recordings_audio)
+    app.router.add_post("/api/oneshot/recordings/tag", api_recordings_tag)
+    app.router.add_get("/api/oneshot/leaderboard", api_leaderboard)
+    app.router.add_post("/api/oneshot/leaderboard/score", api_leaderboard_score)
+    app.router.add_post("/api/oneshot/leaderboard/reset", api_leaderboard_reset)
 
 
 # Recordings lab for this page: score saved takes against every Gate 2 model, and delete takes.
@@ -160,7 +167,11 @@ async def api_recordings_delete(request: web.Request) -> web.Response:
         body = {}
     if not isinstance(body, dict):
         body = {}
-    wanted = [str(i) for i in body.get("ids") or []] if isinstance(body.get("ids"), list) else []
+    wanted = (
+        [str(i) for i in body.get("ids") or []]
+        if isinstance(body.get("ids"), list)
+        else []
+    )
     if body.get("all"):
         wanted = [row["id"] for row in _recording_rows(store)]
     deleted: list[str] = []
@@ -221,13 +232,76 @@ async def api_recordings_score(request: web.Request) -> web.Response:
     if not selected:
         return web.json_response({"error": "no takes with an intent label"}, status=400)
     if not models:
-        return web.json_response({"error": "no known Gate 2 models requested"}, status=400)
+        return web.json_response(
+            {"error": "no known Gate 2 models requested"}, status=400
+        )
 
+    takes, tally = _score_matrix(gs, gates, store, selected, models)
+    summary = _summary_rows(models, tally)
+    return web.json_response(
+        {
+            "takes": takes,
+            "summary": summary,
+            "capped": capped,
+            "limit": MAX_SCORE_RECORDINGS,
+        }
+    )
+
+
+LEADERBOARD_NAME = "leaderboard.json"
+
+
+def _leaderboard_path(store: Any) -> Path:
+    return Path(store.root) / LEADERBOARD_NAME
+
+
+def _load_board(store: Any) -> tuple[int, dict[str, dict[str, Any]]]:
+    """The stored board as (epoch, models); a bare models dict is an older file."""
+    try:
+        data = json.loads(_leaderboard_path(store).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return 0, {}
+    if isinstance(data, dict) and isinstance(data.get("models"), dict):
+        return int(data.get("epoch", 0)), data["models"]
+    return 0, (data if isinstance(data, dict) else {})
+
+
+def _save_board(store: Any, epoch: int, models: dict[str, dict[str, Any]]) -> None:
+    # Best effort: a read-only recordings folder must not break scoring.
+    with contextlib.suppress(OSError):
+        payload = {"epoch": epoch, "models": models}
+        _leaderboard_path(store).write_text(
+            json.dumps(payload, indent=1), encoding="utf-8"
+        )
+
+
+def _leaderboard_rows(board: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    """Running ranking: highest accuracy first, then the most evidence, then name."""
+    rows = [
+        {
+            "model": name,
+            "correct": int(entry.get("correct", 0)),
+            "scored": int(entry.get("scored", 0)),
+            "runs": int(entry.get("runs", 0)),
+            "acc": round(int(entry.get("correct", 0)) / int(entry["scored"]), 4)
+            if int(entry.get("scored", 0))
+            else None,
+        }
+        for name, entry in board.items()
+    ]
+    rows.sort(key=lambda row: (-(row["acc"] or 0.0), -row["scored"], row["model"]))
+    return rows
+
+
+def _score_matrix(
+    gs, gates, store: Any, selected: list, models: list
+) -> tuple[list, dict]:
+    """Run every selected take through every model: one row per take, one result per model."""
     takes = []
     tally: dict[str, list[int]] = {name: [0, 0] for name in models}
     for take in selected:
-        # Resolve against the recordings folder and reject anything that escapes it: the index
-        # is a file on disk, so a bad entry must not turn into reading an arbitrary path.
+        # Resolve against the recordings folder and reject anything that escapes it: the index is
+        # a file on disk, so a bad entry must not turn into reading an arbitrary path.
         candidate = (store.root / take["file"]).resolve()
         try:
             candidate.relative_to(store.root.resolve())
@@ -249,24 +323,166 @@ async def api_recordings_score(request: web.Request) -> web.Response:
                 {
                     "model": name,
                     "intent": str(intent or ""),
-                    "conf": None if conf is None or not np.isfinite(conf) else round(float(conf), 4),
+                    "conf": None
+                    if conf is None or not np.isfinite(conf)
+                    else round(float(conf), 4),
                     "match": bool(hit),
                 }
             )
         takes.append({**take, "results": results})
+    return takes, tally
 
-    summary = [
+
+def _summary_rows(models: list, tally: dict) -> list[dict[str, Any]]:
+    rows = [
         {
             "model": name,
             "correct": tally[name][0],
             "scored": tally[name][1],
-            "acc": round(tally[name][0] / tally[name][1], 4) if tally[name][1] else None,
+            "acc": round(tally[name][0] / tally[name][1], 4)
+            if tally[name][1]
+            else None,
         }
         for name in models
     ]
-    summary.sort(key=lambda row: (-(row["acc"] or 0.0), row["model"]))
+    rows.sort(key=lambda row: (-(row["acc"] or 0.0), row["model"]))
+    return rows
+
+
+def _selection(gs, store: Any, body: dict) -> tuple[list, list, bool]:
+    """Takes and models requested by a body, honouring the per-run cap."""
+    labelled = [row for row in _recording_rows(store) if row["action"].strip()]
+    by_id = {row["id"]: row for row in labelled}
+    wanted = body.get("ids")
+    if isinstance(wanted, str) and wanted == "all":
+        selected = labelled
+    elif isinstance(wanted, list) and wanted:
+        selected = [by_id[str(i)] for i in wanted if str(i) in by_id]
+    else:
+        selected = labelled[:MAX_SCORE_RECORDINGS]
+    capped = len(selected) > MAX_SCORE_RECORDINGS
+    selected = selected[:MAX_SCORE_RECORDINGS]
+
+    requested = body.get("models")
+    known = sorted(gs.GATE2_PACKAGE_RUNNERS)
+    models = (
+        known
+        if (not requested or requested == "all")
+        else [str(name) for name in requested if str(name) in known]
+    )
+    return selected, models, capped
+
+
+async def api_leaderboard(request: web.Request) -> web.Response:
+    """The running ranking accumulated across scoring runs."""
+    _, models = _load_board(request.app["lab"].store)
+    rows = _leaderboard_rows(models)
+    return web.json_response({"ranking": rows, "models": len(rows)})
+
+
+async def api_leaderboard_reset(request: web.Request) -> web.Response:
+    """Forget the accumulated ranking and start a fresh comparison."""
+    epoch, _ = _load_board(request.app["lab"].store)
+    _save_board(request.app["lab"].store, epoch + 1, {})
+    return web.json_response({"ranking": [], "models": 0, "epoch": epoch + 1})
+
+
+async def api_leaderboard_score(request: web.Request) -> web.Response:
+    """Score takes and fold the outcome into the running ranking.
+
+    Body: {"ids": "all" | [...], "models": "all" | [...], "reset": bool}. Passing a single
+    model name scores just that one (the Setup pane's choice), "all" scores every registered one.
+    """
+    gs = importlib.import_module("gate1_server")
+    gates = request.app["gates"]
+    store = request.app["lab"].store
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+
+    selected, models, capped = _selection(gs, store, body)
+    if not selected:
+        return web.json_response({"error": "no takes with an intent label"}, status=400)
+    if not models:
+        return web.json_response(
+            {"error": "no known Gate 2 models requested"}, status=400
+        )
+
+    epoch, board = _load_board(store)
+    if body.get("reset"):
+        epoch += 1
+        board = {}
+        _save_board(store, epoch, {})
+    takes, tally = _score_matrix(gs, gates, store, selected, models)
+    for name in models:
+        entry = board.setdefault(name, {"correct": 0, "scored": 0, "runs": 0})
+        entry["correct"] = int(entry.get("correct", 0)) + tally[name][0]
+        entry["scored"] = int(entry.get("scored", 0)) + tally[name][1]
+        entry["runs"] = int(entry.get("runs", 0)) + (1 if tally[name][1] else 0)
+    # A reset during the round must win: if the epoch moved while scoring, drop this result
+    # instead of writing stale tallies over the cleared board.
+    epoch_now, _ = _load_board(store)
+    if epoch_now != epoch:
+        return web.json_response(
+            {
+                "takes": takes,
+                "summary": _summary_rows(models, tally),
+                "ranking": [],
+                "reset_detected": True,
+                "capped": capped,
+                "limit": MAX_SCORE_RECORDINGS,
+            }
+        )
+    _save_board(store, epoch, board)
     return web.json_response(
-        {"takes": takes, "summary": summary, "capped": capped, "limit": MAX_SCORE_RECORDINGS}
+        {
+            "takes": takes,
+            "summary": _summary_rows(models, tally),
+            "ranking": _leaderboard_rows(board),
+            "capped": capped,
+            "limit": MAX_SCORE_RECORDINGS,
+        }
+    )
+
+
+async def api_recordings_audio(request: web.Request) -> web.FileResponse | web.Response:
+    """The WAV of one take, so a saved trial can be played back from its row."""
+    entry = request.app["lab"].store.get(request.query.get("id", ""))
+    if entry is None:
+        raise web.HTTPNotFound(text="no such recording")
+    path = request.app["lab"].store.path_of(entry)
+    if not path.is_file():
+        raise web.HTTPNotFound(text="audio file missing")
+    return web.FileResponse(path)
+
+
+async def api_recordings_tag(request: web.Request) -> web.Response:
+    """Re-tag a take after the fact: its intent (action), optionally its label too.
+
+    This is how a trial recorded against the wrong phrase gets corrected without re-recording.
+    """
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    rec_id = str(body.get("id") or "")
+    action = str(body.get("action") or "").strip()
+    label = str(body.get("label") or "").strip()
+    if not rec_id:
+        return web.json_response({"error": "id required"}, status=400)
+    store = request.app["lab"].store
+    if store.get(rec_id) is None:
+        return web.json_response({"error": "no such recording"}, status=404)
+    meta: dict[str, Any] = {"action": action} if action else {}
+    store.update(rec_id, label=label or None, meta=meta or None)
+    updated = store.get(rec_id) or {}
+    return web.json_response(
+        {"id": rec_id, "action": updated.get("action"), "label": updated.get("label")}
     )
 
 
@@ -364,6 +580,7 @@ def _classify_capture(
 async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
     gs = importlib.import_module("gate1_server")
     gates = request.app["gates"]
+    store = request.app["lab"].store
     ws = web.WebSocketResponse(max_msg_size=16 * 1024 * 1024)
     await ws.prepare(request)
 
@@ -398,6 +615,8 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
     state = "idle"
     capture_from = 0
     shots = 0
+    arm_intent = ""
+    arm_phrase = ""
 
     async def send(obj: dict[str, Any]) -> None:
         try:
@@ -433,6 +652,10 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 state = "armed"
                 recent.clear()
                 last_g1_at = total
+                # The page says which phrase it expects; the capture is saved under it so the
+                # take is scoreable and the trial list can replay or re-tag it.
+                arm_intent = str(data.get("intent") or "").strip()
+                arm_phrase = str(data.get("phrase") or "").strip()
                 await send({"type": "state", "state": state})
             elif kind == "disarm" and state != "recording":
                 state = "idle"
@@ -527,12 +750,23 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 gs, gates, gate2_name, clip, pre, thresholds
             )
             latency_ms = (time.perf_counter() - started) * 1000.0
+            # Every capture becomes a take: the trial list, playback, re-tagging and the
+            # background scoreboard all work off the saved clip.
+            label = arm_phrase or ("free test shot " + str(shots))
+            meta = {"action": arm_intent} if arm_intent else None
+            take_id = ""
+            try:
+                saved = store.save(clip, label=label, meta=meta)
+                take_id = str(saved.get("id") or "")
+            except (OSError, ValueError, KeyError):
+                take_id = ""
             state = "done"
             await send(
                 {
                     "type": "intent",
                     "state": state,
                     "shot": shots,
+                    "take_id": take_id,
                     "intent": best["intent"] if best else None,
                     "conf": best["conf"] if best else None,
                     "top1": best["top1"] if best else None,

@@ -1,0 +1,29 @@
+{
+ "demos": [
+  "Play music",
+  "Pause",
+  "Next",
+  "Vol +",
+  "Vol \u2212",
+  "Lights on",
+  "Lights off",
+  "60%",
+  "Color",
+  "22\u00b0",
+  "10 s",
+  "6 AM",
+  "water",
+  "Call",
+  "\u2600 Weather",
+  "\ud83c\udfa8 What color",
+  "Time"
+ ],
+ "time_info": "9:17 AM",
+ "weather_info": "29\u00b0C, rain, feels like 33\u00b0C in Manila.",
+ "weather_subtitle": "29\u00b0C, rain, feels like 33\u00b0C in Manila.",
+ "color_info": "Light color: blue",
+ "bulb_color": "#69aefc",
+ "whatcolor_info": "Light color: blue",
+ "page_errors": []
+}
+ROOM-PROBE: PASS

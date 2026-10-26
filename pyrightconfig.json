@@ -1,0 +1,17 @@
+{
+  "pythonPath": "C:/Users/Leandro/AppData/Local/Programs/Python/Python312/python.exe",
+  "extraPaths": [
+    "DemoApp",
+    "vcm_live_test_local/vcm_live_test_local",
+    "C:/Users/Leandro/AppData/Local/Programs/Python/Python312/Lib/site-packages"
+  ],
+  "include": [
+    "DemoApp"
+  ],
+  "exclude": [
+    "USB_ME2",
+    "USB_ME2/**"
+  ],
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false
+}

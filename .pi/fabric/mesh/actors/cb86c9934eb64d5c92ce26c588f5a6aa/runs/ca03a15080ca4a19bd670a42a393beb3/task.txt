@@ -1,0 +1,9 @@
+Fabric actor message from direct:
+
+{
+  "source": "direct",
+  "payload": {
+    "message": "AUDIT TASK v2 — Recording Test + new model registration. App at http://127.0.0.1:8765. Non-destructive HTTP only.\n1) GET /api/recordings -> report count.\n2) GET /api/lab/models -> report g1_models count (expect 13) and models count (expect 48).\n3) Verify these 11 new gate2 models are listed: gate2v58_smooth_pidgate, gate2v59_focal_warp, gate2v60_phone_warp, gate2v61_keyword_mix, gate2v62_speechtrim, gate2v63_pca_frontend, gate2v64_paired_negatives, gate2v64c_stochmel, gate2v64d_expandedneg, gate2v64p_paired_owner, gate2v65_stoch15k.\n4) POST /api/recordings/20261022_175328_646d19/test with {\"g1_models\":[\"gate1v4_f16\"],\"models\":[\"gate2v65_stoch15k\",\"gate2v64p_paired_owner\"],\"hop_s\":1.0} -> poll /api/jobs/{id} until done/error (max 60 s). Report per-summary: ticks, command_ticks, trigger_ticks, error field.\n5) GET /pipeline_all_in_one.html -> confirm ids all-recframe-toggle, rf-start, rf-rec, rf-label, rf-results, rf-refresh exist in the HTML.\n6) Verdict table PASS/FAIL per step."
+  },
+  "id": "ac2ffe63-3b55-4154-9bc4-f98c73aefef1"
+}

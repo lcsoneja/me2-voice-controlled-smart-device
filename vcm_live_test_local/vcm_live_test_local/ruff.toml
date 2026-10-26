@@ -1,0 +1,16 @@
+# pi-lens runs ruff with this config. House style, matching this codebase:
+#
+# 1) Import layout: the isort CLI keeps local root modules in their own
+#    first-party section after the third-party block. Declaring them
+#    known-first-party makes ruff I001 agree instead of demanding a merged block.
+#
+# 2) BLE001 (blind `except Exception`) is intentional here: the ticker safety
+#    wrapper, WebSocket broadcasts, the client-error receiver, and the lab job
+#    runner deliberately swallow unexpected errors, log them, and keep running,
+#    so one bad tick or one failed model cannot kill the whole pipeline.
+#    Narrowing those catches would reintroduce the frozen-gantt bug just fixed.
+[lint]
+ignore = ["BLE001"]
+
+[lint.isort]
+known-first-party = ["_bank_scenarios", "_bench_gate1v8", "_gate1v8_integration_test", "_loadtest_new_gate2", "_parallel_test_server", "_probe_g1_inputs", "_probe_v12_stats", "_probe_wake_models", "gate1_forward_reference", "gate1_monitor", "gate1_server", "live_session", "mic_probe", "nc_dsp", "owner_voice_eval", "parallel_pipeline", "pipeline_frames", "real_session", "recording_lab", "recording_voice", "score_voice"]

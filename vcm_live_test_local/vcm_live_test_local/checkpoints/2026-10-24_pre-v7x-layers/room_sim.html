@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VCM Room Simulator</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0e14;--panel:#151b24;--line:#2b3442;--text:#e6edf3;--muted:#8b949e;--blue:#1f6feb;--green:#2ea043;--amber:#d29922;--red:#b62324}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 "Segoe UI",Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line)}
+header h1{font-size:16px;margin:0}#status{font-size:11px;color:var(--muted)}
+.room{position:relative;max-width:1200px;margin:10px auto;height:520px;background:linear-gradient(#101722,#1a2230 60%,#232c3b);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.window{position:absolute;top:30px;left:40px;width:170px;height:120px;border-radius:8px;background:radial-gradient(circle at 70% 30%,#233a5c,#0a1220);border:3px solid #3a4658}
+.stars{position:absolute;width:100%;height:100%;background-image:radial-gradient(#cfe1ff 1px,transparent 1px);background-size:26px 26px;opacity:.5}
+.moon{position:absolute;top:12px;right:14px;width:26px;height:26px;border-radius:50%;background:#f4e9c8;box-shadow:0 0 18px #f4e9c8aa}
+.floor{position:absolute;left:0;right:0;bottom:26px;height:2px;background:linear-gradient(90deg,transparent,#2b3442 10%,#2b3442 90%,transparent)}
+.bed{position:absolute;bottom:30px;left:60px;width:300px;height:110px;background:#3b4a63;border-radius:10px;border:2px solid #55658a}
+.bed .headboard{position:absolute;left:-16px;top:-38px;width:32px;height:148px;background:#54402c;border:2px solid #6b543f;border-radius:8px}
+.bed .mattress{position:absolute;inset:8px;background:#4d5f80;border-radius:8px}
+.bed .pillow{position:absolute;top:14px;left:14px;width:80px;height:30px;background:#dfe6f2;border-radius:8px}
+.bed .blanket{position:absolute;bottom:8px;right:8px;width:180px;height:52px;background:#7c5ea8;border-radius:8px}
+.bed .legs{position:absolute;bottom:-16px;left:12px;right:12px;height:16px}
+.bed .legs i{position:absolute;bottom:0;width:14px;height:16px;background:#3a2f22;border-radius:0 0 4px 4px}
+.bed .legs i:first-child{left:0}.bed .legs i:last-child{right:0}
+.bed.zzz::after{content:"Z z z";position:absolute;top:-26px;right:30px;color:var(--muted);font-size:12px}
+.nightstand{position:absolute;bottom:30px;left:390px;width:90px;height:70px;background:#4a3a2c;border:2px solid #6b543f;border-radius:6px}
+.nightstand::before{content:"";position:absolute;left:10px;right:10px;top:12px;height:22px;border:1px solid #6b543f;border-radius:4px;background:#54402c}
+.nightstand::after{content:"";position:absolute;left:41px;top:20px;width:8px;height:8px;border-radius:50%;background:#8a6a1d}
+.nslamp{position:absolute;bottom:100px;left:403px;width:34px;height:40px}
+.nslamp .shade{position:absolute;top:0;left:0;width:34px;height:16px;background:linear-gradient(#b18a35,#6e5a22);clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);border-radius:3px}
+.nslamp .stem{position:absolute;top:16px;left:15px;width:4px;height:18px;background:#6e7681}
+.nslamp .base{position:absolute;bottom:0;left:7px;width:20px;height:6px;border-radius:3px;background:#6e7681}
+.nslamp.on .shade{background:linear-gradient(#ffe27a,#d29922);box-shadow:0 0 24px 9px rgba(255,215,94,.5)}
+.bulblamp{position:absolute;top:0;left:52%;width:50px;display:flex;flex-direction:column;align-items:center;z-index:2}
+.bulbwire{width:3px;height:62px;background:#77808d}
+.bulb{position:relative;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#596270,#303844 70%);border:2px solid #8b949e;transition:box-shadow .3s,background .3s,filter .3s}
+.bulb::after{content:"";position:absolute;left:16px;bottom:-12px;width:18px;height:12px;border-radius:0 0 5px 5px;background:#6e7681;border:1px solid #9da5ae}
+.bulb.on{background:var(--bulb-color,#ffe27a);border-color:#fff1b5;box-shadow:0 0 22px 8px rgba(255,215,94,.65),0 0 70px 34px rgba(255,215,94,.34);filter:brightness(calc(.6 + var(--bright)*.01))}
+.bulb .fil{position:absolute;inset:16px;border-radius:50%;background:#20262e}
+.bulb.on .fil{background:#b8860b}
+.musicbox{position:absolute;top:70px;left:620px;display:none}
+.musicbox.show{display:block}
+.musicbox{position:absolute;bottom:30px;left:520px;width:170px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px}
+.musicbox .track{font-size:11px;color:var(--muted);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.musicbox .bars{display:flex;gap:3px;align-items:flex-end;height:26px}
+.musicbox .bars i{width:8px;background:var(--blue);border-radius:2px;height:6px}
+.musicbox.playing .bars i{animation:jump .7s infinite ease-in-out}
+.musicbox .bars i:nth-child(2){animation-delay:.15s}.musicbox .bars i:nth-child(3){animation-delay:.3s}.musicbox .bars i:nth-child(4){animation-delay:.45s}
+@keyframes jump{0%,100%{height:6px}50%{height:24px}}
+.vol{height:6px;background:#0d1117;border:1px solid var(--line);border-radius:4px;margin-top:6px;overflow:hidden}.vol i{display:block;height:100%;background:var(--green);width:40%}
+.thermo{position:absolute;top:60px;right:60px;width:64px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.thermo .num{font-size:20px;font-weight:700}.thermo .unit{font-size:10px;color:var(--muted)}
+.thermo .tube{height:70px;width:10px;margin:8px auto;background:#0d1117;border:1px solid var(--line);border-radius:6px;position:relative}.thermo .tube i{position:absolute;bottom:0;left:0;right:0;background:#ff6b6b;border-radius:5px;transition:height .4s}
+.clock{position:absolute;top:40px;left:280px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px}
+.panel{position:absolute;background:rgba(21,27,36,.92);border:1px solid var(--line);border-radius:10px;padding:8px;font-size:11px;min-width:130px}
+.panel b{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+#p-timer{top:150px;right:150px;display:none}#p-alarm{top:150px;right:20px;display:none}#p-remind{bottom:120px;right:60px;max-width:170px;display:none}#p-call{bottom:120px;left:40px;display:none}#p-msg{top:150px;left:280px;display:none}#p-info{bottom:120px;left:250px;display:none}
+#p-call.ring{border-color:var(--amber);animation:ring 1s infinite}@keyframes ring{0%,100%{box-shadow:0 0 0 rgba(210,153,34,0)}50%{box-shadow:0 0 18px rgba(210,153,34,.7)}}
+#p-timer .cd{font-size:16px;font-weight:700}
+ul#remlist{margin:0;padding-left:14px;max-height:70px;overflow:auto}
+.log{max-width:1200px;margin:8px auto;padding:8px 10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;font-size:11px;color:var(--muted);min-height:34px}
+.log b{color:var(--text)}
+.demos{max-width:1200px;margin:0 auto 20px;display:flex;flex-wrap:wrap;gap:6px;padding:0 10px}
+.demos button{background:#21262d;color:#c9d1d9;border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:11px;cursor:pointer}
+.demos button:hover{background:#30363d}
+.gauges{position:absolute;bottom:8px;right:14px;display:flex;gap:10px;font-size:11px;color:var(--muted)}
+.gauges .g{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.gauges .g b{color:var(--text)}
+.room-subtitle{max-width:1100px;margin:10px auto 8px;padding:12px 18px;min-height:30px;display:flex;align-items:center;gap:10px;background:#101820;border:1px solid #58a6ff;border-left:5px solid #58a6ff;border-radius:9px;box-shadow:0 4px 18px rgba(0,0,0,.28);color:#f0f6fc;font-size:18px;line-height:1.4}.room-subtitle .speaker{flex:none;color:#79c0ff;font-weight:700}.room-subtitle .text{font-weight:600}
+</style>
+</head>
+<body>
+<header><h1>VCM Room Simulator — live bedroom</h1><div style="display:flex;gap:12px;align-items:center"><button id="btn-persona" onclick="togglePersona()" style="background:#21262d;color:#c9d1d9;border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer;">Persona: <b id="lbl-persona" style="color:#58a6ff">Nova ♀</b></button><div id="status">connecting…</div></div></header>
+<div class="room" id="room">
+ <div class="window"><div class="stars"></div><div class="moon"></div></div>
+ <div class="clock" id="clock">--:--</div>
+ <div class="floor"></div>
+ <div class="bed" id="bed"><div class="headboard"></div><div class="mattress"></div><div class="pillow"></div><div class="blanket"></div><div class="legs"><i></i><i></i></div></div>
+ <div class="nightstand"></div><div class="nslamp" id="nslamp" role="img" aria-label="Desk lamp off"><div class="shade"></div><div class="stem"></div><div class="base"></div></div>
+ <div class="musicbox" id="musicbox"><div class="track" id="track">Track 1 · stopped</div><div class="bars"><i></i><i></i><i></i><i></i></div><div class="vol"><i id="volbar"></i></div></div>
+ <div class="bulblamp"><div class="bulbwire"></div><div class="bulb" id="bulb" style="--bright:1"><div class="fil"></div></div></div>
+ <div class="thermo"><div class="num" id="tempnum">22</div><div class="unit">°C</div><div class="tube"><i id="tempbar" style="height:50%"></i></div></div>
+ <div class="panel" id="p-timer"><b>Timer</b><div class="cd" id="timercd">—</div></div>
+ <div class="panel" id="p-alarm"><b>Alarm</b><div id="alarmset">not set</div></div>
+ <div class="panel" id="p-remind"><b>Reminders</b><ul id="remlist"></ul></div>
+ <div class="panel" id="p-call"><b>Intercom</b><div id="callstate">idle</div></div>
+ <div class="panel" id="p-msg"><b>Message</b><div id="msgtext">—</div></div>
+ <div class="panel" id="p-info"><b>Info</b><div id="infotext">—</div></div>
+ <div class="gauges"><div class="g">G1 <b id="g1s">idle</b></div><div class="g">G2 <b id="g2s">idle</b></div><div class="g">Eval <b id="sched">2 s</b></div></div>
+</div>
+<div class="room-subtitle" id="room-subtitle" role="status" aria-live="polite"><span class="speaker" id="room-subtitle-speaker">Nova:</span><span class="text" id="room-subtitle-text">Ready for a voice command.</span></div>
+<div class="log" id="log">Live: the room reacts when the Gate pipeline confirms an action. Demo buttons below work without a microphone.</div>
+<div class="demos" id="demos"></div>
+<script>
+var LOFI_TRACKS = ["01_Study_At_Night.mp3","02_Cozy_Library.mp3","03_Library_Interior.mp3","04_Quiet_Library.mp3","05_Study_Desk.mp3"];
+var CALL_SOUNDS = ["01_Vintage_Telephone_Ringtone.mp3","02_Magic_Notification_Ring.mp3","03_Urgent_Tone_Loop.mp3","04_Office_Telephone_Ring.mp3","05_Marimba_Ringtone.mp3"];
+var BULB_COLORS={'warm white':'#ffe27a',white:'#fff2cc',red:'#ff6b6b',green:'#57d18f',blue:'#69aefc',yellow:'#ffd75e',purple:'#c792ea',pink:'#ff88b7',orange:'#ffad66',cyan:'#64d8e6'};
+var S={playing:false,track:1,vol:50,bright:0,on:false,color:'#ffe27a',colorName:'warm white',temp:22,timer:null,timerEnd:0,reminders:[],logs:[],persona:'nova'};
+var voiceAudio = new Audio();
+var musicAudio = new Audio();
+var callAudio = new Audio();
+musicAudio.loop = true;
+
+function togglePersona(){
+ S.persona = (S.persona==='nova') ? 'piattos' : 'nova';
+ var isN = S.persona==='nova';
+ $('lbl-persona').textContent = isN ? 'Nova ♀' : 'Piattos ♂';
+ $('lbl-persona').style.color = isN ? '#58a6ff' : '#f0883e';
+ log('Assistant persona set to ' + (isN ? 'Nova (female)' : 'Piattos (male)'), 'sys');
+}
+
+function speakOffline(text, persona, onDone) {
+ if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
+ var voices = window.speechSynthesis.getVoices().filter(function(v) { return v.localService !== false; });
+ if (!voices.length) return false;
+ var p = (persona || S.persona || 'nova').toLowerCase();
+ var preferred = p === 'nova' ? /zira|female|susan|aria|jenny/i : /david|male|mark|guy/i;
+ var voice = voices.find(function(v) { return preferred.test(v.name); }) || voices.find(function(v) { return /^en/i.test(v.lang); }) || voices[0];
+ var utterance = new SpeechSynthesisUtterance(text);
+ utterance.voice = voice;
+ utterance.lang = voice.lang || 'en-US';
+ var finished = false;
+ function finish() { if (!finished) { finished = true; if (onDone) onDone(); } }
+ utterance.onend = finish;
+ utterance.onerror = finish;
+ try { window.speechSynthesis.cancel(); window.speechSynthesis.speak(utterance); return true; }
+ catch (e) { return false; }
+}
+function playVoice(intent, persona, onDone, responseUrl, dynamicText) {
+ if (dynamicText && speakOffline(dynamicText, persona, onDone)) return;
+ var p = (persona || S.persona || 'nova').toLowerCase();
+ var i = String(intent || '').toLowerCase();
+ var url1 = responseUrl || ('/assistant-responses/resp_' + p + '_' + i + '_1.wav');
+ var url2 = responseUrl ? responseUrl.replace(/_1\.wav$/, '_2.wav') : ('/assistant-responses/resp_' + p + '_' + i + '_2.wav');
+ var finished = false, triedFallback = false;
+ function finish() { if (!finished) { finished = true; if (onDone) onDone(); } }
+ function attempt(url) {
+  voiceAudio.onended = finish;
+  voiceAudio.onerror = function() {
+   if (!triedFallback && url2 !== url1) { triedFallback = true; attempt(url2); }
+   else finish();
+  };
+  voiceAudio.src = url;
+  var playback = voiceAudio.play();
+  if (playback && playback.catch) playback.catch(function() {
+   if (!triedFallback && url2 !== url1) { triedFallback = true; attempt(url2); }
+   else finish();
+  });
+ }
+ attempt(url1);
+}
+function $(id){return document.querySelector('#'+id)}
+function log(t,cls){S.logs.unshift((cls||'act')+': '+t);S.logs=S.logs.slice(0,6);var el=$('log');el.textContent='';S.logs.forEach(function(l,i){var d=document.createElement('div');d.textContent=l;if(i===0)d.style.color='#e6edf3';el.append(d);});}
+function parseNum(s){var m=/([0-9]+)/.exec(String(s||''));return m?parseInt(m[1],10):null}
+function setBulb(){var b=$('bulb');var lamp=document.querySelector('#nslamp');var on=S.on&&S.bright>0;b.style.setProperty('--bright',(S.bright/100).toFixed(2));b.style.setProperty('--bulb-color',S.color);b.classList.toggle('on',on);b.style.boxShadow=on?'0 0 22px 8px '+S.color+'aa, 0 0 70px 34px '+S.color+'55':'none';b.setAttribute('aria-label',on?'Light bulb on at '+S.bright+' percent, '+S.colorName:'Light bulb off');if(lamp){var lampOn=on&&S.bright>=40;lamp.classList.toggle('on',lampOn);lamp.setAttribute('aria-label',lampOn?'Desk lamp on':'Desk lamp off');}}
+function setMusic(){$('musicbox').classList.toggle('playing',S.playing);$('volbar').style.width=S.vol+'%';$('track').textContent=LOFI_TRACKS[S.track-1].replace('.mp3','')+' · '+(S.playing?'playing':'paused');}
+function setTemp(){var p=Math.max(0,Math.min(100,(S.temp-16)/16*100));$('tempnum').textContent=S.temp;$('tempbar').style.height=p+'%';}
+function show(id,txt){var p=$(id);p.style.display='block';if(txt!==undefined){var f=p.querySelector('div:not(.cd)');if(id==='p-msg')$('msgtext').textContent=txt;else if(id==='p-info')$('infotext').textContent=txt;else if(id==='p-alarm')$('alarmset').textContent=txt;else if(id==='p-call')$('callstate').textContent=txt;}}
+function currentTimeText(){return new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});}
+function responseText(intent,value){
+ var v=String(value||'').trim();
+ switch(intent){
+  case 'LIGHT_ON': return 'Turning the lights on.';
+  case 'LIGHT_OFF': return 'Turning the lights off.';
+  case 'BRIGHTNESS': return 'Setting brightness to '+(v||S.bright+' percent')+'.';
+  case 'COLOR': return 'Changing the light color to '+(v||'warm white')+'.';
+  case 'TEMPERATURE': return 'Setting the temperature to '+(v||S.temp+' degrees')+'.';
+  case 'PLAY_MUSIC': return 'Playing music: '+LOFI_TRACKS[S.track-1].replace('.mp3','')+'.';
+  case 'PAUSE': return 'Pausing the music.';
+  case 'NEXT': return 'Playing the next track.';
+  case 'PREV': return 'Playing the previous track.';
+  case 'VOLUME_UP': return 'Volume increased to '+S.vol+' percent.';
+  case 'VOLUME_DOWN': return 'Volume lowered to '+S.vol+' percent.';
+  case 'TIMER': return 'Timer started for '+(v||'10 seconds')+'.';
+  case 'ALARM': return 'Alarm set for '+(v||'6 AM')+'.';
+  case 'CREATE_REMINDER': return v?'Reminder set: '+v+'.':'Reminder created.';
+  case 'LIST_REMINDERS': return S.reminders.length?'Your reminders: '+S.reminders.join(', ')+'.':'You have no reminders.';
+  case 'CALL': return 'Calling now.';
+  case 'MESSAGE': return v?'Sending your message: '+v+'.':'Sending your message.';
+  case 'STOP': return 'Stopped.';
+  case 'WEATHER': return 'The demo weather is clear and 27 degrees.';
+  case 'TIME': return 'The current time is '+currentTimeText()+'.';
+  case 'SEARCH': return 'Searching now.';
+  default: return 'Command received: '+String(intent||'').replace(/_/g,' ').toLowerCase()+'.';
+ }
+}
+function setSubtitle(text,persona){
+ var p=(persona||S.persona||'nova').toLowerCase();
+ $('room-subtitle-speaker').textContent=(p==='piattos'?'Piattos':'Nova')+':';
+ $('room-subtitle-text').textContent=text;
+}
+function hide(id){$(id).style.display='none'}
+function fetchWeather(city, cb) {
+  var done = false;
+  function finish(ok, text) { if (!done) { done = true; cb(ok, text); } }
+  function wmo(code) {
+    code = Number(code) || 0;
+    if (code === 0) return 'clear sky';
+    if (code <= 3) return code === 2 ? 'partly cloudy' : 'cloudy';
+    if (code === 45 || code === 48) return 'foggy';
+    if (code >= 51 && code <= 67) return 'rain';
+    if (code >= 71 && code <= 77) return 'snow';
+    if (code >= 80 && code <= 82) return 'rain showers';
+    if (code >= 95) return 'thunderstorms';
+    return 'mixed weather';
+  }
+  function forecast(lat, lon, place) {
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto')
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var c = d && d.current ? d.current : null;
+        if (!c) { finish(false, 'No weather data for ' + place + '.'); return; }
+        finish(true, Math.round(c.temperature_2m) + '°C, ' + wmo(c.weather_code) + ', feels like ' + Math.round(c.apparent_temperature) + '°C in ' + place + '.');
+      })
+      .catch(function () { finish(false, 'Weather service unreachable (offline?).'); });
+  }
+  var q = String(city || '').trim();
+  if (!q) { forecast(14.5995, 120.9842, 'Manila'); return; }
+  fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(q) + '&count=1&language=en&format=json')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var hit = d && d.results && d.results[0];
+      if (!hit) { forecast(14.5995, 120.9842, 'Manila'); return; }
+      forecast(hit.latitude, hit.longitude, hit.name);
+    })
+    .catch(function () { forecast(14.5995, 120.9842, 'Manila'); });
+}
+function applyAction(intent,slot,persona,response){
+ var v=slot&&slot.label?slot.label:'';
+ var activePersona=persona||S.persona;
+ var responseUrl=response&&response.url?response.url:null;
+ var subtitle=(response&&response.text)?response.text:responseText(intent,v);
+ setSubtitle(subtitle,activePersona);
+ function say(onDone,dynamicText){playVoice(intent,activePersona,onDone||null,responseUrl,dynamicText||'');}
+ if(intent==='LIGHT_ON'){S.on=true;S.bright=100;setBulb();say();log('Lights on · 🔊 "Turning the lights on."');}
+ else if(intent==='LIGHT_OFF'){S.on=false;setBulb();say();log('Lights off · 🔊 "Turning the lights off."');}
+ else if(intent==='BRIGHTNESS'){S.on=true;S.bright=parseNum(v)||S.bright;setBulb();say();log('Brightness → '+S.bright+'% · 🔊 "Setting brightness."');}
+ else if(intent==='TEMPERATURE'){S.temp=parseNum(v)||S.temp;setTemp();say();log('Temperature → '+S.temp+'°C · 🔊 "Temperature adjusted."');}
+ else if(intent==='COLOR'){
+   var requested=String(v||'warm white').trim().toLowerCase();
+   var colorKey=Object.keys(BULB_COLORS).find(function(name){return requested===name||requested.includes(name);});
+   if(colorKey)S.color=BULB_COLORS[colorKey];
+   else if(/^#[0-9a-f]{6}$/i.test(requested))S.color=requested;
+   else S.color=BULB_COLORS['warm white'];
+   S.colorName=colorKey||requested;S.on=true;if(!S.bright)S.bright=100;setBulb();show('p-info','Light color: '+S.colorName);say();log('Light color → '+S.colorName+' · 🔊 '+subtitle);
+  }
+ var pName = activePersona || 'nova';
+ pName = pName.charAt(0).toUpperCase() + pName.slice(1);
+ if(intent==='PLAY_MUSIC'){
+  callAudio.pause(); callAudio.currentTime = 0; hide('p-call'); $('p-call').classList.remove('ring');
+  var tName = LOFI_TRACKS[S.track - 1];
+  $('track').textContent = tName.replace('.mp3','') + ' · loading…';
+  say(function() {
+   musicAudio.src = '/media/lofiradio/' + tName;
+   musicAudio.volume = S.vol / 100;
+   musicAudio.play().catch(function() {});
+   S.playing = true; setMusic();
+  });
+  log('Play music · 🔊 ' + pName + ': "Playing music." → 🎵 ' + tName);
+ }
+ else if(intent==='PAUSE'){
+  musicAudio.pause(); S.playing=false; setMusic();
+  say();
+  log('Music paused · 🔊 ' + pName + ': "Paused."');
+ }
+ else if(intent==='NEXT'){
+  S.track = (S.track % LOFI_TRACKS.length) + 1;
+  var tName = LOFI_TRACKS[S.track - 1];
+  say(function() {
+   musicAudio.src = '/media/lofiradio/' + tName;
+   musicAudio.volume = S.vol / 100;
+   musicAudio.play().catch(function() {});
+   S.playing = true; setMusic();
+  });
+  log('Next track · 🔊 ' + pName + ' → 🎵 ' + tName);
+ }
+ else if(intent==='PREV'){
+  S.track = S.track > 1 ? S.track - 1 : LOFI_TRACKS.length;
+  var tName = LOFI_TRACKS[S.track - 1];
+  say(function() {
+   musicAudio.src = '/media/lofiradio/' + tName;
+   musicAudio.volume = S.vol / 100;
+   musicAudio.play().catch(function() {});
+   S.playing = true; setMusic();
+  });
+  log('Previous track · 🔊 ' + pName + ' → 🎵 ' + tName);
+ }
+ else if(intent==='VOLUME_UP'){
+  S.vol = Math.min(100, S.vol + 20);
+  musicAudio.volume = S.vol / 100;
+  setMusic();
+  say();
+  log('Volume up → ' + S.vol + '% · 🔊 ' + pName + ': "Volume increased."');
+ }
+ else if(intent==='VOLUME_DOWN'){
+  S.vol = Math.max(0, S.vol - 20);
+  musicAudio.volume = S.vol / 100;
+  setMusic();
+  say();
+  log('Volume down → ' + S.vol + '% · 🔊 ' + pName + ': "Volume lowered."');
+ }
+ else if(intent==='TIMER'){var n=parseNum(v)||10;S.timerEnd=Date.now()+((v&&/minute/i.test(v))?n*60:n)*1000;show('p-timer');say();log('Timer set: '+(v||'10s')+' · 🔊 "Timer started."');}
+ else if(intent==='ALARM'){show('p-alarm',v||'6 AM');say();log('Alarm set: '+(v||'6 AM')+' · 🔊 "Alarm set."');}
+ else if(intent==='CREATE_REMINDER'){S.reminders.unshift(v||'reminder');S.reminders=S.reminders.slice(0,6);var rl=$('remlist');rl.textContent='';S.reminders.forEach(function(r){var li=document.createElement('li');li.textContent=r;rl.append(li);});show('p-remind');say();log('Reminder: '+(v||'added')+' · 🔊 "Reminder created."');}
+ else if(intent==='LIST_REMINDERS'){show('p-remind');say();log('Reminders listed · 🔊 "Showing your reminders."');}
+ else if(intent==='CALL'){
+  if(S.playing) musicAudio.pause();
+  var ringSound = CALL_SOUNDS[Math.floor(Math.random() * CALL_SOUNDS.length)];
+  var rName = ringSound.replace('.mp3','').replace(/^[0-9]+_/,'').replace(/_/g,' ');
+  show('p-call', 'calling… (🔊 ' + pName + ')');
+  say(function() {
+   callAudio.src = '/media/call-sounds/' + ringSound;
+   callAudio.play().catch(function() {});
+   show('p-call', 'ringing… 📞 ' + rName);
+   $('p-call').classList.add('ring');
+   callAudio.onended = function() {
+    hide('p-call'); $('p-call').classList.remove('ring');
+    if(S.playing) musicAudio.play().catch(function() {});
+   };
+   setTimeout(function() {
+    callAudio.pause(); callAudio.currentTime = 0;
+    hide('p-call'); $('p-call').classList.remove('ring');
+    if(S.playing) musicAudio.play().catch(function() {});
+   }, 9000);
+  });
+  log('Intercom call · 🔊 ' + pName + ': "Calling now." → 📞 ' + rName);
+ }
+ else if(intent==='MESSAGE'){show('p-msg',v||'new message');say();log('Message · 🔊 "Sending your message."');}
+ else if(intent==='STOP'){
+  musicAudio.pause(); musicAudio.currentTime = 0;
+  callAudio.pause(); callAudio.currentTime = 0;
+  hide('p-call'); $('p-call').classList.remove('ring');
+  S.playing=false; setMusic();
+  say();
+  log('Stop · 🔊 ' + pName + ': "Stopped."');
+ }
+ else if(intent==='WEATHER'){
+   var wcity=(v&&String(v).trim())?String(v).trim():'';
+   show('p-info','Fetching weather…');
+   setSubtitle('Checking the weather.',activePersona);
+   fetchWeather(wcity,function(ok,wtext){
+     show('p-info',wtext);
+     setSubtitle(wtext,activePersona);
+     say(null,wtext);
+     log('Weather · '+wtext);
+   });
+ }
+ else if(intent==='TIME'){var nowText=currentTimeText();show('p-info',nowText);say(null,subtitle);log('Time requested · '+subtitle);}
+ else if(intent==='COLOR_Q'){
+   var ctxt='The light is set to '+S.colorName+'.';
+   show('p-info','Light color: '+S.colorName);
+   setSubtitle(ctxt,activePersona);
+   say(null,ctxt);
+   log('Color query · '+ctxt);
+ }
+ else if(intent==='SEARCH'){show('p-info','searching… (demo)');say();log('Search requested · 🔊 "Searching now."');}
+}
+var DEMOS=[['PLAY_MUSIC','Play music'],['PAUSE','Pause'],['NEXT','Next'],['VOLUME_UP','Vol +'],['VOLUME_DOWN','Vol −'],['LIGHT_ON','Lights on'],['LIGHT_OFF','Lights off'],['BRIGHTNESS','60%'],['COLOR','Color'],['TEMPERATURE','22°'],['TIMER','10 s'],['ALARM','6 AM'],['CREATE_REMINDER','water'],['CALL','Call'],['WEATHER','☀ Weather'],['COLOR_Q','🎨 What color'],['TIME','Time']];
+var DEMO_VALUES={BRIGHTNESS:'60 percent',COLOR:'blue',TEMPERATURE:'22 degrees',TIMER:'10 seconds',ALARM:'6 AM',CREATE_REMINDER:'drink water'};
+var dwrap=$('demos');DEMOS.forEach(function(d){var b=document.createElement('button');b.textContent=d[1];b.onclick=function(){applyAction(d[0],{label:DEMO_VALUES[d[0]]||''});};dwrap.append(b);});
+var lastAction='';
+var lastWake='';
+function render(m){
+ if(m.g1){var wl=m.g1.activation_label||m.g1.wake;if(wl)S.persona=wl.toLowerCase();var g1Text='idle';if(m.g1.active)g1Text=(wl||'wake')+' '+Number(m.g1.remaining_s||0).toFixed(0)+'s';$('g1s').textContent=g1Text;}
+ if(m.g2){var ci=m.g2.current_intent||m.g2.intent;var g2Text=ci||'idle';if(m.g2.active)g2Text=(m.g2.activation_intent||ci||'—')+' '+Number(m.g2.remaining_s||0).toFixed(0)+'s';$('g2s').textContent=g2Text;}
+ if(m.memory&&m.memory.scheduler){$('sched').textContent=Number(m.memory.scheduler.interval_s||2)+'s · skip '+Number(m.memory.scheduler.skipped_ticks||0);}
+ var ag=m.action_gate||{};
+ if(ag.triggered&&ag.intent){var key=String(ag.event_id||0);if(key!==lastAction){lastAction=key;applyAction(ag.intent,m.spec,S.persona,m.assistant_response);}}
+ if(m.wake_response&&m.wake_response.url){var wk=String(m.wake_response.event_id||0);if(wk!==lastWake){lastWake=wk;var wp=m.wake_response.persona||S.persona;var wt=m.wake_response.text||'wake';setSubtitle(wt,wp);playVoice('wake',wp,null,m.wake_response.url,'');log('Wake '+((wp==='piattos')?'Piattos':'Nova')+' · 🔊 '+wt,'sys');}}
+}
+setInterval(function(){$('clock').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});if(S.timerEnd){var r=Math.max(0,Math.round((S.timerEnd-Date.now())/1000));$('timercd').textContent=r>0?r+' s':'done';if(r===0){S.timerEnd=0;log('Timer finished','sys');}}},500);
+var ws=new WebSocket((location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws/room');
+ws.onopen=function(){$('status').textContent='linked to live pipeline (read-only viewer)'};
+ws.onclose=function(){$('status').textContent='disconnected — retrying…';setTimeout(function(){location.reload()},2500)};
+ws.onmessage=function(ev){var m;try{m=JSON.parse(ev.data)}catch(e){return}if(m.type==='pipe')render(m)};
+setBulb();setMusic();setTemp();
+</script>
+</body>
+</html>

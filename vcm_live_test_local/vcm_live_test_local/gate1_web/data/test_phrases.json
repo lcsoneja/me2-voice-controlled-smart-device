@@ -1,39 +1,279 @@
 {
-  "schema": 1,
-  "source": "pipeline_all_in_one.html VCMPIPE2_PHRASES.G2",
-  "wake": ["Nova", "Piattos"],
-  "note": "Say the wake word first, then one phrase. The app then records 5 s and makes exactly one decision.",
-  "phrases": [
-    {"phrase": "play some music", "intent": "PLAY_MUSIC"},
-    {"phrase": "what's the weather today", "intent": "WEATHER"},
-    {"phrase": "what time is it", "intent": "TIME"},
-    {"phrase": "turn on the lights", "intent": "LIGHT_ON"},
-    {"phrase": "turn off the lights", "intent": "LIGHT_OFF"},
-    {"phrase": "pause the music", "intent": "PAUSE"},
-    {"phrase": "stop", "intent": "STOP"},
-    {"phrase": "next song", "intent": "NEXT"},
-    {"phrase": "turn the volume up", "intent": "VOLUME_UP"},
-    {"phrase": "turn the volume down", "intent": "VOLUME_DOWN"},
-    {"phrase": "call mom", "intent": "CALL"},
-    {"phrase": "send a message to john", "intent": "MESSAGE"},
-    {"phrase": "list my reminders", "intent": "LIST_REMINDERS"},
-    {"phrase": "set a timer for 10 seconds", "intent": "TIMER"},
-    {"phrase": "set a timer for 30 seconds", "intent": "TIMER"},
-    {"phrase": "set a timer for 1 minute", "intent": "TIMER"},
-    {"phrase": "set an alarm for 6 am", "intent": "ALARM"},
-    {"phrase": "set an alarm for 8 am", "intent": "ALARM"},
-    {"phrase": "set an alarm for 9 pm", "intent": "ALARM"},
-    {"phrase": "set the temperature to 18 degrees", "intent": "TEMPERATURE"},
-    {"phrase": "set the temperature to 22 degrees", "intent": "TEMPERATURE"},
-    {"phrase": "set the temperature to 26 degrees", "intent": "TEMPERATURE"},
-    {"phrase": "set brightness to 20 percent", "intent": "BRIGHTNESS"},
-    {"phrase": "set brightness to 60 percent", "intent": "BRIGHTNESS"},
-    {"phrase": "set brightness to 100 percent", "intent": "BRIGHTNESS"},
-    {"phrase": "make the lights red", "intent": "COLOR"},
-    {"phrase": "make the lights blue", "intent": "COLOR"},
-    {"phrase": "make the lights green", "intent": "COLOR"},
-    {"phrase": "remind me to drink water", "intent": "CREATE_REMINDER"},
-    {"phrase": "remind me to study", "intent": "CREATE_REMINDER"},
-    {"phrase": "remind me to exercise", "intent": "CREATE_REMINDER"}
-  ]
+ "schema": 1,
+ "source": "pipeline_all_in_one.html VCMPIPE2_PHRASES.G2",
+ "wake": [
+  "Nova",
+  "Piattos"
+ ],
+ "note": "Say the wake word first, then one phrase. The app records 5 s and makes exactly one decision. Every intent has several phrasings so one wording cannot memorise the test.",
+ "phrases": [
+  {
+   "phrase": "play some music",
+   "intent": "PLAY_MUSIC"
+  },
+  {
+   "phrase": "play my favorite song",
+   "intent": "PLAY_MUSIC"
+  },
+  {
+   "phrase": "put on some music",
+   "intent": "PLAY_MUSIC"
+  },
+  {
+   "phrase": "start the music",
+   "intent": "PLAY_MUSIC"
+  },
+  {
+   "phrase": "what's the weather today",
+   "intent": "WEATHER"
+  },
+  {
+   "phrase": "how is the weather outside",
+   "intent": "WEATHER"
+  },
+  {
+   "phrase": "will it rain tomorrow",
+   "intent": "WEATHER"
+  },
+  {
+   "phrase": "what's the weather like",
+   "intent": "WEATHER"
+  },
+  {
+   "phrase": "what time is it",
+   "intent": "TIME"
+  },
+  {
+   "phrase": "tell me the time",
+   "intent": "TIME"
+  },
+  {
+   "phrase": "what's the time right now",
+   "intent": "TIME"
+  },
+  {
+   "phrase": "turn on the lights",
+   "intent": "LIGHT_ON"
+  },
+  {
+   "phrase": "lights on please",
+   "intent": "LIGHT_ON"
+  },
+  {
+   "phrase": "switch on the lights",
+   "intent": "LIGHT_ON"
+  },
+  {
+   "phrase": "turn off the lights",
+   "intent": "LIGHT_OFF"
+  },
+  {
+   "phrase": "lights off please",
+   "intent": "LIGHT_OFF"
+  },
+  {
+   "phrase": "switch off the lights",
+   "intent": "LIGHT_OFF"
+  },
+  {
+   "phrase": "pause the music",
+   "intent": "PAUSE"
+  },
+  {
+   "phrase": "pause the song",
+   "intent": "PAUSE"
+  },
+  {
+   "phrase": "pause playback",
+   "intent": "PAUSE"
+  },
+  {
+   "phrase": "stop",
+   "intent": "STOP"
+  },
+  {
+   "phrase": "stop the music",
+   "intent": "STOP"
+  },
+  {
+   "phrase": "stop playing",
+   "intent": "STOP"
+  },
+  {
+   "phrase": "next song",
+   "intent": "NEXT"
+  },
+  {
+   "phrase": "skip to the next song",
+   "intent": "NEXT"
+  },
+  {
+   "phrase": "play the next track",
+   "intent": "NEXT"
+  },
+  {
+   "phrase": "turn the volume up",
+   "intent": "VOLUME_UP"
+  },
+  {
+   "phrase": "volume up",
+   "intent": "VOLUME_UP"
+  },
+  {
+   "phrase": "louder please",
+   "intent": "VOLUME_UP"
+  },
+  {
+   "phrase": "increase the volume",
+   "intent": "VOLUME_UP"
+  },
+  {
+   "phrase": "turn the volume down",
+   "intent": "VOLUME_DOWN"
+  },
+  {
+   "phrase": "volume down",
+   "intent": "VOLUME_DOWN"
+  },
+  {
+   "phrase": "quieter please",
+   "intent": "VOLUME_DOWN"
+  },
+  {
+   "phrase": "decrease the volume",
+   "intent": "VOLUME_DOWN"
+  },
+  {
+   "phrase": "call mom",
+   "intent": "CALL"
+  },
+  {
+   "phrase": "call john please",
+   "intent": "CALL"
+  },
+  {
+   "phrase": "make a phone call",
+   "intent": "CALL"
+  },
+  {
+   "phrase": "send a message to john",
+   "intent": "MESSAGE"
+  },
+  {
+   "phrase": "send john a message",
+   "intent": "MESSAGE"
+  },
+  {
+   "phrase": "text john hello",
+   "intent": "MESSAGE"
+  },
+  {
+   "phrase": "list my reminders",
+   "intent": "LIST_REMINDERS"
+  },
+  {
+   "phrase": "what are my reminders",
+   "intent": "LIST_REMINDERS"
+  },
+  {
+   "phrase": "show my reminders",
+   "intent": "LIST_REMINDERS"
+  },
+  {
+   "phrase": "set a timer for 10 seconds",
+   "intent": "TIMER"
+  },
+  {
+   "phrase": "set a timer for 30 seconds",
+   "intent": "TIMER"
+  },
+  {
+   "phrase": "set a timer for 1 minute",
+   "intent": "TIMER"
+  },
+  {
+   "phrase": "start a timer for five minutes",
+   "intent": "TIMER"
+  },
+  {
+   "phrase": "set an alarm for 6 am",
+   "intent": "ALARM"
+  },
+  {
+   "phrase": "set an alarm for 8 am",
+   "intent": "ALARM"
+  },
+  {
+   "phrase": "set an alarm for 9 pm",
+   "intent": "ALARM"
+  },
+  {
+   "phrase": "set an alarm for 7 am",
+   "intent": "ALARM"
+  },
+  {
+   "phrase": "set the temperature to 18 degrees",
+   "intent": "TEMPERATURE"
+  },
+  {
+   "phrase": "set the temperature to 22 degrees",
+   "intent": "TEMPERATURE"
+  },
+  {
+   "phrase": "set the temperature to 26 degrees",
+   "intent": "TEMPERATURE"
+  },
+  {
+   "phrase": "set the temperature to 24 degrees",
+   "intent": "TEMPERATURE"
+  },
+  {
+   "phrase": "set brightness to 20 percent",
+   "intent": "BRIGHTNESS"
+  },
+  {
+   "phrase": "set brightness to 60 percent",
+   "intent": "BRIGHTNESS"
+  },
+  {
+   "phrase": "set brightness to 100 percent",
+   "intent": "BRIGHTNESS"
+  },
+  {
+   "phrase": "set brightness to 40 percent",
+   "intent": "BRIGHTNESS"
+  },
+  {
+   "phrase": "make the lights red",
+   "intent": "COLOR"
+  },
+  {
+   "phrase": "make the lights blue",
+   "intent": "COLOR"
+  },
+  {
+   "phrase": "make the lights green",
+   "intent": "COLOR"
+  },
+  {
+   "phrase": "make the lights warm white",
+   "intent": "COLOR"
+  },
+  {
+   "phrase": "remind me to drink water",
+   "intent": "CREATE_REMINDER"
+  },
+  {
+   "phrase": "remind me to study",
+   "intent": "CREATE_REMINDER"
+  },
+  {
+   "phrase": "remind me to exercise",
+   "intent": "CREATE_REMINDER"
+  },
+  {
+   "phrase": "remind me to call the dentist",
+   "intent": "CREATE_REMINDER"
+  }
+ ]
 }

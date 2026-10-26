@@ -1,0 +1,32 @@
+{
+  "id": "9ea5472160e449e5a3f713ae3d8c8345",
+  "name": "deepseek-auditor",
+  "task": "Fabric actor message from direct:\n\n{\n  \"source\": \"direct\",\n  \"payload\": {\n    \"message\": \"AUDIT TASK — Recording Test feature, app at http://127.0.0.1:8765. Non-destructive HTTP only.\\n1) GET /api/recordings -> report count + first recording id.\\n2) GET /api/lab/models -> report g1_models count and models count (list the last 5 gate2 model names).\\n3) POST /api/recordings/20261022_175328_646d19/test with {\\\"g1_models\\\":[\\\"gate1v4_f16\\\"],\\\"models\\\":[\\\"gate2v34a_std\\\"],\\\"hop_s\\\":1.0} -> capture job id.\\n4) Poll GET /api/jobs/{job_id} until status != running/queued (max 10 tries, 1s apart). Report status, elapsed_s, per-summary: g1_model, model, ticks, command_ticks, trigger_ticks.\\n5) GET /pipeline_all_in_one.html -> confirm it contains: all-recframe-toggle, rf-start, rf-rec, rf-results, rf-refresh. Report which are present/missing.\\n6) Verdict table: PASS/FAIL per step with one-line evidence.\"\n  },\n  \"id\": \"aa01ce2b-7c43-4c9b-b707-db234ff3b892\"\n}",
+  "status": "failed",
+  "runner": "pi-durable",
+  "kernel": "typescript",
+  "transport": "process",
+  "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+  "model": "openrouter/deepseek/deepseek-v4.1-flash",
+  "requestedModel": "openrouter/deepseek/deepseek-v4.1-flash",
+  "thinking": "high",
+  "actorId": "cb86c9934eb64d5c92ce26c588f5a6aa",
+  "actorName": "deepseek-auditor",
+  "startedAt": 1792749272728,
+  "updatedAt": 1792749335053,
+  "turns": 6,
+  "toolCalls": 5,
+  "text": "AUDIT COMPLETE — Recording Test feature @ `http://127.0.0.1:8765`\n\n| # | Step | Result | Evidence |\n|---|---|---|---|\n| 1 | `GET /api/recordings` | **PASS** | HTTP 200; **9 recordings**; first id `20261023_043625_41bebc` (label `live30-123625`, 8.7 s, 16 kHz mono) |\n| 2 | `GET /api/lab/models` | **PASS** | **g1_models: 13** (`gate1v10_dr` … `gate1v8_f32`); **models: 37**. Last 5 gate2 names: `gate2v52_adjswap`, `gate2v53_melbin_dropout`, `gate2v56_v54`, `gate2v56_v54b`, `gate2v57_pidgate` |\n| 3 | `POST /api/recordings/20261022_175328_646d19/test` | **PASS** | HTTP 200, job created: **`9e004969c066`**, `ticks_total: 26`, `log_file: recordings/logs/9e004969c066.jsonl` |\n| 4 | Poll `GET /api/jobs/9e004969c066` | **PASS** | `status: done`, `elapsed_s: 0.29`, `progress: 1.0`, `error: \"\"` |\n| 5 | `GET /pipeline_all_in_one.html` | **PASS** | 108,072 bytes; all 5 tokens **PRESENT** (`all-recframe-toggle`, `rf-start`, `rf-rec`, `rf-results`, `rf-refresh`); none missing |\n\n**Step 4 per-summary detail**\n\n| g1_model | model | ticks | command_ticks | trigger_ticks |\n|---|---|---|---|---|\n| `gate1v4_f16` | `gate2v34a_std` | 26 | 10 | 8 |\n\nExtra: `distinct_intents 1`, `top_intent PLAY_MUSIC` (10 ticks), `mean_conf 0.6094`, `mean_infer_ms 3.624`, `p95 4.222 ms`.\nEvents (9): wake `Nova` @ t=9.92 s conf 1.0 and `Piattos` @ t=19.92 s conf 0.66; top command `PLAY_MUSIC` @ 9.92 s conf 0.9861; 5 sub-threshold probes (`LIGHT_ON`/`TIMER`/`ALARM`/`NEXT`, conf 0.37–0.49) correctly withheld at `threshold: 0.5`.\n\n**Notes / caveats**\n- Job API wraps its payload as `{\"job\": {...}}` — my first poll loop read top-level keys and reported `status=undefined`; that was a harness parsing bug, not an app failure. Raw payload confirmed terminal `done`.\n- The POST response also uses the `{\"job\": {\"id\": ...}}` wrapper; job id was `9e004969c066` (not a top-level `job_id` field).\n- A final read-only convenience command (`wc -l` on the job log) was denied by the shell permission policy as `external_directory`; no side effects, and results were already conclusive without it.\n- No files or servers were modified; no start/stop actions taken.\n\n**Overall: 5/5 PASS.** The Recording Test feature accepts a test request, executes the full 26-tick G1→G2 pass in ~0.3 s, exposes complete per-combo summaries and event traces, and the lab UI contains all five recording-frame controls.",
+  "usage": {
+    "input": 10866,
+    "output": 3559,
+    "cacheRead": 235776,
+    "cacheWrite": 0,
+    "cost": 0.004426328
+  },
+  "logFile": "C:\\Users\\Leandro\\AppData\\Local\\Temp\\pi-fabric-runs-1y6u02\\9ea5472160e449e5a3f713ae3d8c8345\\events.jsonl",
+  "error": "Child Pi settled; child did not exit after stdin closed for 5000ms",
+  "exitCode": 1,
+  "stderr": "",
+  "finishedAt": 1792749335053
+}

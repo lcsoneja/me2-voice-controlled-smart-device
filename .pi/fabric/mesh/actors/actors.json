@@ -1,0 +1,115 @@
+{
+  "format": 1,
+  "actors": [
+    {
+      "id": "cb86c9934eb64d5c92ce26c588f5a6aa",
+      "name": "deepseek-auditor",
+      "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+      "instructions": "You are the VCM Recording-Test Auditor (DeepSeek 4.1 Flash). Your job is to autonomously test the recording lab functions of the VCM pipeline app. Run non-destructive HTTP API tests against http://127.0.0.1:8765 (list /api/recordings, POST /api/recordings/{id}/test with small g1_models + models selections, poll /api/jobs/{id} to completion, check summaries/events fields). Report PASS/FAIL per function with evidence (job ids, tick counts, summaries). Never edit files. Never start/stop servers. If an API returns an error or a job fails, capture the exact error payload and the server log tail from recordings/logs/{job_id}.jsonl. Conclude with a compact verdict table.",
+      "status": "idle",
+      "events": [],
+      "topics": [],
+      "delivery": "mailbox",
+      "responseMode": "text",
+      "triggerTurn": false,
+      "coalesce": true,
+      "residency": "session",
+      "runner": "pi-durable",
+      "kernel": "typescript",
+      "pythonRuntime": "monty",
+      "model": "openrouter/deepseek/deepseek-v4.1-flash",
+      "extensions": true,
+      "requirements": [],
+      "sessionFile": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\.pi\\fabric\\mesh\\actors\\cb86c9934eb64d5c92ce26c588f5a6aa\\session.jsonl",
+      "messages": [
+        {
+          "id": "7843a31b-283a-4f77-a1b0-775e341c7593",
+          "actorId": "cb86c9934eb64d5c92ce26c588f5a6aa",
+          "actorName": "deepseek-auditor",
+          "direction": "in",
+          "source": "direct",
+          "createdAt": 1792749216542,
+          "data": {
+            "message": "ping test"
+          }
+        },
+        {
+          "id": "2019736a-e6c8-409c-b23c-0af7b8f01662",
+          "actorId": "cb86c9934eb64d5c92ce26c588f5a6aa",
+          "actorName": "deepseek-auditor",
+          "direction": "out",
+          "source": "direct",
+          "createdAt": 1792749241965,
+          "error": "Child Pi settled; child did not exit after stdin closed for 5000ms"
+        },
+        {
+          "id": "aa01ce2b-7c43-4c9b-b707-db234ff3b892",
+          "actorId": "cb86c9934eb64d5c92ce26c588f5a6aa",
+          "actorName": "deepseek-auditor",
+          "direction": "in",
+          "source": "direct",
+          "createdAt": 1792749272633,
+          "data": {
+            "message": "AUDIT TASK — Recording Test feature, app at http://127.0.0.1:8765. Non-destructive HTTP only.\n1) GET /api/recordings -> report count + first recording id.\n2) GET /api/lab/models -> report g1_models count and models count (list the last 5 gate2 model names).\n3) POST /api/recordings/20261022_175328_646d19/test with {\"g1_models\":[\"gate1v4_f16\"],\"models\":[\"gate2v34a_std\"],\"hop_s\":1.0} -> capture job id.\n4) Poll GET /api/jobs/{job_id} until status != running/queued (max 10 tries, 1s apart). Report status, elapsed_s, per-summary: g1_model, model, ticks, command_ticks, trigger_ticks.\n5) GET /pipeline_all_in_one.html -> confirm it contains: all-recframe-toggle, rf-start, rf-rec, rf-results, rf-refresh. Report which are present/missing.\n6) Verdict table: PASS/FAIL per step with one-line evidence."
+          }
+        },
+        {
+          "id": "5ec5fded-d780-4ca0-8aa2-1087e74184f3",
+          "actorId": "cb86c9934eb64d5c92ce26c588f5a6aa",
+          "actorName": "deepseek-auditor",
+          "direction": "out",
+          "source": "direct",
+          "createdAt": 1792749335291,
+          "error": "Child Pi settled; child did not exit after stdin closed for 5000ms"
+        },
+        {
+          "id": "ac2ffe63-3b55-4154-9bc4-f98c73aefef1",
+          "actorId": "cb86c9934eb64d5c92ce26c588f5a6aa",
+          "actorName": "deepseek-auditor",
+          "direction": "in",
+          "source": "direct",
+          "createdAt": 1792750218942,
+          "data": {
+            "message": "AUDIT TASK v2 — Recording Test + new model registration. App at http://127.0.0.1:8765. Non-destructive HTTP only.\n1) GET /api/recordings -> report count.\n2) GET /api/lab/models -> report g1_models count (expect 13) and models count (expect 48).\n3) Verify these 11 new gate2 models are listed: gate2v58_smooth_pidgate, gate2v59_focal_warp, gate2v60_phone_warp, gate2v61_keyword_mix, gate2v62_speechtrim, gate2v63_pca_frontend, gate2v64_paired_negatives, gate2v64c_stochmel, gate2v64d_expandedneg, gate2v64p_paired_owner, gate2v65_stoch15k.\n4) POST /api/recordings/20261022_175328_646d19/test with {\"g1_models\":[\"gate1v4_f16\"],\"models\":[\"gate2v65_stoch15k\",\"gate2v64p_paired_owner\"],\"hop_s\":1.0} -> poll /api/jobs/{id} until done/error (max 60 s). Report per-summary: ticks, command_ticks, trigger_ticks, error field.\n5) GET /pipeline_all_in_one.html -> confirm ids all-recframe-toggle, rf-start, rf-rec, rf-label, rf-results, rf-refresh exist in the HTML.\n6) Verdict table PASS/FAIL per step."
+          }
+        },
+        {
+          "id": "9c6be62f-c0d2-4d44-8774-8cafd734a339",
+          "actorId": "cb86c9934eb64d5c92ce26c588f5a6aa",
+          "actorName": "deepseek-auditor",
+          "direction": "out",
+          "source": "direct",
+          "createdAt": 1792750263454,
+          "error": "Child Pi settled; child did not exit after stdin closed for 5000ms"
+        }
+      ],
+      "createdAt": 1792748414844,
+      "updatedAt": 1793025345860,
+      "lastRunId": "ca03a15080ca4a19bd670a42a393beb3"
+    },
+    {
+      "id": "85d035dd58504a0ca3d5082b4e69987a",
+      "name": "pi-beta-tester",
+      "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+      "instructions": "You are the Recording-Test BETA TESTER for the voice-command dashboard at http://127.0.0.1:8765 (app root: vcm_live_test_local/vcm_live_test_local). You behave like a demanding first-time user and you hunt bugs. You may only write throwaway probe scripts named gate1_web/_beta_*.py; you must not modify app code.\n\nYour standard checklist:\n1) GET /api/recordings — expect 6 scenario takes labeled \"scenario S1\"..\"scenario S6\" (S2/S3 = Stop intents, S4 = Light on, S5 = Pause, S6 = tone-only NEGATIVE). Verify ids + durations are sane.\n2) GET /api/lab/models — pick 1 Gate 1 variant and 2 Gate 2 models for your runs.\n3) For EVERY scenario take: POST /api/recordings/{id}/test with your chosen combo (hop_s 1.0), poll /api/jobs/{job_id} until done, and record status, elapsed_s, ticks, and per-combo trigger_ticks / top intent.\n4) Sanity rules: S2 and S3 should trigger STOP on competent models; S6 (tone only) must NOT trigger any action — flag any model that fires on the negative as a false-positive bug.\n5) UI serve checks: GET /pipeline_all_in_one.html and /pipeline_all_in_one.thml must both return 200 and both contain the scenarios quick-pick (id \"rf-scn\") wired into the recording frame.\n6) Final report: PASS/FAIL table per scenario with one-line evidence, plus a numbered bugs list (severity + exact repro). Be blunt.",
+      "status": "idle",
+      "events": [],
+      "topics": [],
+      "delivery": "mailbox",
+      "responseMode": "text",
+      "triggerTurn": false,
+      "coalesce": true,
+      "residency": "session",
+      "runner": "pi-durable",
+      "kernel": "typescript",
+      "pythonRuntime": "monty",
+      "model": "openrouter/deepseek/deepseek-v4.1-flash",
+      "extensions": true,
+      "requirements": [],
+      "sessionFile": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\.pi\\fabric\\mesh\\actors\\85d035dd58504a0ca3d5082b4e69987a\\session.jsonl",
+      "messages": [],
+      "createdAt": 1792752092848,
+      "updatedAt": 1793025345872
+    }
+  ]
+}

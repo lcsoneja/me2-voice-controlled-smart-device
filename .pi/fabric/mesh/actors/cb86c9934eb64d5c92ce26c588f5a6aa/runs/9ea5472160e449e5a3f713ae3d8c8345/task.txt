@@ -1,0 +1,9 @@
+Fabric actor message from direct:
+
+{
+  "source": "direct",
+  "payload": {
+    "message": "AUDIT TASK — Recording Test feature, app at http://127.0.0.1:8765. Non-destructive HTTP only.\n1) GET /api/recordings -> report count + first recording id.\n2) GET /api/lab/models -> report g1_models count and models count (list the last 5 gate2 model names).\n3) POST /api/recordings/20261022_175328_646d19/test with {\"g1_models\":[\"gate1v4_f16\"],\"models\":[\"gate2v34a_std\"],\"hop_s\":1.0} -> capture job id.\n4) Poll GET /api/jobs/{job_id} until status != running/queued (max 10 tries, 1s apart). Report status, elapsed_s, per-summary: g1_model, model, ticks, command_ticks, trigger_ticks.\n5) GET /pipeline_all_in_one.html -> confirm it contains: all-recframe-toggle, rf-start, rf-rec, rf-results, rf-refresh. Report which are present/missing.\n6) Verdict table: PASS/FAIL per step with one-line evidence."
+  },
+  "id": "aa01ce2b-7c43-4c9b-b707-db234ff3b892"
+}

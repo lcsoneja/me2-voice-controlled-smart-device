@@ -1,0 +1,1115 @@
+[
+ {
+  "page": 1,
+  "w": 841.889764,
+  "h": 595.275591,
+  "spans": [
+   {
+    "y": 544.9,
+    "x": 31.2,
+    "fs": 37.3,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "ME2 — Voice Controlled Smart Device\n"
+   },
+   {
+    "y": 518.1,
+    "x": 31.2,
+    "fs": 24.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Always-on keyword + intent recognition at the edge · no cloud round-trip"
+   },
+   {
+    "y": 489.7,
+    "x": 31.2,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "1 October 2026 · "
+   },
+   {
+    "y": 489.7,
+    "x": 31.2,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 489.7,
+    "x": 31.2,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "fill: author / team"
+   },
+   {
+    "y": 489.7,
+    "x": 31.2,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 489.7,
+    "x": 31.2,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " · Model · Dataset · Training on A100 · Validation on RPi 4"
+   },
+   {
+    "y": 455.0,
+    "x": 31.2,
+    "fs": 26.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Model"
+   },
+   {
+    "y": 455.0,
+    "x": 428.0,
+    "fs": 26.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Dataset"
+   },
+   {
+    "y": 424.1,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Item Value"
+   },
+   {
+    "y": 399.0,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Source "
+   },
+   {
+    "y": 399.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 399.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "fill"
+   },
+   {
+    "y": 399.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 372.7,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Hours / utts "
+   },
+   {
+    "y": 372.7,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 372.7,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 372.7,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 372.7,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " h / "
+   },
+   {
+    "y": 372.7,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 372.7,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 372.7,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 346.3,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Speakers "
+   },
+   {
+    "y": 346.3,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 346.3,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 346.3,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 320.0,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Labels "
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " intents · "
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 320.0,
+    "x": 556.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " slots"
+   },
+   {
+    "y": 288.4,
+    "x": 37.1,
+    "fs": 24.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Item Value"
+   },
+   {
+    "y": 283.4,
+    "x": 428.0,
+    "fs": 26.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Training on the A100 cluster"
+   },
+   {
+    "y": 263.4,
+    "x": 37.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Parameters / weights "
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " M · "
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 263.4,
+    "x": 231.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " MB"
+   },
+   {
+    "y": 252.5,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Item Value"
+   },
+   {
+    "y": 227.4,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Cluster "
+   },
+   {
+    "y": 227.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 227.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "fill: # A100"
+   },
+   {
+    "y": 227.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 226.8,
+    "x": 31.2,
+    "fs": 26.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Validation on the Raspberry Pi 4"
+   },
+   {
+    "y": 201.0,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Objective "
+   },
+   {
+    "y": 201.0,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 201.0,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "fill: CTC / attn"
+   },
+   {
+    "y": 201.0,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 195.9,
+    "x": 37.1,
+    "fs": 24.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Item Value"
+   },
+   {
+    "y": 189.0,
+    "x": 154.0,
+    "fs": 29.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Actuator"
+   },
+   {
+    "y": 189.0,
+    "x": 466.0,
+    "fs": 29.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Raspberry Pi 4"
+   },
+   {
+    "y": 174.7,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Optimiser "
+   },
+   {
+    "y": 174.7,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 174.7,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "fill"
+   },
+   {
+    "y": 174.7,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 170.8,
+    "x": 37.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Keyword / intent acc "
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " % / "
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 170.8,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " %\n"
+   },
+   {
+    "y": 148.4,
+    "x": 434.0,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Steps / loss "
+   },
+   {
+    "y": 148.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 148.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 148.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 148.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " / "
+   },
+   {
+    "y": 148.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 148.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 148.4,
+    "x": 602.6,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 144.4,
+    "x": 37.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "False-accept rate "
+   },
+   {
+    "y": 144.4,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 144.4,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 144.4,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 144.4,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " %\n"
+   },
+   {
+    "y": 140.0,
+    "x": 154.0,
+    "fs": 29.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Intent head"
+   },
+   {
+    "y": 140.0,
+    "x": 466.0,
+    "fs": 29.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Slot head"
+   },
+   {
+    "y": 118.1,
+    "x": 37.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Latency p95 / RTF "
+   },
+   {
+    "y": 118.1,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 118.1,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 118.1,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 118.1,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " ms / "
+   },
+   {
+    "y": 118.1,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 118.1,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 118.1,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 98.0,
+    "x": 310.0,
+    "fs": 31.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "KV-cache · streaming"
+   },
+   {
+    "y": 91.7,
+    "x": 37.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "Runtime onnxruntime · "
+   },
+   {
+    "y": 91.7,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 91.7,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "TBD"
+   },
+   {
+    "y": 91.7,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 91.7,
+    "x": 216.1,
+    "fs": 24.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": " thr"
+   },
+   {
+    "y": 78.0,
+    "x": 310.0,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Causal encoder × "
+   },
+   {
+    "y": 78.0,
+    "x": 577.7,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟨"
+   },
+   {
+    "y": 78.0,
+    "x": 596.4,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "TBD"
+   },
+   {
+    "y": 78.0,
+    "x": 660.1,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟩ "
+   },
+   {
+    "y": 78.0,
+    "x": 687.4,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "· "
+   },
+   {
+    "y": 78.0,
+    "x": 704.7,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟨"
+   },
+   {
+    "y": 78.0,
+    "x": 723.3,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "TBD"
+   },
+   {
+    "y": 78.0,
+    "x": 787.1,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟩"
+   },
+   {
+    "y": 78.0,
+    "x": 805.7,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "-dim"
+   },
+   {
+    "y": 30.0,
+    "x": 310.0,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Mic · 16 kHz "
+   },
+   {
+    "y": 30.0,
+    "x": 498.3,
+    "fs": 31.0,
+    "font": "/CFDMQT+Arial-Bold",
+    "t": "→ "
+   },
+   {
+    "y": 30.0,
+    "x": 537.9,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "log-mel "
+   },
+   {
+    "y": 30.0,
+    "x": 658.9,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟨"
+   },
+   {
+    "y": 30.0,
+    "x": 677.6,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "TBD"
+   },
+   {
+    "y": 30.0,
+    "x": 741.3,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟩"
+   },
+   {
+    "y": 30.0,
+    "x": 760.0,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "×"
+   },
+   {
+    "y": 30.0,
+    "x": 778.6,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟨"
+   },
+   {
+    "y": 30.0,
+    "x": 797.3,
+    "fs": 31.0,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "TBD"
+   },
+   {
+    "y": 30.0,
+    "x": 861.0,
+    "fs": 31.0,
+    "font": "/LJNWZM+Menlo-Bold",
+    "t": "⟩"
+   },
+   {
+    "y": 6.9,
+    "x": 772.9,
+    "fs": 16.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "p. 1 / 2"
+   }
+  ]
+ },
+ {
+  "page": 2,
+  "w": 841.889764,
+  "h": 595.275591,
+  "spans": [
+   {
+    "y": 543.8,
+    "x": 31.2,
+    "fs": 37.3,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "To Be Submitted"
+   },
+   {
+    "y": 490.1,
+    "x": 234.7,
+    "fs": 24.0,
+    "font": "/LKFSVD+Menlo",
+    "t": "⟨fill: org/repo — public, MIT⟩"
+   },
+   {
+    "y": 489.4,
+    "x": 41.9,
+    "fs": 24.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "GitHub repository"
+   },
+   {
+    "y": 449.9,
+    "x": 234.7,
+    "fs": 24.0,
+    "font": "/LKFSVD+Menlo",
+    "t": "⟨fill: Zenodo / HF DOI + access terms⟩"
+   },
+   {
+    "y": 449.1,
+    "x": 41.9,
+    "fs": 24.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Dataset location"
+   },
+   {
+    "y": 409.6,
+    "x": 234.7,
+    "fs": 24.0,
+    "font": "/LKFSVD+Menlo",
+    "t": "⟨fill: node ID, # GPUs, wall-clock, seeds⟩"
+   },
+   {
+    "y": 408.8,
+    "x": 41.9,
+    "fs": 24.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "A100 cluster"
+   },
+   {
+    "y": 369.3,
+    "x": 234.7,
+    "fs": 24.0,
+    "font": "/LKFSVD+Menlo",
+    "t": "⟨fill: release URL + licence⟩"
+   },
+   {
+    "y": 368.5,
+    "x": 41.9,
+    "fs": 24.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "Model weights"
+   },
+   {
+    "y": 321.2,
+    "x": 31.2,
+    "fs": 26.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "What the reviewer will look for"
+   },
+   {
+    "y": 288.7,
+    "x": 37.1,
+    "fs": 24.7,
+    "font": "/WMHEWB+Helvetica-Neue-Bold",
+    "t": "# Item Status"
+   },
+   {
+    "y": 261.4,
+    "x": 37.1,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "1 Repo public, one-command reproduction "
+   },
+   {
+    "y": 261.4,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 261.4,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "todo"
+   },
+   {
+    "y": 261.4,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 233.3,
+    "x": 37.1,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "2 Dataset licensed and citable (DOI) "
+   },
+   {
+    "y": 233.3,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 233.3,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "todo"
+   },
+   {
+    "y": 233.3,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 205.1,
+    "x": 37.1,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "3 Training logs + final checkpoint committed "
+   },
+   {
+    "y": 205.1,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 205.1,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "todo"
+   },
+   {
+    "y": 205.1,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 177.0,
+    "x": 37.1,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "4 Pi 4 latency reproduced by the posted script "
+   },
+   {
+    "y": 177.0,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 177.0,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "todo"
+   },
+   {
+    "y": 177.0,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 148.9,
+    "x": 37.1,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "5 Held-out test set, unseen speakers "
+   },
+   {
+    "y": 148.9,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 148.9,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "todo"
+   },
+   {
+    "y": 148.9,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩\n"
+   },
+   {
+    "y": 120.8,
+    "x": 37.1,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "6 Baseline of comparable size compared "
+   },
+   {
+    "y": 120.8,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟨"
+   },
+   {
+    "y": 120.8,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "todo"
+   },
+   {
+    "y": 120.8,
+    "x": 703.0,
+    "fs": 24.7,
+    "font": "/PMSTEZ+Apple-Symbols",
+    "t": "⟩"
+   },
+   {
+    "y": 6.9,
+    "x": 772.9,
+    "fs": 16.0,
+    "font": "/TISKIF+Helvetica-Neue",
+    "t": "p. 2 / 2"
+   }
+  ]
+ }
+]

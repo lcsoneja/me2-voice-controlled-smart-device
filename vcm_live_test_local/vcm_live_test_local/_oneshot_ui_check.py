@@ -86,7 +86,9 @@ def main() -> int:
         m4 = page.evaluate(PROBE)
         print("PHRASE_SELECT note=[" + str(m4["notePhrase"]) + "]")
 
-        page.click("#tab-phrases")   # the recordings tab took over the pane; go back first
+        page.click(
+            "#tab-phrases"
+        )  # the recordings tab took over the pane; go back first
         page.click("#ph-list li:nth-child(4)")
         page.wait_for_timeout(300)
         m5 = page.evaluate(PROBE)

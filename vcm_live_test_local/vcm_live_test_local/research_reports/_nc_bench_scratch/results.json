@@ -1,0 +1,135 @@
+{
+  "files": {
+    "owner_wav_count": 150,
+    "owner_duration_seconds_median": 1.61066,
+    "owner_duration_seconds_max": 3.43469,
+    "manifest_csv": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\real_voice_owner\\manifest_150.csv",
+    "voice_dir": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\real_voice_owner\\audio",
+    "real_noise_count": 8,
+    "real_noise_files": [
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording (2).m4a",
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording (3).m4a",
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording (4).m4a",
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording (5).m4a",
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording (6).m4a",
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording (7).m4a",
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording (8).m4a",
+      "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\Shipping\\10randomMicSilentRecordings\\Recording.m4a"
+    ],
+    "real_noise_format": "M4A decoded locally with C:/ffmpeg/bin/ffmpeg.exe to mono float32 16kHz; processing itself NumPy-only",
+    "real_noise_seconds": [
+      6.827,
+      4.864,
+      6.528,
+      7.829,
+      7.061,
+      10.091,
+      7.317,
+      8.32
+    ]
+  },
+  "protocol": {
+    "sample_rate_hz": 16000,
+    "frame_seconds": 1,
+    "ring_seconds": 20,
+    "eval_window_seconds": 5.92,
+    "eval_window_samples": 94720,
+    "noise_profile_updates": 24,
+    "ambient_floor_owner_test": 0.00782955,
+    "ambient_floor_update_count": 24,
+    "short_silence_handling": "Records shorter than 5.92s are tiled to one full evaluation window for stationary-noise assessment; longer files are evaluated on trailing windows after the ring fills.",
+    "ambient_floor_note": "Exact _track_ambient rule simulated over the 8 real silent streams, updating on each 1 Hz evaluation using newest one-second RMS. Final floor is reused for owner WAVs and synthetic tests; per-frame soft gate ramps from zero at floor to unity at 2x floor.",
+    "synthetic_snr_db": [
+      0,
+      5,
+      10,
+      20
+    ],
+    "synthetic_seeds": {
+      "0": 20261017,
+      "5": 20261022,
+      "10": 20261027,
+      "20": 20261037
+    },
+    "synthetic_snr_reference_median_owner_rms": 0.02377143653528454,
+    "synthetic_recipe": "50/100/60/120 Hz sinusoids + seeded white hiss (0.35 amplitude before scaling); each noise RMS set to median owner WAV RMS / 10^(SNR/20). Noise-only attenuation; not mixed speech recognition testing.",
+    "owner_profile": "Shared A/B profile adapted across all 8 real noise-only recordings, then frozen while processing each owner WAV."
+  },
+  "metrics": {
+    "real_noise_median_attenuation_db": {
+      "spectral_subtraction": 3.8298,
+      "wiener": 3.6021,
+      "ambient_gate": 249.9656,
+      "hum_notch": 6.9981
+    },
+    "synthetic_noise_attenuation_db_by_snr": {
+      "0": {
+        "spectral_subtraction": -0.6843,
+        "wiener": 2.0009,
+        "ambient_gate": 0.0,
+        "hum_notch": 8.696
+      },
+      "5": {
+        "spectral_subtraction": -1.0124,
+        "wiener": 1.8786,
+        "ambient_gate": 3.0075,
+        "hum_notch": 8.852
+      },
+      "10": {
+        "spectral_subtraction": -0.7317,
+        "wiener": 2.6216,
+        "ambient_gate": 257.5211,
+        "hum_notch": 8.8507
+      },
+      "20": {
+        "spectral_subtraction": -0.5033,
+        "wiener": 2.2667,
+        "ambient_gate": 247.5211,
+        "hum_notch": 8.7517
+      }
+    },
+    "owner_rms_retention": {
+      "spectral_subtraction": {
+        "median": 0.92954,
+        "p10": 0.85033,
+        "tone900": 0.9909
+      },
+      "wiener": {
+        "median": 0.98959,
+        "p10": 0.96373,
+        "tone900": 1.0006
+      },
+      "ambient_gate": {
+        "median": 0.98536,
+        "p10": 0.51815,
+        "tone900": 1.0
+      },
+      "hum_notch": {
+        "median": 0.90145,
+        "p10": 0.76001,
+        "tone900": 1.0
+      }
+    },
+    "spectral_guard_trip_fraction": 0.83333,
+    "spectral_guard_frames": 20,
+    "spectral_guard_total": 24,
+    "local_cpu_median_ms_per_eval": {
+      "spectral_subtraction_ms": 10.67334999970626,
+      "wiener_ms": 9.78814999689348,
+      "ambient_gate_ms": 0.0168999977177009,
+      "hum_notch_ms": 0.2803000097628683
+    },
+    "pi5_estimate_ms_per_eval_assuming_4x_local": {
+      "spectral_subtraction_ms": 42.6934,
+      "wiener_ms": 39.1526,
+      "ambient_gate_ms": 0.0676,
+      "hum_notch_ms": 1.1212
+    }
+  },
+  "implementation_complexity_estimate_lines": {
+    "spectral_subtraction": "~65 (ported helper/profile + guard)",
+    "wiener": "~30 additional (shared profile and STFT/OLA)",
+    "ambient_gate": "~15",
+    "hum_notch": "~20"
+  }
+}

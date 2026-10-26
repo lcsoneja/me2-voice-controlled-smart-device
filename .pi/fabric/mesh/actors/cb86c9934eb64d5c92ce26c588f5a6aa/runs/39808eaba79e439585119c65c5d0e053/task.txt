@@ -1,0 +1,9 @@
+Fabric actor message from direct:
+
+{
+  "source": "direct",
+  "payload": {
+    "message": "ping test"
+  },
+  "id": "7843a31b-283a-4f77-a1b0-775e341c7593"
+}

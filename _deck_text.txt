@@ -1,0 +1,48 @@
+===== PAGE 1 =====
+ME2 — Voice Controlled Smart Device
+Always-on keyword + intent recognition at the edge · no cloud round-trip
+1 October 2026 · ⟨fill: author / team⟩ · Model · Dataset · Training on A100 · Validation on RPi 4
+Model
+Item Value
+Parameters / weights ⟨TBD⟩ M · ⟨TBD⟩ MB
+Validation on the Raspberry Pi 4
+Item Value
+Keyword / intent acc ⟨TBD⟩ % / ⟨TBD⟩ %
+False-accept rate ⟨TBD⟩ %
+Latency p95 / RTF ⟨TBD⟩ ms / ⟨TBD⟩
+Runtime onnxruntime · ⟨TBD⟩ thr
+Dataset
+Item Value
+Source ⟨fill⟩
+Hours / utts ⟨TBD⟩ h / ⟨TBD⟩
+Speakers ⟨TBD⟩
+Labels ⟨TBD⟩ intents · ⟨TBD⟩ slots
+Training on the A100 cluster
+Item Value
+Cluster ⟨fill: # A100⟩
+Objective ⟨fill: CTC / attn⟩
+Optimiser ⟨fill⟩
+Steps / loss ⟨TBD⟩ / ⟨TBD⟩
+Mic · 16 kHz → log-mel ⟨TBD⟩×⟨TBD⟩
+Causal encoder × ⟨TBD⟩ · ⟨TBD⟩-dim
+KV-cache · streaming
+Intent head
+Slot head
+Actuator
+Raspberry Pi 4
+p. 1 / 2
+===== PAGE 2 =====
+To Be Submitted
+What the reviewer will look for
+# Item Status
+1 Repo public, one-command reproduction ⟨todo⟩
+2 Dataset licensed and citable (DOI) ⟨todo⟩
+3 Training logs + final checkpoint committed ⟨todo⟩
+4 Pi 4 latency reproduced by the posted script ⟨todo⟩
+5 Held-out test set, unseen speakers ⟨todo⟩
+6 Baseline of comparable size compared ⟨todo⟩
+GitHub repository ⟨fill: org/repo — public, MIT⟩
+Dataset location ⟨fill: Zenodo / HF DOI + access terms⟩
+A100 cluster ⟨fill: node ID, # GPUs, wall-clock, seeds⟩
+Model weights ⟨fill: release URL + licence⟩
+p. 2 / 2

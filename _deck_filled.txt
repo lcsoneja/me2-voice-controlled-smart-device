@@ -1,0 +1,115 @@
+ME2 -- Voice Controlled Smart Device
+
+Always-on keyword + intent recognition at the edge · no cloud round-trip
+
+11 OOctcotboebr e20r2260· 2fi6ll: ·auLtehoarn/dteraomS ·oMnoedjeal ·-DAatIa2se3t1· TMraiEni2ng·oMn Ao1d0e0l· ·VaDlidaatatiosneotn·RTPria4ining o
+
+Model                                                   Dataset
+
+Mic · 16 kHz  log-mel TBD×TBD                           Item            Value
+
+Causal encoder × TBD · TBD-dim                          SSoouurcrece ME2filhloldout (HF: airimonda/ai
+            KV-cache · streaming
+                                                        HHoouursrs/ u/ttus ttsT0B.7D7 hh/ /T4B2D4 s
+      Intent head         Slot head
+                                                        SSppeeakaekrsers 6rTeBaDl + synth + 1 owners
+      Actuator     Raspberry Pi 4
+                                                        LLaabbelesls 19 inTteBnDtsin·te3nts(G· 3T-B5D) sllootsts
+
+Item               Value                                Training on the A100 cluster
+
+PPaararmameteerste/rwse/igwhtes ighTtBsD0 .M34· TMBD·0M.7B0 MB          Value
+
+                                                                  Item
+VVaalildidataiotnioonnothne tRhaespRbaersrypbPie4rry Pi 4ClCulusstteerr DGX Staftiillo: #nA-1010GPU (local)s
+
+Item               Value                                OObbjejectcivteive CNN (DfillS: C-CTCN/Nat)tnclassifiers
+
+KKeeyywworodr/din/teinnttaecnct aTcBcD9%1./2T%BD/ 9%1.7 %sOOpptitmimiseisr er n/a (shfiilpl model_src)s
+
+FFaalsles-ea-cacecpcteraptte rateT1B0D0 .%0 %s          SStteepps s/ lo/ slsoss n/a /TnB/Da / TBD
+
+LLaatetencnycpy95p9/ R5T/F RTFTB4D7 .m9sm/ sTB/D0.048s
+
+RRuunntimtime e tflite (XNoNnnPxraunctkim) e· ·1TtBhDr thr
+
+                          Causal encoder × n/a · n/a-dim
+
+                          Mic · 16 kHz  log-mel 148×60
+
+                                                                                                                                              p. 1 / 2
+To Be Submitted
+
+GGititHHuub brerpeopsiotosriytorygfitihlulb: .coorgm/r/aeiproim--onpudbal/ivcc,mM-IbTenchmark
+DDaatatasesteltocloatcioantionhufgigliln:gfZaecneo.dcoo//daHFtaDsOeIts+/aaircimceossndtae/ramis231-me2-voice-com
+AA110000clucslutesrter DGXfSitlalt:iono-delocIDa,l (#seGePUssh,ipwsa)ll-clock, seeds
+MMooddeel wl weigehigtshts Shipfpilinlg: /r-eTleFaLsieteUfR1L6++lSicHeAnc2e56SUMS
+
+What the reviewer will look for
+
+# Item                           Status
+
+11 RReeppoo ppuubblicli,co,noe-nceom-cmoamndmreapnroddurectpiornoduction done: repo public +todboenchmark
+
+22 DDaatatasseettlilcicenesnesdeadndacnitadblceit(DaObIl)e (DOI) done: LICENSE.md (resetoadroch-only)s
+
+33 TrTaraiinniinngglolgosg+sfi+naflicnhaelckcphoeinctkcpomoimnittecdommitted done: ships + SHtAod2o5 6 + mod
+
+44 PPi i44llatteennccy yrepreropdruoceddubcyetdhebpyosttheed spcoripstted script pending: Pi offlitnodeo2 026-10-
+
+55 HHeeldld--oouutttetestsstest,eutn,sueennssepeeankesrpseakers done: holdout unseen sptoedaokerss
+
+66 BBaasseelinneeoof cfocmopmarpabalerasbizleecosmizpearcedompared done: 55-model basetoldinoe sweep
+
+                                         p. 2 / 2
+Best Combination - ME2 full-pipeline batch (2026-10-24)
+
+424 takes x 13 Gate 1 x 55 Gate 2 x raw x arch v1+v2 | winner: gate1v3_f32 x
+gate2v64p_paired_owner x raw x v1: full 187/205 (91.2%), action 91.7%, wake 94.6%, OOS reject
+0.0%, p95 47.9 ms
+
+Demo setup (Pipeline test window):
+  Gate 1 variant = gate1v3_f32 Gate 2 model = gate2v64p_paired_owner Architecture = v1 NC = raw
+
+Top combinations (ranked by fully-correct rate):
+
+# G1       G2                    nc  arch         full  rate  act  wake oosrej ms                                           p95
+1 v3_f32   v64p_paired_owner                                                                                                47.9
+2 v3_f16   v64p_paired_owner     raw v1           187/205 91.2% 91.7% 94.6% 0.0%                                      18.0  51.8
+3 v3_f32   v20_aux                                                                                                          30.7
+4 v3_f16   v20_aux               raw v1           187/205 91.2% 91.7% 94.6% 0.0%                                      20.1  31.6
+5 v2_f32   v64p_paired_owner                                                                                                63.5
+6 v2_f16   v64p_paired_owner     raw v1           186/205 90.7% 93.7% 94.6% 0.0%                                      12.7  105.3
+7 v2_f16   v20_aux                                                                                                          90.1
+8 v2_f32   v20_aux               raw v1           186/205 90.7% 93.7% 94.6% 0.0%                                      14.0  50.8
+9 v3_f32   v19                                                                                                              14.2
+10 v3_f16  v19                   raw v1           186/205 90.7% 91.7% 93.7% 0.0%                                      27.3  18.2
+11 v3_f32  v64c_stochmel                                                                                                    42.0
+12 v3_f16  v64c_stochmel         raw v1           186/205 90.7% 82.6% 93.7% 50.0% 63.0                                      46.1
+13 v2_f32  v64c_stochmel                                                                                                    72.2
+14 v3_f32  v64c_stochmel         raw v1           185/205 90.2% 93.9% 93.7% 50.0% 81.9                                      25.2
+15 v3_f32  v64p_paired_owner                                                                                                26.5
+16 v3_f16  v64c_stochmel         raw v1           185/205 90.2% 93.7% 93.7% 0.0%                                      19.2  26.9
+17 v3_f16  v64p_paired_owner                                                                                                27.1
+18 v3_f32  v64_paired_negatives  raw v1           185/205 90.2% 92.7% 94.6% 0.0%                                      6.1   58.9
+
+                                 raw v1           185/205 90.2% 92.7% 94.6% 0.0%                                      7.5
+
+                                 raw v1           185/205 90.2% 90.7% 94.6% 18.8% 16.1
+
+                                 raw v1           185/205 90.2% 90.7% 94.6% 18.8% 18.8
+
+                                 raw v1           185/205 90.2% 90.7% 93.7% 18.8% 28.7
+
+                                 raw v2           185/205 90.2% 90.2% 94.6% 25.0% 11.2
+
+                                 raw v2           185/205 90.2% 90.2% 94.6% 6.2%                                      11.9
+
+                                 raw v2           185/205 90.2% 90.2% 94.6% 25.0% 12.0
+
+                                 raw v2           185/205 90.2% 90.2% 94.6% 6.2%                                      12.3
+
+                                 raw v1           185/205 90.2% 90.2% 94.6% 6.2%                                      21.9
+
+Sources: recordings/results (2026-10-24 batch) | ME2 holdout 202 clips (86 real + 100 synth + 16 OOS) | owner takes.
+

@@ -1,0 +1,21 @@
+const task = [
+  'Goal: Integrate the new Gate 2 working-model bundle as the MAIN Gate 2 model of the live monitor server and its .html UI.',
+  'Target (sole writer scope): C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/vcm_live_test_local/vcm_live_test_local — gate1_server.py, gate1_web/**, plus NEW files under gate1_web/gate2v2_assets/.',
+  'Source bundle (READ-ONLY): C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/Shipping/Gate2WorkingModels_ship',
+  'Authority: sole writer for the files above. Do NOT edit anything under Shipping/ or 07_dgx_task1/. Do not commit. Do not spawn subagents.',
+  'Context/evidence:',
+  '- Bundle: models/clean/best_model.keras (RECOMMENDED default) + models/augmented/best_model.keras; assets/clean|augmented/{preprocessing.json, feature_stats.npz}; labels.json (19 intents, same order as current); infer.py is the exact preprocessing contract: mono->16k, librosa melspectrogram(n_fft/hop/win/n_mels/center from preprocessing.json, power=2.0), x=log1p(S).T, centered crop/pad to target_frames=148, x=(x-mean)/(std+1e-8), input shape (148,60,1).',
+  '- Current wiring: gate1_server.py Gates class loads gate1_web/gate2_float16.tflite (74-frame MFCC pre74) for the "gate2" slot used by the gate2 and both modes; UI (vcm_monitor.html, js/shared.js, js/gate2.js, js/pipeline.js) shows 19-intent probs with per-phrase activation thresholds and charts. Server runs as PID 17060 on port 8765; you may kill/restart it (it is ours; the monitor page reconnects).',
+  'Success conditions:',
+  '1. models/clean/best_model.keras converted to gate1_web/gate2v2_float16.tflite (and gate2v2_float32.tflite); conversion parity checked (keras vs tflite on one identical input, max abs diff < 1e-2).',
+  '2. assets/clean sidecars copied to gate1_web/gate2v2_assets/; gate1_server.py loads gate2v2 as the DEFAULT "gate2" model with a dedicated preprocessor implementing the infer.py contract exactly. Old gate2_float16 may remain as a selectable variant only if trivial.',
+  '3. UI 19 intents and label order unchanged; per-phrase thresholds + charts keep working; user-visible model name updated (e.g. "Gate 2 v2 (combined)").',
+  '4. Sanity: synthetic_samples/gate2_PLAY_MUSIC_f02_pitchnorm_fast.wav -> top PLAY_MUSIC conf >= 0.5 through the NEW path; a gate4_COLOR_Blue clip has COLOR in top-3.',
+  '5. python _gate1v8_integration_test.py passes (update only assertions hardcoding the old gate2 artifact; do not weaken tests); py_compile clean.',
+  'Validation: py_compile, integration suite, sanity inferences, restart server (kill port 8765 owner first), confirm http 200.',
+  'Output: concise report — files changed, parity numbers, sanity outputs, suite result (N tests OK), server status. If conversion or the preprocessing contract is ambiguous, STOP and report instead of guessing.',
+  'SUPERVISOR DECISION (pre-authorized, do NOT ask again, do NOT use contact_supervisor): The clean model uses a bidirectional GRU; default TFLite conversion fails on TensorListReserve. Authorized routes in order: (1) builtins-only: re-express the bidirectional GRU as two explicit GRU layers (forward GRU + backward GRU with go_backwards=True) or set unroll=True, keeping functional equivalence; verify keras-vs-rebuilt parity (max abs diff < 1e-3) BEFORE converting. (2) fallback: SELECT_TF_OPS with supported_ops=[TFLITE_BUILTINS, SELECT_TF_OPS] and converter._experimental_lower_tensor_list_ops=False. The Select TF Ops dependency is ACCEPTED for the PC server (full TF installed); note the RPi flex-runtime implication in your report instead of blocking. Produce gate2v2_float16.tflite (primary) and gate2v2_float32.tflite. Keep gate2v2_assets/ and the RED test. If BOTH routes fail, stop and report full tracebacks.',
+  'Stop/escalate: missing bundle file, sanity contradicting labels order, or tests fixable only by weakening.'
+].join('\n');
+const out = await runs.run('integration', { label: 'Integrate Gate2 v2 combined model', agent: 'worker', model: 'openrouter/openai/gpt-6-luna', task: task });
+return out;

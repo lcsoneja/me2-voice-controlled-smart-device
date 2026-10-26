@@ -52,19 +52,37 @@ def main() -> int:
         print("AFTER_SELECT checked=" + str(m2["checked"]))
 
         page.click("#tk-score")
-        page.wait_for_function("() => !document.getElementById('tk-result').hidden && document.querySelectorAll('#tk-result tbody tr').length > 0", timeout=300000)
+        page.wait_for_function(
+            "() => !document.getElementById('tk-result').hidden && document.querySelectorAll('#tk-result tbody tr').length > 0",
+            timeout=300000,
+        )
         page.wait_for_timeout(1500)
         m3 = page.evaluate(PROBE)
-        print("SCORE summary_rows=" + str(m3["summaryRows"]) + " details=" + str(m3["details"]))
+        print(
+            "SCORE summary_rows="
+            + str(m3["summaryRows"])
+            + " details="
+            + str(m3["details"])
+        )
         print("  best_row=[" + str(m3["firstSummary"]) + "]")
         print("  first_detail=[" + str(m3["firstDetail"]) + "]")
 
         page.click("#tk-each")
         page.wait_for_timeout(4000)
         m4 = page.evaluate(PROBE)
-        print("EACH_MODE details=" + str(m4["details"]) + " count=[" + str(m4["count"]) + "]")
-        print("LAYOUT page_scroll_ok=" + str(m4["pageScrollH"] <= m4["innerH"] + 1)
-              + " clipped_in_pane=" + str(m4["clipped"]))
+        print(
+            "EACH_MODE details="
+            + str(m4["details"])
+            + " count=["
+            + str(m4["count"])
+            + "]"
+        )
+        print(
+            "LAYOUT page_scroll_ok="
+            + str(m4["pageScrollH"] <= m4["innerH"] + 1)
+            + " clipped_in_pane="
+            + str(m4["clipped"])
+        )
         browser.close()
     return 0
 

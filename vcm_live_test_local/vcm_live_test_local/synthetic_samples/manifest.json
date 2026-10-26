@@ -1,0 +1,342 @@
+[
+  {
+    "file": "gate1_wake_nova_f01_pitchhigh_normal.wav",
+    "gate": "gate1",
+    "intended_gate2_intent": null,
+    "intended_specialist_value": null,
+    "transcript": "Nova",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "higher",
+      "speed": 1.0,
+      "preset": "cvref-fluent-gvKeNY2D3Rs2jRdL",
+      "instruction": "You are a helpful assistant. Speak English clearly with higher pitch.<|endofprompt|>"
+    },
+    "seed": 101,
+    "duration_s": 0.6,
+    "sha256": "e56d00bd2207ed6c0bf796312b46d2b248ff0cac6563362055b66e7311f080b4"
+  },
+  {
+    "file": "gate1_wake_piattos_m01_pitchnorm_fast.wav",
+    "gate": "gate1",
+    "intended_gate2_intent": null,
+    "intended_specialist_value": null,
+    "transcript": "Piattos",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "normal",
+      "speed": 1.2,
+      "preset": "cvref-fluent-eLQ3mNg27GHLkDej",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 102,
+    "duration_s": 0.86,
+    "sha256": "d922af9c3a38f4c518e8584e35d511f3b55a613f88bc71d4de20858c3c3cfa82"
+  },
+  {
+    "file": "gate2_PLAY_MUSIC_f02_pitchnorm_fast.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "PLAY_MUSIC",
+    "intended_specialist_value": null,
+    "transcript": "play music",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "normal",
+      "speed": 1.15,
+      "preset": "cvref-fluent-Gym5dABePPHA8mZK9",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 103,
+    "duration_s": 1.2,
+    "sha256": "eaa7f4335760da7c8725e18b75300e5efc2393dabd8ab1b8206220feac1df559"
+  },
+  {
+    "file": "gate2_TIME_m02_pitchlow_normal.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "TIME",
+    "intended_specialist_value": null,
+    "transcript": "what time is it",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "lower",
+      "speed": 1.0,
+      "preset": "cvref-fluent-7NqqnAOPVVSKnxyv",
+      "instruction": "You are a helpful assistant. Speak English clearly with lower pitch.<|endofprompt|>"
+    },
+    "seed": 104,
+    "duration_s": 0.96,
+    "sha256": "5dbfbaef840204d43bb9ae895da3fb3bba2ab658746f66f18cca572ec8d1fc51"
+  },
+  {
+    "file": "gate2_LIGHT_ON_f03_pitchhigh_fast.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "LIGHT_ON",
+    "intended_specialist_value": null,
+    "transcript": "turn on the lights",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "higher",
+      "speed": 1.2,
+      "preset": "cvref-fluent-kNnmb7MdArswxLYw",
+      "instruction": "You are a helpful assistant. Speak English clearly with higher pitch.<|endofprompt|>"
+    },
+    "seed": 105,
+    "duration_s": 0.86,
+    "sha256": "96614b0fd9d7f94e3e1f4e9541e688d18b53f1714de1a1dd429d9c046fd710ab"
+  },
+  {
+    "file": "gate2_VOLUME_UP_m03_pitchnorm_slow.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "VOLUME_UP",
+    "intended_specialist_value": null,
+    "transcript": "volume up",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "normal",
+      "speed": 0.9,
+      "preset": "cvref-fluent-ZebMRl5Z7dhrPKRD",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 106,
+    "duration_s": 0.92,
+    "sha256": "ef838afa57d1fc5fc117e4811fd061ee22a647264e61190117c0979092df288d"
+  },
+  {
+    "file": "gate2_CALL_f04_pitchlow_normal.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "CALL",
+    "intended_specialist_value": null,
+    "transcript": "call mama",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "lower",
+      "speed": 1.0,
+      "preset": "cvref-fluent-2ojo7YRL7Gck83Z3",
+      "instruction": "You are a helpful assistant. Speak English clearly with lower pitch.<|endofprompt|>"
+    },
+    "seed": 107,
+    "duration_s": 0.8,
+    "sha256": "53caf82ef3f9706c38cdc22a5d655daef671d865f6f94f5b1499d842e37df109"
+  },
+  {
+    "file": "gate2_WEATHER_m04_pitchhigh_normal.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "WEATHER",
+    "intended_specialist_value": null,
+    "transcript": "what is the weather",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "higher",
+      "speed": 1.05,
+      "preset": "cvref-fluent-eL2w4ZBD7liA85wm",
+      "instruction": "You are a helpful assistant. Speak English clearly with higher pitch.<|endofprompt|>"
+    },
+    "seed": 108,
+    "duration_s": 1.1,
+    "sha256": "c39066bf645679ece4ccc361058df3ee5c4b208cad5e6055304c77de6bf162d7"
+  },
+  {
+    "file": "gate2_NEXT_f05_pitchnorm_fast.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "NEXT",
+    "intended_specialist_value": null,
+    "transcript": "next song",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "normal",
+      "speed": 1.2,
+      "preset": "cvref-fluent-9MX3AgZzVgCw4W4j",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 109,
+    "duration_s": 0.6,
+    "sha256": "766ca615529c1064ac5420845e75a9890597eed04a54ba9291763c5919b3dd90"
+  },
+  {
+    "file": "gate2_PAUSE_m05_pitchlow_slow.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "PAUSE",
+    "intended_specialist_value": null,
+    "transcript": "pause",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "lower",
+      "speed": 0.95,
+      "preset": "cvref-fluent-gNYvkbx3gof2Y3V9",
+      "instruction": "You are a helpful assistant. Speak English clearly with lower pitch.<|endofprompt|>"
+    },
+    "seed": 110,
+    "duration_s": 0.62,
+    "sha256": "b838c4d03e6600a5310082f38dda58d411da47769ba3027cd8c373acac640a74"
+  },
+  {
+    "file": "gate2_STOP_f06_pitchhigh_normal.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "STOP",
+    "intended_specialist_value": null,
+    "transcript": "stop",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "higher",
+      "speed": 1.0,
+      "preset": "cvref-fluent-V4ZbwLm9G5irobWn",
+      "instruction": "You are a helpful assistant. Speak English clearly with higher pitch.<|endofprompt|>"
+    },
+    "seed": 111,
+    "duration_s": 0.52,
+    "sha256": "417684853fe8c3e40da50e22d5ac014cefa013fcc4cd527c9c4d2967949f891d"
+  },
+  {
+    "file": "gate2_LIST_REMINDERS_m06_pitchnorm_normal.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "LIST_REMINDERS",
+    "intended_specialist_value": null,
+    "transcript": "show my reminders",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "normal",
+      "speed": 1.0,
+      "preset": "cvref-fluent-W4XOzzNEbrtZz4dW",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 112,
+    "duration_s": 1.4,
+    "sha256": "0f8e156763e67de1c03fb11bdb328ada595dc5d74ce2d1cd65c401a34cf60fbd"
+  },
+  {
+    "file": "gate2_MESSAGE_f07_pitchlow_fast.wav",
+    "gate": "gate2",
+    "intended_gate2_intent": "MESSAGE",
+    "intended_specialist_value": null,
+    "transcript": "send a message",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "lower",
+      "speed": 1.15,
+      "preset": "cvref-fluent-oOK5kxoW7dskMbaK",
+      "instruction": "You are a helpful assistant. Speak English clearly with lower pitch.<|endofprompt|>"
+    },
+    "seed": 113,
+    "duration_s": 0.96,
+    "sha256": "3bd49e493be483285994f7faee6f47f790279ed79995598472a248308dc679b1"
+  },
+  {
+    "file": "gate3a_TIMER_10sec_m07_pitchnorm_fast.wav",
+    "gate": "gate3a",
+    "intended_gate2_intent": "TIMER",
+    "intended_specialist_value": "10 seconds",
+    "transcript": "set a timer for 10 seconds",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "normal",
+      "speed": 1.15,
+      "preset": "cvref-fluent-kxgXN97ALmHbaezp",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 114,
+    "duration_s": 1.56,
+    "sha256": "0799adc35379c26249967c1263b9fb9dcb211d322596f72b66bba1c35c7b083d"
+  },
+  {
+    "file": "gate3a_TIMER_1min_f08_pitchhigh_normal.wav",
+    "gate": "gate3a",
+    "intended_gate2_intent": "TIMER",
+    "intended_specialist_value": "1 minute",
+    "transcript": "set a timer for 1 minute",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "higher",
+      "speed": 1.0,
+      "preset": "cvref-fluent-Ze7YenyZvxiB4MYZ",
+      "instruction": "You are a helpful assistant. Speak English clearly with higher pitch.<|endofprompt|>"
+    },
+    "seed": 115,
+    "duration_s": 1.64,
+    "sha256": "053fda1dfdefcc43a7229d2bf6bed63cde439f02cfedfab30a069ae65e837ec0"
+  },
+  {
+    "file": "gate3b_ALARM_6AM_m08_pitchlow_normal.wav",
+    "gate": "gate3b",
+    "intended_gate2_intent": "ALARM",
+    "intended_specialist_value": "6 AM",
+    "transcript": "set an alarm for 6 AM",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "lower",
+      "speed": 1.05,
+      "preset": "cvref-fluent-g2dnA9Wpvzi2WAmZ",
+      "instruction": "You are a helpful assistant. Speak English clearly with lower pitch.<|endofprompt|>"
+    },
+    "seed": 116,
+    "duration_s": 1.74,
+    "sha256": "08e32487addbf82efa0e8b91d03facee4d5c0c9f707a46ad480a23795a65213b"
+  },
+  {
+    "file": "gate3c_TEMP_22deg_f09_pitchlow_slow.wav",
+    "gate": "gate3c",
+    "intended_gate2_intent": "TEMPERATURE",
+    "intended_specialist_value": "22 degrees",
+    "transcript": "set temperature to 22 degrees",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "lower",
+      "speed": 0.95,
+      "preset": "cvref-fluent-Q4vMvpXkXBsqryvZ",
+      "instruction": "You are a helpful assistant. Speak English clearly with lower pitch.<|endofprompt|>"
+    },
+    "seed": 117,
+    "duration_s": 2.64,
+    "sha256": "8caaff51d827e73cd048a1973e4281b335b73ba9280cec1f6819eed30a5798d6"
+  },
+  {
+    "file": "gate3d_BRIGHT_60pct_m09_pitchhigh_fast.wav",
+    "gate": "gate3d",
+    "intended_gate2_intent": "BRIGHTNESS",
+    "intended_specialist_value": "60 percent",
+    "transcript": "set brightness to 60 percent",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "higher",
+      "speed": 1.15,
+      "preset": "cvref-fluent-NgQEvO2x7Vh3xy2xz",
+      "instruction": "You are a helpful assistant. Speak English clearly with higher pitch.<|endofprompt|>"
+    },
+    "seed": 118,
+    "duration_s": 1.76,
+    "sha256": "0bef31889066c45680ea8a5618b0cd87b8e4f05ef2fd3d0af51342c4f630ef15"
+  },
+  {
+    "file": "gate4_COLOR_Blue_f10_pitchnorm_normal.wav",
+    "gate": "gate4",
+    "intended_gate2_intent": "COLOR",
+    "intended_specialist_value": "Blue",
+    "transcript": "the color blue",
+    "voice_config": {
+      "gender": "female",
+      "pitch": "normal",
+      "speed": 1.0,
+      "preset": "cvref-fluent-DWmlpyg93YCXAXgE",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 119,
+    "duration_s": 1.08,
+    "sha256": "e05f62b112beb570bdda5d1a4a3bd1c05ad2eb165eb00977a0b20e6a03745859"
+  },
+  {
+    "file": "gate5_REMIND_DrinkWater_m10_pitchnorm_fast.wav",
+    "gate": "gate5",
+    "intended_gate2_intent": "CREATE_REMINDER",
+    "intended_specialist_value": "Drink water",
+    "transcript": "remind me to drink water",
+    "voice_config": {
+      "gender": "male",
+      "pitch": "normal",
+      "speed": 1.1,
+      "preset": "cvref-fluent-X4vEl3glp9urv4GN",
+      "instruction": "You are a helpful assistant. Speak English clearly.<|endofprompt|>"
+    },
+    "seed": 120,
+    "duration_s": 1.34,
+    "sha256": "5d577a7e18f99daf06325d44f4345fa9199c2c8b903ef2106dba6e2940390be3"
+  }
+]

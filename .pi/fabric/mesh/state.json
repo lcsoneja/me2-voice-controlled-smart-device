@@ -1,0 +1,1492 @@
+{
+  "format": 1,
+  "revisionFormat": 2,
+  "entries": {
+    "topology/peer-seq": {
+      "key": "topology/peer-seq",
+      "value": {
+        "format": 1,
+        "next": 23
+      },
+      "version": 23,
+      "updatedAt": 1792812686050,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    },
+    "sessions/01a1075e-9f05-76ea-a37c-283f5c43724e": {
+      "key": "sessions/01a1075e-9f05-76ea-a37c-283f5c43724e",
+      "value": {
+        "id": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "name": "E2-2",
+        "label": "E2-2",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "model": "openrouter/openai/gpt-6-luna",
+        "thinking": "medium",
+        "startedAt": 1791125012847,
+        "updatedAt": 1791125293537,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 64005,
+      "updatedAt": 1791125293540,
+      "updatedBy": {
+        "id": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1075e-9f05-76ea-a37c-283f5c43724e"
+      }
+    },
+    "topology/participants/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b": {
+      "key": "topology/participants/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b",
+      "value": {
+        "format": 1,
+        "id": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "kind": "root",
+        "rootId": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "ownerHostId": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "ownerIdentityId": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "model": "openrouter/openai/gpt-6-luna",
+        "thinking": "medium",
+        "startedAt": 1791125012847,
+        "updatedAt": 1791125293537,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "23310912-0813-473a-b8aa-ec5fadff1a60",
+        "label": "E2-2"
+      },
+      "version": 64006,
+      "updatedAt": 1791125293549,
+      "updatedBy": {
+        "id": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1075e-9f05-76ea-a37c-283f5c43724e"
+      }
+    },
+    "topology/hosts/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b": {
+      "key": "topology/hosts/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b",
+      "value": {
+        "format": 1,
+        "id": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "rootId": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "identity": {
+          "id": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a1075e-9f05-76ea-a37c-283f5c43724e"
+        },
+        "startedAt": 1791125012848,
+        "updatedAt": 1791125293553,
+        "expiresAt": 1791125308553
+      },
+      "version": 64007,
+      "updatedAt": 1791125293555,
+      "updatedBy": {
+        "id": "session:01a1075e-9f05-76ea-a37c-283f5c43724e",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1075e-9f05-76ea-a37c-283f5c43724e"
+      }
+    },
+    "sessions/01a10774-39ed-7458-ae9a-634d8cae80a9": {
+      "key": "sessions/01a10774-39ed-7458-ae9a-634d8cae80a9",
+      "value": {
+        "id": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "name": "E2-4",
+        "label": "E2-4",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "model": "openrouter/z-ai/glm-5.3-flash",
+        "thinking": "high",
+        "startedAt": 1791126444484,
+        "updatedAt": 1791126589737,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 65130,
+      "updatedAt": 1791126589739,
+      "updatedBy": {
+        "id": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10774-39ed-7458-ae9a-634d8cae80a9"
+      }
+    },
+    "topology/participants/e519794d33eb0528b8f1bdeeb65c8850467f014f73375b897012226a426ecbc2": {
+      "key": "topology/participants/e519794d33eb0528b8f1bdeeb65c8850467f014f73375b897012226a426ecbc2",
+      "value": {
+        "format": 1,
+        "id": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "kind": "root",
+        "rootId": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "ownerHostId": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "ownerIdentityId": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "model": "openrouter/z-ai/glm-5.3-flash",
+        "thinking": "high",
+        "startedAt": 1791126444484,
+        "updatedAt": 1791126589737,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "ef5cba6a-f35a-4f85-bb5e-86751012bda6",
+        "label": "E2-4"
+      },
+      "version": 65131,
+      "updatedAt": 1791126589740,
+      "updatedBy": {
+        "id": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10774-39ed-7458-ae9a-634d8cae80a9"
+      }
+    },
+    "topology/hosts/e519794d33eb0528b8f1bdeeb65c8850467f014f73375b897012226a426ecbc2": {
+      "key": "topology/hosts/e519794d33eb0528b8f1bdeeb65c8850467f014f73375b897012226a426ecbc2",
+      "value": {
+        "format": 1,
+        "id": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "rootId": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "identity": {
+          "id": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a10774-39ed-7458-ae9a-634d8cae80a9"
+        },
+        "startedAt": 1791126444485,
+        "updatedAt": 1791126589741,
+        "expiresAt": 1791126604741
+      },
+      "version": 65132,
+      "updatedAt": 1791126589742,
+      "updatedBy": {
+        "id": "session:01a10774-39ed-7458-ae9a-634d8cae80a9",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10774-39ed-7458-ae9a-634d8cae80a9"
+      }
+    },
+    "sessions/01a10774-87e9-75f3-88c6-7bcf375a4345": {
+      "key": "sessions/01a10774-87e9-75f3-88c6-7bcf375a4345",
+      "value": {
+        "id": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "name": "E2-5",
+        "label": "E2-5",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "model": "openrouter/qwen/qwen3.8-27b",
+        "thinking": "medium",
+        "startedAt": 1791126457753,
+        "updatedAt": 1791126848312,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 65225,
+      "updatedAt": 1791126848316,
+      "updatedBy": {
+        "id": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10774-87e9-75f3-88c6-7bcf375a4345"
+      }
+    },
+    "topology/participants/db443cafa491b5fc417b4a731111c0fe9692258e9178d80f359de7ccc4e50e82": {
+      "key": "topology/participants/db443cafa491b5fc417b4a731111c0fe9692258e9178d80f359de7ccc4e50e82",
+      "value": {
+        "format": 1,
+        "id": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "kind": "root",
+        "rootId": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "ownerHostId": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "ownerIdentityId": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "model": "openrouter/qwen/qwen3.8-27b",
+        "thinking": "medium",
+        "startedAt": 1791126457753,
+        "updatedAt": 1791126848312,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "b3cbaa19-6288-4888-8eb4-e6ba7d987af8",
+        "label": "E2-5"
+      },
+      "version": 65226,
+      "updatedAt": 1791126848318,
+      "updatedBy": {
+        "id": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10774-87e9-75f3-88c6-7bcf375a4345"
+      }
+    },
+    "topology/hosts/db443cafa491b5fc417b4a731111c0fe9692258e9178d80f359de7ccc4e50e82": {
+      "key": "topology/hosts/db443cafa491b5fc417b4a731111c0fe9692258e9178d80f359de7ccc4e50e82",
+      "value": {
+        "format": 1,
+        "id": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "rootId": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "identity": {
+          "id": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a10774-87e9-75f3-88c6-7bcf375a4345"
+        },
+        "startedAt": 1791126457754,
+        "updatedAt": 1791126848319,
+        "expiresAt": 1791126863319
+      },
+      "version": 65227,
+      "updatedAt": 1791126848320,
+      "updatedBy": {
+        "id": "session:01a10774-87e9-75f3-88c6-7bcf375a4345",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10774-87e9-75f3-88c6-7bcf375a4345"
+      }
+    },
+    "sessions/01a10785-856b-70d5-8ba1-9c146c017e10": {
+      "key": "sessions/01a10785-856b-70d5-8ba1-9c146c017e10",
+      "value": {
+        "id": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "name": "E2-6",
+        "label": "E2-6",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a10785-856b-70d5-8ba1-9c146c017e10",
+        "model": "openrouter/openai/gpt-6-luna",
+        "thinking": "high",
+        "startedAt": 1791127561720,
+        "updatedAt": 1791127957617,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 66467,
+      "updatedAt": 1791127957618,
+      "updatedBy": {
+        "id": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10785-856b-70d5-8ba1-9c146c017e10"
+      }
+    },
+    "topology/participants/1d65130acffadf19c210e6e6756ed56dfa395bfccb3e1c39182020b6a225fe86": {
+      "key": "topology/participants/1d65130acffadf19c210e6e6756ed56dfa395bfccb3e1c39182020b6a225fe86",
+      "value": {
+        "format": 1,
+        "id": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "kind": "root",
+        "rootId": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "ownerHostId": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "ownerIdentityId": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a10785-856b-70d5-8ba1-9c146c017e10",
+        "model": "openrouter/openai/gpt-6-luna",
+        "thinking": "high",
+        "startedAt": 1791127561720,
+        "updatedAt": 1791127957617,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "364c1c2d-c520-4c6d-9ce7-963ae0839276",
+        "label": "E2-6"
+      },
+      "version": 66468,
+      "updatedAt": 1791127957622,
+      "updatedBy": {
+        "id": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10785-856b-70d5-8ba1-9c146c017e10"
+      }
+    },
+    "topology/hosts/1d65130acffadf19c210e6e6756ed56dfa395bfccb3e1c39182020b6a225fe86": {
+      "key": "topology/hosts/1d65130acffadf19c210e6e6756ed56dfa395bfccb3e1c39182020b6a225fe86",
+      "value": {
+        "format": 1,
+        "id": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "rootId": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "identity": {
+          "id": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a10785-856b-70d5-8ba1-9c146c017e10"
+        },
+        "startedAt": 1791127561721,
+        "updatedAt": 1791127957623,
+        "expiresAt": 1791127972623
+      },
+      "version": 66469,
+      "updatedAt": 1791127957624,
+      "updatedBy": {
+        "id": "session:01a10785-856b-70d5-8ba1-9c146c017e10",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a10785-856b-70d5-8ba1-9c146c017e10"
+      }
+    },
+    "sessions/01a1078d-9c39-72a5-9b6c-8bc153f39fd4": {
+      "key": "sessions/01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+      "value": {
+        "id": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "name": "E2-7",
+        "label": "E2-7",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "model": "openrouter/qwen/qwen3.8-27b",
+        "thinking": "medium",
+        "startedAt": 1791128089735,
+        "updatedAt": 1791128385238,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 67194,
+      "updatedAt": 1791128385241,
+      "updatedBy": {
+        "id": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1078d-9c39-72a5-9b6c-8bc153f39fd4"
+      }
+    },
+    "topology/participants/6aa57a3b4130b9ca71e1e469191f83ebb613bee2df4d18532be6cc1fa0b03d07": {
+      "key": "topology/participants/6aa57a3b4130b9ca71e1e469191f83ebb613bee2df4d18532be6cc1fa0b03d07",
+      "value": {
+        "format": 1,
+        "id": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "kind": "root",
+        "rootId": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "ownerHostId": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "ownerIdentityId": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "model": "openrouter/qwen/qwen3.8-27b",
+        "thinking": "medium",
+        "startedAt": 1791128089735,
+        "updatedAt": 1791128385238,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "69930740-9796-4068-837a-5f55fc7332b2",
+        "label": "E2-7"
+      },
+      "version": 67195,
+      "updatedAt": 1791128385246,
+      "updatedBy": {
+        "id": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1078d-9c39-72a5-9b6c-8bc153f39fd4"
+      }
+    },
+    "topology/hosts/6aa57a3b4130b9ca71e1e469191f83ebb613bee2df4d18532be6cc1fa0b03d07": {
+      "key": "topology/hosts/6aa57a3b4130b9ca71e1e469191f83ebb613bee2df4d18532be6cc1fa0b03d07",
+      "value": {
+        "format": 1,
+        "id": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "rootId": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "identity": {
+          "id": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a1078d-9c39-72a5-9b6c-8bc153f39fd4"
+        },
+        "startedAt": 1791128089736,
+        "updatedAt": 1791128385248,
+        "expiresAt": 1791128400248
+      },
+      "version": 67196,
+      "updatedAt": 1791128385249,
+      "updatedBy": {
+        "id": "session:01a1078d-9c39-72a5-9b6c-8bc153f39fd4",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1078d-9c39-72a5-9b6c-8bc153f39fd4"
+      }
+    },
+    "sessions/01a109f1-1609-724b-94e2-d6c076e2e4bb": {
+      "key": "sessions/01a109f1-1609-724b-94e2-d6c076e2e4bb",
+      "value": {
+        "id": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "name": "E2-10",
+        "label": "E2-10",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "model": "openrouter/google/gemini-3.8-flash",
+        "thinking": "high",
+        "startedAt": 1791168164748,
+        "updatedAt": 1791168991644,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 92077,
+      "updatedAt": 1791168991647,
+      "updatedBy": {
+        "id": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a109f1-1609-724b-94e2-d6c076e2e4bb"
+      }
+    },
+    "topology/participants/681ffe98360042e7f922bda854ef4d7c66c74d9c6a62498e7e68b8fd24a5d3de": {
+      "key": "topology/participants/681ffe98360042e7f922bda854ef4d7c66c74d9c6a62498e7e68b8fd24a5d3de",
+      "value": {
+        "format": 1,
+        "id": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "kind": "root",
+        "rootId": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "ownerHostId": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "ownerIdentityId": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "model": "openrouter/google/gemini-3.8-flash",
+        "thinking": "high",
+        "startedAt": 1791168164748,
+        "updatedAt": 1791168991644,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "842b2f86-8f40-44a4-b277-ff308d3d3d65",
+        "label": "E2-10"
+      },
+      "version": 92078,
+      "updatedAt": 1791168991651,
+      "updatedBy": {
+        "id": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a109f1-1609-724b-94e2-d6c076e2e4bb"
+      }
+    },
+    "topology/hosts/681ffe98360042e7f922bda854ef4d7c66c74d9c6a62498e7e68b8fd24a5d3de": {
+      "key": "topology/hosts/681ffe98360042e7f922bda854ef4d7c66c74d9c6a62498e7e68b8fd24a5d3de",
+      "value": {
+        "format": 1,
+        "id": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "rootId": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "identity": {
+          "id": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a109f1-1609-724b-94e2-d6c076e2e4bb"
+        },
+        "startedAt": 1791168164748,
+        "updatedAt": 1791168991654,
+        "expiresAt": 1791169006654
+      },
+      "version": 92079,
+      "updatedAt": 1791168991656,
+      "updatedBy": {
+        "id": "session:01a109f1-1609-724b-94e2-d6c076e2e4bb",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a109f1-1609-724b-94e2-d6c076e2e4bb"
+      }
+    },
+    "sessions/01a110cc-a2a2-727f-9cbc-fa9af934e7e5": {
+      "key": "sessions/01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+      "value": {
+        "id": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "name": "E2-11",
+        "label": "E2-11",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "model": "openrouter/openai/gpt-6-luna",
+        "thinking": "high",
+        "startedAt": 1791283216587,
+        "updatedAt": 1791283822526,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 162472,
+      "updatedAt": 1791283822530,
+      "updatedBy": {
+        "id": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a110cc-a2a2-727f-9cbc-fa9af934e7e5"
+      }
+    },
+    "topology/participants/a4ee26706a07cf71c7da6e86b4fd1d45d055b0f696352e1f48091edac32f77e8": {
+      "key": "topology/participants/a4ee26706a07cf71c7da6e86b4fd1d45d055b0f696352e1f48091edac32f77e8",
+      "value": {
+        "format": 1,
+        "id": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "kind": "root",
+        "rootId": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "ownerHostId": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "ownerIdentityId": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "model": "openrouter/openai/gpt-6-luna",
+        "thinking": "high",
+        "startedAt": 1791283216587,
+        "updatedAt": 1791283822526,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "f4a59fdd-4d73-4335-b661-368704c870a2",
+        "label": "E2-11"
+      },
+      "version": 162473,
+      "updatedAt": 1791283822536,
+      "updatedBy": {
+        "id": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a110cc-a2a2-727f-9cbc-fa9af934e7e5"
+      }
+    },
+    "topology/hosts/a4ee26706a07cf71c7da6e86b4fd1d45d055b0f696352e1f48091edac32f77e8": {
+      "key": "topology/hosts/a4ee26706a07cf71c7da6e86b4fd1d45d055b0f696352e1f48091edac32f77e8",
+      "value": {
+        "format": 1,
+        "id": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "rootId": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "identity": {
+          "id": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a110cc-a2a2-727f-9cbc-fa9af934e7e5"
+        },
+        "startedAt": 1791283216589,
+        "updatedAt": 1791283822539,
+        "expiresAt": 1791283837539
+      },
+      "version": 162474,
+      "updatedAt": 1791283822542,
+      "updatedBy": {
+        "id": "session:01a110cc-a2a2-727f-9cbc-fa9af934e7e5",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a110cc-a2a2-727f-9cbc-fa9af934e7e5"
+      }
+    },
+    "sessions/01a1647a-0624-7004-b435-5c12e11941e3": {
+      "key": "sessions/01a1647a-0624-7004-b435-5c12e11941e3",
+      "value": {
+        "id": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "name": "E2-16",
+        "label": "E2-16",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1647a-0624-7004-b435-5c12e11941e3",
+        "model": "openrouter/deepseek/deepseek-v4-flash",
+        "thinking": "high",
+        "startedAt": 1792687099632,
+        "updatedAt": 1792687620694,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 580033,
+      "updatedAt": 1792687620697,
+      "updatedBy": {
+        "id": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1647a-0624-7004-b435-5c12e11941e3"
+      }
+    },
+    "topology/participants/b412262829ca0c0b1505864fa3fa5cc2ce129f84e2a0a7f3ec41538de183f2e2": {
+      "key": "topology/participants/b412262829ca0c0b1505864fa3fa5cc2ce129f84e2a0a7f3ec41538de183f2e2",
+      "value": {
+        "format": 1,
+        "id": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "kind": "root",
+        "rootId": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "ownerHostId": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "ownerIdentityId": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1647a-0624-7004-b435-5c12e11941e3",
+        "model": "openrouter/deepseek/deepseek-v4-flash",
+        "thinking": "high",
+        "startedAt": 1792687099632,
+        "updatedAt": 1792687620694,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "4b551ed9-2419-4db9-b841-d064effaf18c",
+        "label": "E2-16"
+      },
+      "version": 580034,
+      "updatedAt": 1792687620701,
+      "updatedBy": {
+        "id": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1647a-0624-7004-b435-5c12e11941e3"
+      }
+    },
+    "topology/hosts/b412262829ca0c0b1505864fa3fa5cc2ce129f84e2a0a7f3ec41538de183f2e2": {
+      "key": "topology/hosts/b412262829ca0c0b1505864fa3fa5cc2ce129f84e2a0a7f3ec41538de183f2e2",
+      "value": {
+        "format": 1,
+        "id": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "rootId": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "identity": {
+          "id": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a1647a-0624-7004-b435-5c12e11941e3"
+        },
+        "startedAt": 1792687099634,
+        "updatedAt": 1792687620703,
+        "expiresAt": 1792687635703
+      },
+      "version": 580035,
+      "updatedAt": 1792687620704,
+      "updatedBy": {
+        "id": "session:01a1647a-0624-7004-b435-5c12e11941e3",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1647a-0624-7004-b435-5c12e11941e3"
+      }
+    },
+    "actors/01a0fd11-7eef-756c-a99e-16cb847ed363/cb86c9934eb64d5c92ce26c588f5a6aa": {
+      "key": "actors/01a0fd11-7eef-756c-a99e-16cb847ed363/cb86c9934eb64d5c92ce26c588f5a6aa",
+      "value": {
+        "id": "cb86c9934eb64d5c92ce26c588f5a6aa",
+        "scope": "project",
+        "name": "deepseek-auditor",
+        "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "status": "idle",
+        "runner": "pi-durable",
+        "kernel": "typescript",
+        "pythonRuntime": "monty",
+        "events": [],
+        "topics": [],
+        "delivery": "mailbox",
+        "responseMode": "text",
+        "triggerTurn": false,
+        "coalesce": true,
+        "residency": "session",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "binding": {
+          "scope": "session",
+          "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+        },
+        "projectDefaults": {
+          "scope": "project",
+          "model": "openrouter/deepseek/deepseek-v4.1-flash"
+        },
+        "timeoutMs": 86400000,
+        "extensions": true,
+        "requirements": [],
+        "queued": 0,
+        "messages": 6,
+        "createdAt": 1792748414844,
+        "updatedAt": 1793025345857,
+        "lastRunId": "ca03a15080ca4a19bd670a42a393beb3",
+        "sessionFile": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\.pi\\fabric\\mesh\\actors\\cb86c9934eb64d5c92ce26c588f5a6aa\\session.jsonl",
+        "logDir": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\.pi\\fabric\\mesh\\actors\\cb86c9934eb64d5c92ce26c588f5a6aa\\runs"
+      },
+      "version": 612299,
+      "updatedAt": 1793025345901,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    },
+    "actors/01a0fd11-7eef-756c-a99e-16cb847ed363/85d035dd58504a0ca3d5082b4e69987a": {
+      "key": "actors/01a0fd11-7eef-756c-a99e-16cb847ed363/85d035dd58504a0ca3d5082b4e69987a",
+      "value": {
+        "id": "85d035dd58504a0ca3d5082b4e69987a",
+        "scope": "project",
+        "name": "pi-beta-tester",
+        "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "status": "idle",
+        "runner": "pi-durable",
+        "kernel": "typescript",
+        "pythonRuntime": "monty",
+        "events": [],
+        "topics": [],
+        "delivery": "mailbox",
+        "responseMode": "text",
+        "triggerTurn": false,
+        "coalesce": true,
+        "residency": "session",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "binding": {
+          "scope": "session",
+          "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+        },
+        "projectDefaults": {
+          "scope": "project",
+          "model": "openrouter/deepseek/deepseek-v4.1-flash"
+        },
+        "timeoutMs": 86400000,
+        "extensions": true,
+        "requirements": [],
+        "queued": 0,
+        "messages": 0,
+        "createdAt": 1792752092848,
+        "updatedAt": 1793025345872,
+        "sessionFile": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\.pi\\fabric\\mesh\\actors\\85d035dd58504a0ca3d5082b4e69987a\\session.jsonl",
+        "logDir": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b\\.pi\\fabric\\mesh\\actors\\85d035dd58504a0ca3d5082b4e69987a\\runs"
+      },
+      "version": 615332,
+      "updatedAt": 1793025345903,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    },
+    "sessions/01a16909-57ba-71c1-8ec8-39cf5862d402": {
+      "key": "sessions/01a16909-57ba-71c1-8ec8-39cf5862d402",
+      "value": {
+        "id": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "name": "E2-17",
+        "label": "E2-17",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "model": "openrouter/deepseek/deepseek-v4-flash",
+        "thinking": "high",
+        "startedAt": 1792763583273,
+        "updatedAt": 1792763693648,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 623248,
+      "updatedAt": 1792763693650,
+      "updatedBy": {
+        "id": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a16909-57ba-71c1-8ec8-39cf5862d402"
+      }
+    },
+    "topology/participants/66f1bc5b370a5a07c40d85475665649cb477b2787479551957ec5e2aba1b5963": {
+      "key": "topology/participants/66f1bc5b370a5a07c40d85475665649cb477b2787479551957ec5e2aba1b5963",
+      "value": {
+        "format": 1,
+        "id": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "kind": "root",
+        "rootId": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "ownerHostId": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "ownerIdentityId": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "model": "openrouter/deepseek/deepseek-v4-flash",
+        "thinking": "high",
+        "startedAt": 1792763583273,
+        "updatedAt": 1792763693648,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "7140df28-6aad-4bba-bffc-1c2264dcc303",
+        "label": "E2-17"
+      },
+      "version": 623249,
+      "updatedAt": 1792763693652,
+      "updatedBy": {
+        "id": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a16909-57ba-71c1-8ec8-39cf5862d402"
+      }
+    },
+    "topology/hosts/66f1bc5b370a5a07c40d85475665649cb477b2787479551957ec5e2aba1b5963": {
+      "key": "topology/hosts/66f1bc5b370a5a07c40d85475665649cb477b2787479551957ec5e2aba1b5963",
+      "value": {
+        "format": 1,
+        "id": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "rootId": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "identity": {
+          "id": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a16909-57ba-71c1-8ec8-39cf5862d402"
+        },
+        "startedAt": 1792763583273,
+        "updatedAt": 1792763693653,
+        "expiresAt": 1792763708653
+      },
+      "version": 623250,
+      "updatedAt": 1792763693654,
+      "updatedBy": {
+        "id": "session:01a16909-57ba-71c1-8ec8-39cf5862d402",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a16909-57ba-71c1-8ec8-39cf5862d402"
+      }
+    },
+    "sessions/01a1695d-5aaf-76ec-a9db-7801287dae00": {
+      "key": "sessions/01a1695d-5aaf-76ec-a9db-7801287dae00",
+      "value": {
+        "id": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "name": "E2-18",
+        "label": "E2-18",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "thinking": "low",
+        "startedAt": 1792769088930,
+        "updatedAt": 1792769144042,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 627493,
+      "updatedAt": 1792769144044,
+      "updatedBy": {
+        "id": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1695d-5aaf-76ec-a9db-7801287dae00"
+      }
+    },
+    "topology/participants/8cca93fbc0afab869c567fac406ac18b46d571aaac5cd24c523acbb93baa411e": {
+      "key": "topology/participants/8cca93fbc0afab869c567fac406ac18b46d571aaac5cd24c523acbb93baa411e",
+      "value": {
+        "format": 1,
+        "id": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "kind": "root",
+        "rootId": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "ownerHostId": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "ownerIdentityId": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "thinking": "low",
+        "startedAt": 1792769088930,
+        "updatedAt": 1792769144042,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "9a82627e-f6b5-4a02-a87d-daf4c761390d",
+        "label": "E2-18"
+      },
+      "version": 627494,
+      "updatedAt": 1792769144046,
+      "updatedBy": {
+        "id": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1695d-5aaf-76ec-a9db-7801287dae00"
+      }
+    },
+    "topology/hosts/8cca93fbc0afab869c567fac406ac18b46d571aaac5cd24c523acbb93baa411e": {
+      "key": "topology/hosts/8cca93fbc0afab869c567fac406ac18b46d571aaac5cd24c523acbb93baa411e",
+      "value": {
+        "format": 1,
+        "id": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "rootId": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "identity": {
+          "id": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a1695d-5aaf-76ec-a9db-7801287dae00"
+        },
+        "startedAt": 1792769088930,
+        "updatedAt": 1792769144047,
+        "expiresAt": 1792769159047
+      },
+      "version": 627495,
+      "updatedAt": 1792769144048,
+      "updatedBy": {
+        "id": "session:01a1695d-5aaf-76ec-a9db-7801287dae00",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a1695d-5aaf-76ec-a9db-7801287dae00"
+      }
+    },
+    "sessions/01a169fa-77ed-7291-8676-5a7fee96fe7b": {
+      "key": "sessions/01a169fa-77ed-7291-8676-5a7fee96fe7b",
+      "value": {
+        "id": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "name": "E2-20",
+        "label": "E2-20",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "thinking": "low",
+        "startedAt": 1792779385664,
+        "updatedAt": 1792779671035,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 637004,
+      "updatedAt": 1792779671038,
+      "updatedBy": {
+        "id": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a169fa-77ed-7291-8676-5a7fee96fe7b"
+      }
+    },
+    "topology/participants/5aba37e487397012b7ac8fd2a496eb7c54aa7e7721ba34e4fb27d8a6b06ccb9b": {
+      "key": "topology/participants/5aba37e487397012b7ac8fd2a496eb7c54aa7e7721ba34e4fb27d8a6b06ccb9b",
+      "value": {
+        "format": 1,
+        "id": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "kind": "root",
+        "rootId": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "ownerHostId": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "ownerIdentityId": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "thinking": "low",
+        "startedAt": 1792779385664,
+        "updatedAt": 1792779671035,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "ab72435d-49d6-43dd-b941-c903021e3cbb",
+        "label": "E2-20"
+      },
+      "version": 637005,
+      "updatedAt": 1792779671041,
+      "updatedBy": {
+        "id": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a169fa-77ed-7291-8676-5a7fee96fe7b"
+      }
+    },
+    "topology/hosts/5aba37e487397012b7ac8fd2a496eb7c54aa7e7721ba34e4fb27d8a6b06ccb9b": {
+      "key": "topology/hosts/5aba37e487397012b7ac8fd2a496eb7c54aa7e7721ba34e4fb27d8a6b06ccb9b",
+      "value": {
+        "format": 1,
+        "id": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "rootId": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "identity": {
+          "id": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a169fa-77ed-7291-8676-5a7fee96fe7b"
+        },
+        "startedAt": 1792779385664,
+        "updatedAt": 1792779671043,
+        "expiresAt": 1792779686043
+      },
+      "version": 637006,
+      "updatedAt": 1792779671044,
+      "updatedBy": {
+        "id": "session:01a169fa-77ed-7291-8676-5a7fee96fe7b",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a169fa-77ed-7291-8676-5a7fee96fe7b"
+      }
+    },
+    "sessions/01a16a53-56ea-72da-ab86-f9c49219591d": {
+      "key": "sessions/01a16a53-56ea-72da-ab86-f9c49219591d",
+      "value": {
+        "id": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "name": "E2-21",
+        "label": "E2-21",
+        "kind": "peer",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a16a53-56ea-72da-ab86-f9c49219591d",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "thinking": "low",
+        "startedAt": 1792785209915,
+        "updatedAt": 1792785239987,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 641485,
+      "updatedAt": 1792785239990,
+      "updatedBy": {
+        "id": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a16a53-56ea-72da-ab86-f9c49219591d"
+      }
+    },
+    "topology/participants/59b1e545916e60cc18cfd59d9ba89ff5d1c1bbf16ffe6ded2c47ab164d88f432": {
+      "key": "topology/participants/59b1e545916e60cc18cfd59d9ba89ff5d1c1bbf16ffe6ded2c47ab164d88f432",
+      "value": {
+        "format": 1,
+        "id": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "kind": "root",
+        "rootId": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "ownerHostId": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "ownerIdentityId": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "name": "main",
+        "status": "idle",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a16a53-56ea-72da-ab86-f9c49219591d",
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "thinking": "low",
+        "startedAt": 1792785209915,
+        "updatedAt": 1792785239987,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "45f43c94-fe07-4b4a-a7c6-2e529260957c",
+        "label": "E2-21"
+      },
+      "version": 641486,
+      "updatedAt": 1792785239994,
+      "updatedBy": {
+        "id": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a16a53-56ea-72da-ab86-f9c49219591d"
+      }
+    },
+    "topology/hosts/59b1e545916e60cc18cfd59d9ba89ff5d1c1bbf16ffe6ded2c47ab164d88f432": {
+      "key": "topology/hosts/59b1e545916e60cc18cfd59d9ba89ff5d1c1bbf16ffe6ded2c47ab164d88f432",
+      "value": {
+        "format": 1,
+        "id": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "rootId": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "identity": {
+          "id": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a16a53-56ea-72da-ab86-f9c49219591d"
+        },
+        "startedAt": 1792785209915,
+        "updatedAt": 1792785239995,
+        "expiresAt": 1792785254995
+      },
+      "version": 641487,
+      "updatedAt": 1792785239996,
+      "updatedBy": {
+        "id": "session:01a16a53-56ea-72da-ab86-f9c49219591d",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a16a53-56ea-72da-ab86-f9c49219591d"
+      }
+    },
+    "sessions/01a0fd11-7eef-756c-a99e-16cb847ed363": {
+      "key": "sessions/01a0fd11-7eef-756c-a99e-16cb847ed363",
+      "value": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "E2-23",
+        "label": "E2-23",
+        "kind": "peer",
+        "status": "running",
+        "runner": "pi",
+        "transport": "host",
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "model": "openrouter/z-ai/glm-5.3-flash",
+        "thinking": "max",
+        "startedAt": 1793025345847,
+        "updatedAt": 1793033524082,
+        "pendingMessages": false,
+        "local": false
+      },
+      "version": 677489,
+      "updatedAt": 1793033524084,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    },
+    "topology/participants/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": {
+      "key": "topology/participants/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4",
+      "value": {
+        "format": 1,
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "kind": "root",
+        "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "ownerHostId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "ownerIdentityId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "status": "running",
+        "runner": "pi",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "fabric"
+        ],
+        "cwd": "C:\\Users\\Leandro\\Desktop\\Leandro\\AI 222 and AI 231\\Exercise 2\\Exercise 2b",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "model": "openrouter/z-ai/glm-5.3-flash",
+        "thinking": "max",
+        "startedAt": 1793025345847,
+        "updatedAt": 1793033524082,
+        "pendingMessages": false,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "99257bcd-5f51-4cfc-89be-d69f9f8dc86f",
+        "label": "E2-23"
+      },
+      "version": 677490,
+      "updatedAt": 1793033524086,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    },
+    "topology/participants/90de5777f6d7263a03e4e32391c8af9f4617ae7eb94fc351f410455e3f912112": {
+      "key": "topology/participants/90de5777f6d7263a03e4e32391c8af9f4617ae7eb94fc351f410455e3f912112",
+      "value": {
+        "format": 1,
+        "id": "cb86c9934eb64d5c92ce26c588f5a6aa",
+        "kind": "actor",
+        "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "ownerHostId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "ownerIdentityId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "parentId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "deepseek-auditor",
+        "status": "idle",
+        "residency": "session",
+        "runner": "pi-durable",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "stop",
+          "ask",
+          "actor-bindings",
+          "fabric"
+        ],
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "startedAt": 1792748414844,
+        "updatedAt": 1793025345860,
+        "actorQueued": 0,
+        "actorMessages": 6,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "99257bcd-5f51-4cfc-89be-d69f9f8dc86f"
+      },
+      "version": 660845,
+      "updatedAt": 1793025345907,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    },
+    "topology/participants/1ac4f73e8bd84e9ae7e53b3ee0d9a3d8b73255221c007baaf725e5c96f3fcb7a": {
+      "key": "topology/participants/1ac4f73e8bd84e9ae7e53b3ee0d9a3d8b73255221c007baaf725e5c96f3fcb7a",
+      "value": {
+        "format": 1,
+        "id": "85d035dd58504a0ca3d5082b4e69987a",
+        "kind": "actor",
+        "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "ownerHostId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "ownerIdentityId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "parentId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "pi-beta-tester",
+        "status": "idle",
+        "residency": "session",
+        "runner": "pi-durable",
+        "transport": "host",
+        "capabilities": [
+          "steer",
+          "followUp",
+          "stop",
+          "ask",
+          "actor-bindings",
+          "fabric"
+        ],
+        "model": "openrouter/deepseek/deepseek-v4.1-flash",
+        "startedAt": 1792752092848,
+        "updatedAt": 1793025345872,
+        "actorQueued": 0,
+        "actorMessages": 0,
+        "controlProtocol": "v1",
+        "ownerIncarnation": "99257bcd-5f51-4cfc-89be-d69f9f8dc86f"
+      },
+      "version": 660846,
+      "updatedAt": 1793025345909,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    },
+    "topology/hosts/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": {
+      "key": "topology/hosts/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4",
+      "value": {
+        "format": 1,
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "rootId": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "identity": {
+          "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+          "name": "main",
+          "kind": "main",
+          "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+        },
+        "startedAt": 1793025345847,
+        "updatedAt": 1793033524088,
+        "expiresAt": 1793033539088
+      },
+      "version": 677493,
+      "updatedAt": 1793033524089,
+      "updatedBy": {
+        "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
+        "name": "main",
+        "kind": "main",
+        "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
+      }
+    }
+  },
+  "highWater": 710801,
+  "versions": {
+    "topology/peer-seq": 23,
+    "sessions/01a0fd11-7eef-756c-a99e-16cb847ed363": 677489,
+    "topology/participants/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": 677490,
+    "topology/hosts/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": 677493,
+    "sessions/01a1075e-9f05-76ea-a37c-283f5c43724e": 64005,
+    "topology/participants/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b": 64006,
+    "topology/hosts/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b": 64007,
+    "sessions/01a10774-39ed-7458-ae9a-634d8cae80a9": 65130,
+    "topology/participants/e519794d33eb0528b8f1bdeeb65c8850467f014f73375b897012226a426ecbc2": 65131,
+    "topology/hosts/e519794d33eb0528b8f1bdeeb65c8850467f014f73375b897012226a426ecbc2": 65132,
+    "sessions/01a10774-87e9-75f3-88c6-7bcf375a4345": 65225,
+    "topology/participants/db443cafa491b5fc417b4a731111c0fe9692258e9178d80f359de7ccc4e50e82": 65226,
+    "topology/hosts/db443cafa491b5fc417b4a731111c0fe9692258e9178d80f359de7ccc4e50e82": 65227,
+    "sessions/01a10785-856b-70d5-8ba1-9c146c017e10": 66467,
+    "topology/participants/1d65130acffadf19c210e6e6756ed56dfa395bfccb3e1c39182020b6a225fe86": 66468,
+    "topology/hosts/1d65130acffadf19c210e6e6756ed56dfa395bfccb3e1c39182020b6a225fe86": 66469,
+    "sessions/01a1078d-9c39-72a5-9b6c-8bc153f39fd4": 67194,
+    "topology/participants/6aa57a3b4130b9ca71e1e469191f83ebb613bee2df4d18532be6cc1fa0b03d07": 67195,
+    "topology/hosts/6aa57a3b4130b9ca71e1e469191f83ebb613bee2df4d18532be6cc1fa0b03d07": 67196,
+    "sessions/01a107cf-1143-766e-9526-3045a50a4fce": 70501,
+    "topology/participants/57c4ba362519a02cb83231f3d4cf75f43c70d6513e57d85fd6b6d4b9769b114f": 70503,
+    "topology/hosts/57c4ba362519a02cb83231f3d4cf75f43c70d6513e57d85fd6b6d4b9769b114f": 70504,
+    "sessions/01a109f1-160a-7265-a6c4-c3ef209465c8": 91829,
+    "topology/participants/b8c09195b20b5531bcddcd16d6a352fc4eafa7ad71699dc3ee276df4c4a56b13": 91831,
+    "topology/hosts/b8c09195b20b5531bcddcd16d6a352fc4eafa7ad71699dc3ee276df4c4a56b13": 91832,
+    "sessions/01a109f1-1609-724b-94e2-d6c076e2e4bb": 92077,
+    "topology/participants/681ffe98360042e7f922bda854ef4d7c66c74d9c6a62498e7e68b8fd24a5d3de": 92078,
+    "topology/hosts/681ffe98360042e7f922bda854ef4d7c66c74d9c6a62498e7e68b8fd24a5d3de": 92079,
+    "sessions/01a110cc-a2a2-727f-9cbc-fa9af934e7e5": 162472,
+    "topology/participants/a4ee26706a07cf71c7da6e86b4fd1d45d055b0f696352e1f48091edac32f77e8": 162473,
+    "topology/hosts/a4ee26706a07cf71c7da6e86b4fd1d45d055b0f696352e1f48091edac32f77e8": 162474,
+    "sessions/01a110d6-120d-71b7-83ea-3225ff1cce77": 163613,
+    "topology/participants/fa44a5f1a2a98b7c63c6ee6e5afbac8af4a4c835046d18f6114802ef33abfd34": 163615,
+    "topology/hosts/fa44a5f1a2a98b7c63c6ee6e5afbac8af4a4c835046d18f6114802ef33abfd34": 163616,
+    "topology/participants/678b559992111f3b02671222a497673d7a7299c25da2643c8694648a457d5357": 366520,
+    "topology/participants/53934179ecc2d4c1bea011a889be0dbff512ccc9d4021ca820a5b0a9c8b3dd4d": 366709,
+    "topology/hosts/faa7067b75f7d5080b9b6f22b7b92bc9d66a0dd318c2e951bc18168bed021a0b": 366807,
+    "topology/participants/afd1591ca56c1be15737e8c87fec73576cb35cbd2944f0ee3e714eabe3188605": 367183,
+    "topology/hosts/0184f3ced078eea28c20061c197ff4febe86a5c314a5856f28dbcbbbb14e9449": 367263,
+    "topology/participants/98a011c497ed5f3a17723993f9029d4758c21f1aa75b34130b0ec30194abda3a": 367740,
+    "topology/hosts/b872fd2c23d02538781dfbb077297fcb86dcd43b0d7daa68537bf0fac2456365": 367964,
+    "topology/participants/e063648030d86fb41e4b4d25f3e46bc84568a31a7931cde9d00d3d57435fecc1": 482781,
+    "topology/hosts/069977fa7681ac70fe7a2cf6ec5e1a489bd3c7d802b1d730520e2cd5e53987f4": 482869,
+    "sessions/01a14889-c42f-7063-8496-8031b1819c5e": 495075,
+    "topology/participants/769aa12a016b670781fcc958b89a8e6b0fcbe64a77b7af013fd01abd9696f5fd": 495077,
+    "topology/hosts/769aa12a016b670781fcc958b89a8e6b0fcbe64a77b7af013fd01abd9696f5fd": 495078,
+    "sessions/01a1629d-4c60-727d-ac75-7c8a2f5c0ef1": 560603,
+    "topology/participants/0b37a89015c19da094e37074e3c88d78ef660b547025db54bf74e4949a2e2803": 560605,
+    "topology/hosts/0b37a89015c19da094e37074e3c88d78ef660b547025db54bf74e4949a2e2803": 560606,
+    "sessions/01a1647a-0624-7004-b435-5c12e11941e3": 580033,
+    "topology/participants/b412262829ca0c0b1505864fa3fa5cc2ce129f84e2a0a7f3ec41538de183f2e2": 580034,
+    "topology/hosts/b412262829ca0c0b1505864fa3fa5cc2ce129f84e2a0a7f3ec41538de183f2e2": 580035,
+    "actors/01a0fd11-7eef-756c-a99e-16cb847ed363/cb86c9934eb64d5c92ce26c588f5a6aa": 612299,
+    "topology/participants/90de5777f6d7263a03e4e32391c8af9f4617ae7eb94fc351f410455e3f912112": 660845,
+    "topology/participants/08108bc1a5b23190fa871142a46a4671749b4b5c4439775405dcb06fd57ee78a": 612347,
+    "topology/hosts/3e6687d858a3c0741ebad0bfa7d8106b00521feb1303ee8588c07766c61e284c": 612498,
+    "topology/hosts/6fa3abc2c2d81a5eed2c72d6f5018f256773a324d7e0829817664e0c3bf12ad8": 614058,
+    "actors/01a0fd11-7eef-756c-a99e-16cb847ed363/85d035dd58504a0ca3d5082b4e69987a": 615332,
+    "topology/participants/1ac4f73e8bd84e9ae7e53b3ee0d9a3d8b73255221c007baaf725e5c96f3fcb7a": 660846,
+    "sessions/01a16909-57ba-71c1-8ec8-39cf5862d402": 623248,
+    "topology/participants/66f1bc5b370a5a07c40d85475665649cb477b2787479551957ec5e2aba1b5963": 623249,
+    "topology/hosts/66f1bc5b370a5a07c40d85475665649cb477b2787479551957ec5e2aba1b5963": 623250,
+    "sessions/01a1695d-5aaf-76ec-a9db-7801287dae00": 627493,
+    "topology/participants/8cca93fbc0afab869c567fac406ac18b46d571aaac5cd24c523acbb93baa411e": 627494,
+    "topology/hosts/8cca93fbc0afab869c567fac406ac18b46d571aaac5cd24c523acbb93baa411e": 627495,
+    "sessions/01a1695f-8292-71b3-a85a-034ea1edff8a": 627692,
+    "topology/participants/73634359536181e812b40c1a65ae91246ef4a27982013d04e98c5485996fb220": 627694,
+    "topology/hosts/73634359536181e812b40c1a65ae91246ef4a27982013d04e98c5485996fb220": 627695,
+    "sessions/01a169fa-77ed-7291-8676-5a7fee96fe7b": 637004,
+    "topology/participants/5aba37e487397012b7ac8fd2a496eb7c54aa7e7721ba34e4fb27d8a6b06ccb9b": 637005,
+    "topology/hosts/5aba37e487397012b7ac8fd2a496eb7c54aa7e7721ba34e4fb27d8a6b06ccb9b": 637006,
+    "sessions/01a16a53-56ea-72da-ab86-f9c49219591d": 641485,
+    "topology/participants/59b1e545916e60cc18cfd59d9ba89ff5d1c1bbf16ffe6ded2c47ab164d88f432": 641486,
+    "topology/hosts/59b1e545916e60cc18cfd59d9ba89ff5d1c1bbf16ffe6ded2c47ab164d88f432": 641487,
+    "sessions/01a16a57-08a3-7537-99a6-3adecfb15c87": 641726,
+    "topology/participants/9646ef6958a3977cdf53270ae97695a5a5796646e0e0529c27a6c4f37c157ce7": 641728,
+    "topology/hosts/9646ef6958a3977cdf53270ae97695a5a5796646e0e0529c27a6c4f37c157ce7": 641729
+  },
+  "tombstoneOrder": [
+    "sessions/01a107cf-1143-766e-9526-3045a50a4fce",
+    "topology/participants/57c4ba362519a02cb83231f3d4cf75f43c70d6513e57d85fd6b6d4b9769b114f",
+    "topology/hosts/57c4ba362519a02cb83231f3d4cf75f43c70d6513e57d85fd6b6d4b9769b114f",
+    "sessions/01a109f1-160a-7265-a6c4-c3ef209465c8",
+    "topology/participants/b8c09195b20b5531bcddcd16d6a352fc4eafa7ad71699dc3ee276df4c4a56b13",
+    "topology/hosts/b8c09195b20b5531bcddcd16d6a352fc4eafa7ad71699dc3ee276df4c4a56b13",
+    "sessions/01a110d6-120d-71b7-83ea-3225ff1cce77",
+    "topology/participants/fa44a5f1a2a98b7c63c6ee6e5afbac8af4a4c835046d18f6114802ef33abfd34",
+    "topology/hosts/fa44a5f1a2a98b7c63c6ee6e5afbac8af4a4c835046d18f6114802ef33abfd34",
+    "topology/hosts/faa7067b75f7d5080b9b6f22b7b92bc9d66a0dd318c2e951bc18168bed021a0b",
+    "topology/hosts/0184f3ced078eea28c20061c197ff4febe86a5c314a5856f28dbcbbbb14e9449",
+    "topology/hosts/b872fd2c23d02538781dfbb077297fcb86dcd43b0d7daa68537bf0fac2456365",
+    "topology/participants/53934179ecc2d4c1bea011a889be0dbff512ccc9d4021ca820a5b0a9c8b3dd4d",
+    "topology/participants/678b559992111f3b02671222a497673d7a7299c25da2643c8694648a457d5357",
+    "topology/participants/98a011c497ed5f3a17723993f9029d4758c21f1aa75b34130b0ec30194abda3a",
+    "topology/participants/afd1591ca56c1be15737e8c87fec73576cb35cbd2944f0ee3e714eabe3188605",
+    "topology/hosts/069977fa7681ac70fe7a2cf6ec5e1a489bd3c7d802b1d730520e2cd5e53987f4",
+    "sessions/01a14889-c42f-7063-8496-8031b1819c5e",
+    "topology/participants/769aa12a016b670781fcc958b89a8e6b0fcbe64a77b7af013fd01abd9696f5fd",
+    "topology/hosts/769aa12a016b670781fcc958b89a8e6b0fcbe64a77b7af013fd01abd9696f5fd",
+    "topology/participants/e063648030d86fb41e4b4d25f3e46bc84568a31a7931cde9d00d3d57435fecc1",
+    "sessions/01a1629d-4c60-727d-ac75-7c8a2f5c0ef1",
+    "topology/participants/0b37a89015c19da094e37074e3c88d78ef660b547025db54bf74e4949a2e2803",
+    "topology/hosts/0b37a89015c19da094e37074e3c88d78ef660b547025db54bf74e4949a2e2803",
+    "topology/hosts/3e6687d858a3c0741ebad0bfa7d8106b00521feb1303ee8588c07766c61e284c",
+    "topology/hosts/6fa3abc2c2d81a5eed2c72d6f5018f256773a324d7e0829817664e0c3bf12ad8",
+    "sessions/01a1695f-8292-71b3-a85a-034ea1edff8a",
+    "topology/participants/73634359536181e812b40c1a65ae91246ef4a27982013d04e98c5485996fb220",
+    "topology/hosts/73634359536181e812b40c1a65ae91246ef4a27982013d04e98c5485996fb220",
+    "sessions/01a16a57-08a3-7537-99a6-3adecfb15c87",
+    "topology/participants/9646ef6958a3977cdf53270ae97695a5a5796646e0e0529c27a6c4f37c157ce7",
+    "topology/hosts/9646ef6958a3977cdf53270ae97695a5a5796646e0e0529c27a6c4f37c157ce7",
+    "topology/participants/08108bc1a5b23190fa871142a46a4671749b4b5c4439775405dcb06fd57ee78a"
+  ]
+}

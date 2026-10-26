@@ -1,0 +1,58 @@
+{
+ "picked": {
+  "g1_total": 13,
+  "model_total": 53,
+  "g1_left": 1,
+  "model_left": 1,
+  "take": "me2w_0000"
+ },
+ "filtered_rows": 202,
+ "timeline": [
+  {
+   "say": "batch: 1 take \u00d7 3 lanes each (G1 1 \u00d7 G2 1 \u00d7 NC 1 \u00d7 arch 3: v1 + v2 + v3) \u00b7 auto workers\u2026",
+   "prog": "take 1/1: ME2 wake+cmd (real): Play music",
+   "head": "",
+   "progressShown": true,
+   "progressText": "batch: 1 take\u2026"
+  },
+  {
+   "say": "batch: 1 take \u00d7 3 lanes each (G1 1 \u00d7 G2 1 \u00d7 NC 1 \u00d7 arch 3: v1 + v2 + v3) \u00b7 auto workers\u2026",
+   "prog": "take 1/1: ME2 wake+cmd (real): Play music",
+   "head": "",
+   "progressShown": true,
+   "progressText": "batch: 1 take\u2026"
+  },
+  {
+   "say": "batch: 1 take \u00d7 3 lanes each (G1 1 \u00d7 G2 1 \u00d7 NC 1 \u00d7 arch 3: v1 + v2 + v3) \u00b7 auto workers\u2026",
+   "prog": "take 1/1: ME2 wake+cmd (real): Play music",
+   "head": "",
+   "progressShown": true,
+   "progressText": "batch: 1 take\u2026"
+  },
+  {
+   "say": "batch: 1 take \u00d7 3 lanes each (G1 1 \u00d7 G2 1 \u00d7 NC 1 \u00d7 arch 3: v1 + v2 + v3) \u00b7 auto workers\u2026",
+   "prog": "take 1/1: ME2 wake+cmd (real): Play music",
+   "head": "",
+   "progressShown": true,
+   "progressText": "batch: 1 take\u2026"
+  },
+  {
+   "say": "batch: 1 take \u00d7 3 lanes each (G1 1 \u00d7 G2 1 \u00d7 NC 1 \u00d7 arch 3: v1 + v2 + v3) \u00b7 auto workers\u2026",
+   "prog": "take 1/1: ME2 wake+cmd (real): Play music",
+   "head": "",
+   "progressShown": true,
+   "progressText": "batch: 1 take\u2026"
+  }
+ ],
+ "progress_seen": 5,
+ "progress_sample": "batch: 1 take\u2026",
+ "header_ok": true,
+ "workers_sel": true,
+ "find_input": true,
+ "batch_header": "Batch: 1/1 takes tested \u00b7 3 lanes/take (G1 1 \u00d7 G2 1 \u00d7 NC 1 \u00d7 arch 3: v1 + v2 + v3) \u00b7 8 workers \u2014 per-take summaries above",
+ "results_text": "Batch: 1/1 takes tested \u00b7 3 lanes/take (G1 1 \u00d7 G2 1 \u00d7 NC 1 \u00d7 arch 3: v1 + v2 + v3) \u00b7 8 workers \u2014 per-take summaries above1. ME2 wake+cmd (real): Play music \u00b7 3 combinations \u00b7 arch v1 + v2 + v3Summary \u2014 expected wake: Nova \u00b7 expected action: PLAY_MUSIC \u00b7 Architecture v1 + v2 + v33 combinations \u00b7 fully correct 0 \u00b7 Gate 1 (wake) correct 0 \u00b7 Gate 2 (action) correct 0Best wake variants: v10_dr 0/3  |  Best intent models: v16 0 ticksArchitectureNoise cancellerGate 1 \u00b7 wakeGate 2 \u00b7 intentLane: G1v10_dr \u00d7 G2v16 \u00b7 raw \u00b7 Arch v1 \u00b7 0/5 action ticks \u00b7 \u2717 wrongWake fired at: never   \u00b7   Intent fired at: 5.9s CREATE_REMINDER, 7.9s NEXT   \u00b7   9.7 ms mean \u00b7 22.2 ms p95 \u00b7 3.1 ms cpu/tickInspect lane:G1v10_dr \u00d7 G2v16 \u00b7 raw \u00b7 Arch v1 \u2717ArchitectureNoise cancellerGate 1 \u00b7 wakeGate 2 \u00b7 intent",
+ "chart_canvases": 8,
+ "find_matches": 3,
+ "page_errors": []
+}
+UI-PROBE: PASS
