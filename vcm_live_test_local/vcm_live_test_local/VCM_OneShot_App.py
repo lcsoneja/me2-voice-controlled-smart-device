@@ -84,6 +84,62 @@ def healthy() -> bool:
         return False
 
 
+def _windows_of_this_process(hint: str) -> list[int]:
+    """Top-level window handles owned by this process whose title contains ``hint``."""
+    import ctypes
+    from ctypes import wintypes
+
+    user32 = ctypes.windll.user32
+    pid = ctypes.windll.kernel32.GetCurrentProcessId()
+    found: list[int] = []
+
+    def visit(handle: int, _param: int) -> bool:
+        owner = wintypes.DWORD()
+        user32.GetWindowThreadProcessId(handle, ctypes.byref(owner))
+        if owner.value != pid:
+            return True
+        length = user32.GetWindowTextLengthW(handle)
+        if not length:
+            return True
+        buffer = ctypes.create_unicode_buffer(length + 1)
+        user32.GetWindowTextW(handle, buffer, length + 1)
+        if hint.lower() in buffer.value.lower():
+            found.append(handle)
+        return True
+
+    user32.EnumWindows(
+        ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)(visit), 0
+    )
+    return found
+
+
+def _ensure_window_visible(
+    hint: str = "One-Shot", tries: int = 30, interval: float = 0.5
+) -> None:
+    """Show the pywebview window when the toolkit created it hidden.
+
+    Observed on this machine: the WinForms window exists at the right position and size while
+    IsWindowVisible is False, so the app looks like it never opened even though the process and
+    server keep running. Poll briefly and show/restore it when that happens.
+    """
+    try:
+        import ctypes
+
+        user32 = ctypes.windll.user32
+        sw_restore, sw_show = 9, 5
+        for _ in range(tries):
+            for handle in _windows_of_this_process(hint):
+                if not user32.IsWindowVisible(handle):
+                    _log("[app] window was hidden by the toolkit; showing it")
+                    user32.ShowWindow(handle, sw_restore)
+                    user32.ShowWindow(handle, sw_show)
+                    user32.SetForegroundWindow(handle)
+                return
+            time.sleep(interval)
+    except (AttributeError, OSError, ValueError):
+        pass
+
+
 def _fatal(message: str) -> None:
     """Report a failure even when running windowed, where there is no console."""
     _log("[app] FATAL " + message)
@@ -395,6 +451,11 @@ def main() -> int:
             min_size=(880, 540),
             text_select=True,
         )
+        # pywebview intermittently leaves this window created-but-hidden on this machine, which
+        # looks exactly like "the app did not open". Make sure it really shows itself.
+        threading.Thread(
+            target=_ensure_window_visible, args=(WINDOW_TITLE_HINT,), daemon=True
+        ).start()
         if created is None:
             _fatal("could not create the application window")
             return 3
