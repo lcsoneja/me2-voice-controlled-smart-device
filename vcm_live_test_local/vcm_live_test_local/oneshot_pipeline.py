@@ -79,6 +79,7 @@ def register_routes(app: web.Application) -> None:
     app.router.add_post("/api/oneshot/recordings/tag", api_recordings_tag)
     app.router.add_get("/api/oneshot/sessions", api_sessions)
     app.router.add_post("/api/oneshot/sessions", api_sessions_new)
+    app.router.add_post("/api/oneshot/sessions/delete", api_sessions_delete)
     app.router.add_post("/api/oneshot/results/export", api_results_export)
     app.router.add_post("/api/oneshot/results/save", api_results_save)
     app.router.add_get("/api/oneshot/leaderboard", api_leaderboard)
@@ -494,6 +495,21 @@ async def api_recordings_tag(request: web.Request) -> web.Response:
 async def api_sessions(request: web.Request) -> web.Response:
     store = request.app["lab"].store
     return web.json_response({"sessions": store.list_sessions()})
+
+
+async def api_sessions_delete(request: web.Request) -> web.Response:
+    """Remove one session: empty folders outright, non-empty ones into the trash."""
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    session_id = str(body.get("id") or "")
+    if not session_id:
+        return web.json_response({"error": "id required"}, status=400)
+    store = request.app["lab"].store
+    return web.json_response(store.delete_session(session_id))
 
 
 async def api_sessions_new(request: web.Request) -> web.Response:

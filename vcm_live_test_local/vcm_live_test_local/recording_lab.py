@@ -231,6 +231,71 @@ class RecordingStore:
             pass
         return meta
 
+    def delete_session(self, session_id: str) -> dict[str, Any]:
+        """Remove a session folder: outright when empty, else into the trash.
+
+        Deleting a session that still holds takes moves the whole folder to
+        recordings/_trash_<stamp>/ and records it in trash_manifest.json, so no
+        audio is ever lost - exactly like single-take trashing."""
+        with self._lock:
+            folder = self.root / SESSIONS_DIR / str(session_id or "")
+            meta_path = folder / "session.json"
+            if not meta_path.is_file():
+                return {"deleted": False, "reason": "not found"}
+            entries = self._read()
+            mine = [entry for entry in entries if entry.get("session") == session_id]
+            wavs = list(folder.glob("*.wav")) if folder.is_dir() else []
+            kept = [entry for entry in entries if entry.get("session") != session_id]
+            if not mine and not wavs:
+                try:
+                    shutil.rmtree(folder)
+                except OSError:
+                    return {"deleted": False, "reason": "folder busy"}
+                return {"deleted": True, "moved_to": None, "takes_removed": 0}
+            stamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+            trash_dir = self.root / ("_trash_" + stamp)
+            try:
+                trash_dir.mkdir(parents=True, exist_ok=True)
+            except OSError:
+                trash_dir = self.root / "_trash"
+                trash_dir.mkdir(parents=True, exist_ok=True)
+            target = trash_dir / str(session_id)
+            try:
+                shutil.move(str(folder), str(target))
+            except OSError:
+                target.mkdir(parents=True, exist_ok=True)
+                for wav in wavs:
+                    try:
+                        shutil.move(str(wav), str(target / wav.name))
+                    except OSError:
+                        pass
+            if mine:
+                self._write(kept)
+                manifest_path = self.root / "trash_manifest.json"
+                rows = [
+                    {**entry, "trashed_at": stamp, "deleted_session": session_id}
+                    for entry in mine
+                ]
+                try:
+                    history: list[Any] = []
+                    if manifest_path.is_file():
+                        raw = json.loads(manifest_path.read_text(encoding="utf-8"))
+                        if isinstance(raw, list):
+                            history = raw
+                    history.extend(rows)
+                    manifest_path.write_text(
+                        json.dumps(history, indent=1), encoding="utf-8"
+                    )
+                except (OSError, json.JSONDecodeError):
+                    pass
+                return {
+                    "deleted": True,
+                    "moved_to": str(target.relative_to(self.root)),
+                    "takes_removed": len(mine),
+                }
+            return {"deleted": True, "moved_to": str(target.relative_to(self.root)),
+                    "takes_removed": 0}
+
     def set_session_phrases(self, session_id: str, pointer: int) -> None:
         folder = self.root / SESSIONS_DIR / str(session_id or "")
         meta_path = folder / "session.json"

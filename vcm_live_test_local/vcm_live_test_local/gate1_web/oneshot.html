@@ -135,6 +135,11 @@
   .rkbar { display:flex; gap:4px; align-items:center; margin:2px 0 4px; }
   .rkbar input { flex:1 1 auto; min-width:0; font-size:10.5px; padding:2px 6px; }
   .rkbar button { font-size:10.5px; padding:2px 8px; }
+  /* Session manager: a compact collapsible list with per-session delete. */
+  #sman-box summary { font-size:10.5px; }
+  .sman { max-height:170px; overflow:auto; display:flex; flex-direction:column; gap:2px; padding:2px; }
+  .srow { display:flex; justify-content:space-between; align-items:center; gap:6px; font-size:10.5px; padding:1px 2px; }
+  .srow button { font-size:10px; padding:1px 8px; }
   .rank table { width:100%; border-collapse:collapse; }
   .rank th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
   .rank td.n, .rank th.n { text-align:right; font-variant-numeric:tabular-nums; }
@@ -315,6 +320,10 @@
           <tbody id="rk-body"></tbody>
         </table>
       </div>
+      <details id="sman-box">
+        <summary>Sessions - manage</summary>
+        <div class="sman" id="sman"></div>
+      </details>
       <p class="note" id="tk-count">loading recordings...</p>
       <ul class="tk-list" id="tk-list"></ul>
       <div class="score" id="tk-result" hidden></div>
@@ -542,6 +551,7 @@
           filter.value = kept || "";
         }
         paintSessionNote();
+        paintSessionManager();
       })
       .catch(function () {
         var note = el("sel-session-note");
@@ -611,6 +621,77 @@
     if (items.length) {
       setExpectation(items[0].getAttribute("data-intent") || "", items[0].getAttribute("data-phrase"));
     }
+  }
+
+  // ---- session manager: every session listed with its take count; delete
+  // empties outright, non-empty ones move to the trash so audio is never lost ----
+  function paintSessionManager() {
+    var host = el("sman");
+    if (!host) { return; }
+    fetch("/api/oneshot/sessions", { cache: "no-store" })
+      .then(function (resp) { return resp.json(); })
+      .then(function (data) {
+        var sessions = data.sessions || [];
+        host.textContent = "";
+        var empties = sessions.filter(function (s) { return !s.takes; });
+        var note = document.createElement("p");
+        note.className = "note";
+        note.textContent = sessions.length + " session(s), "
+          + empties.length + " with no takes";
+        host.appendChild(note);
+        sessions.forEach(function (item) {
+          var row = document.createElement("div");
+          row.className = "srow";
+          var info = document.createElement("span");
+          info.textContent = String(item.label || item.folder || item.id).slice(0, 38)
+            + " - " + item.takes + " take(s)";
+          info.title = item.id;
+          var del = document.createElement("button");
+          del.type = "button";
+          del.textContent = "delete";
+          del.title = item.takes
+            ? "session with audio moves to the trash"
+            : "removes the empty folder";
+          del.addEventListener("click", function () {
+            postJson("/api/oneshot/sessions/delete", { id: item.id }, "removing " + item.id)
+              .then(function (res) {
+                el("tk-count").textContent = res.moved_to
+                  ? ("moved to " + res.moved_to) : "session removed";
+                paintSessionManager();
+                loadSessions();
+                loadTakes();
+              })
+              .catch(function () { el("tk-count").textContent = "delete failed"; });
+          });
+          row.appendChild(info);
+          row.appendChild(del);
+          host.appendChild(row);
+        });
+        if (empties.length) {
+          var sweep = document.createElement("button");
+          sweep.type = "button";
+          sweep.textContent = "Remove " + empties.length + " empty session(s)";
+          sweep.addEventListener("click", function () {
+            Promise.all(empties.map(function (item) {
+              return fetch("/api/oneshot/sessions/delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: item.id })
+              }).then(function (resp) { return resp.json(); });
+            })).then(function () {
+              paintSessionManager();
+              loadSessions();
+              loadTakes();
+              el("tk-count").textContent = "removed " + empties.length + " empty session(s)";
+            }).catch(function () {});
+          });
+          host.appendChild(sweep);
+        }
+      })
+      .catch(function () {
+        var note = el("sman");
+        if (note) { note.textContent = "sessions unavailable"; }
+      });
   }
 
   var selSession = el("sel-session");
