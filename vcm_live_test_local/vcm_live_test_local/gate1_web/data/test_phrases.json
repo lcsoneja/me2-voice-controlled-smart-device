@@ -8,6 +8,14 @@
  "note": "Say the wake word first, then one phrase. The app records 5 s and makes exactly one decision. Every intent has several phrasings so one wording cannot memorise the test.",
  "phrases": [
   {
+   "phrase": "start music",
+   "intent": "PLAY_MUSIC"
+  },
+  {
+   "phrase": "play music",
+   "intent": "PLAY_MUSIC"
+  },
+  {
    "phrase": "play some music",
    "intent": "PLAY_MUSIC"
   },
@@ -22,6 +30,14 @@
   {
    "phrase": "start the music",
    "intent": "PLAY_MUSIC"
+  },
+  {
+   "phrase": "weather today",
+   "intent": "WEATHER"
+  },
+  {
+   "phrase": "weather",
+   "intent": "WEATHER"
   },
   {
    "phrase": "what's the weather today",
@@ -40,6 +56,10 @@
    "intent": "WEATHER"
   },
   {
+   "phrase": "time",
+   "intent": "TIME"
+  },
+  {
    "phrase": "what time is it",
    "intent": "TIME"
   },
@@ -50,6 +70,10 @@
   {
    "phrase": "what's the time right now",
    "intent": "TIME"
+  },
+  {
+   "phrase": "lights on",
+   "intent": "LIGHT_ON"
   },
   {
    "phrase": "turn on the lights",
@@ -64,6 +88,10 @@
    "intent": "LIGHT_ON"
   },
   {
+   "phrase": "lights out",
+   "intent": "LIGHT_OFF"
+  },
+  {
    "phrase": "turn off the lights",
    "intent": "LIGHT_OFF"
   },
@@ -74,6 +102,10 @@
   {
    "phrase": "switch off the lights",
    "intent": "LIGHT_OFF"
+  },
+  {
+   "phrase": "pause",
+   "intent": "PAUSE"
   },
   {
    "phrase": "pause the music",
@@ -98,6 +130,10 @@
   {
    "phrase": "stop playing",
    "intent": "STOP"
+  },
+  {
+   "phrase": "next",
+   "intent": "NEXT"
   },
   {
    "phrase": "next song",
@@ -144,6 +180,14 @@
    "intent": "VOLUME_DOWN"
   },
   {
+   "phrase": "make a call",
+   "intent": "CALL"
+  },
+  {
+   "phrase": "call",
+   "intent": "CALL"
+  },
+  {
    "phrase": "call mom",
    "intent": "CALL"
   },
@@ -154,6 +198,10 @@
   {
    "phrase": "make a phone call",
    "intent": "CALL"
+  },
+  {
+   "phrase": "message",
+   "intent": "MESSAGE"
   },
   {
    "phrase": "send a message to john",
@@ -168,6 +216,10 @@
    "intent": "MESSAGE"
   },
   {
+   "phrase": "reminders",
+   "intent": "LIST_REMINDERS"
+  },
+  {
    "phrase": "list my reminders",
    "intent": "LIST_REMINDERS"
   },
@@ -178,6 +230,14 @@
   {
    "phrase": "show my reminders",
    "intent": "LIST_REMINDERS"
+  },
+  {
+   "phrase": "timer 30 seconds",
+   "intent": "TIMER"
+  },
+  {
+   "phrase": "timer 10 seconds",
+   "intent": "TIMER"
   },
   {
    "phrase": "set a timer for 10 seconds",
@@ -196,6 +256,10 @@
    "intent": "TIMER"
   },
   {
+   "phrase": "alarm 6 am",
+   "intent": "ALARM"
+  },
+  {
    "phrase": "set an alarm for 6 am",
    "intent": "ALARM"
   },
@@ -210,6 +274,10 @@
   {
    "phrase": "set an alarm for 7 am",
    "intent": "ALARM"
+  },
+  {
+   "phrase": "temperature 18 degrees",
+   "intent": "TEMPERATURE"
   },
   {
    "phrase": "set the temperature to 18 degrees",
@@ -228,6 +296,10 @@
    "intent": "TEMPERATURE"
   },
   {
+   "phrase": "brightness 20 percent",
+   "intent": "BRIGHTNESS"
+  },
+  {
    "phrase": "set brightness to 20 percent",
    "intent": "BRIGHTNESS"
   },
@@ -242,6 +314,10 @@
   {
    "phrase": "set brightness to 40 percent",
    "intent": "BRIGHTNESS"
+  },
+  {
+   "phrase": "change color to red",
+   "intent": "COLOR"
   },
   {
    "phrase": "make the lights red",

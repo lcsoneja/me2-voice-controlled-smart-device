@@ -17,23 +17,27 @@ def main() -> int:
         page.wait_for_selector("#btn-cont", timeout=30000)
         page.click("#btn-cont")
         page.wait_for_function(
-            "() => window.__oneshot.continueMode === true",
-            timeout=20000, polling=300)
-        print("CONTINUE_ON echo=" + str(page.eval_on_selector(
-            "#btn-cont", "el => el.classList.contains('on')")))
+            "() => window.__oneshot.continueMode === true", timeout=20000, polling=300
+        )
+        print(
+            "CONTINUE_ON echo="
+            + str(
+                page.eval_on_selector("#btn-cont", "el => el.classList.contains('on')")
+            )
+        )
         page.click("#btn-disarm")
         page.wait_for_function(
-            "() => window.__oneshot.continueMode === false",
-            timeout=20000, polling=300)
+            "() => window.__oneshot.continueMode === false", timeout=20000, polling=300
+        )
         print("DISARM_CLEARED_CONTINUE=true")
         page.click("#btn-cont")
         page.wait_for_function(
-            "() => window.__oneshot.continueMode === true",
-            timeout=20000, polling=300)
+            "() => window.__oneshot.continueMode === true", timeout=20000, polling=300
+        )
         page.click("#btn-cont")
         page.wait_for_function(
-            "() => window.__oneshot.continueMode === false",
-            timeout=20000, polling=300)
+            "() => window.__oneshot.continueMode === false", timeout=20000, polling=300
+        )
         print("TOGGLE_OFF=true")
         browser.close()
     return 0
