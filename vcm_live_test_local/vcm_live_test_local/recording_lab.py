@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import threading
 import time
 import uuid
@@ -346,6 +347,73 @@ class RecordingStore:
                         self.path_of(entry).unlink()
             self._write(keep)
             return True
+
+    def trash_takes(self, rec_ids: list[str]) -> dict[str, Any]:
+        """Move takes into a dated trash folder instead of deleting them.
+
+        Nothing the user recorded is ever lost: the wav moves to
+        recordings/_trash_<stamp>/, every entry is recorded in
+        trash_manifest.json, and only the live index row is removed. Holdout
+        clips are refused, never trashed."""
+        with self._lock:
+            entries = self._read()
+            stamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+            trash_dir = self.root / ("_trash_" + stamp)
+            try:
+                trash_dir.mkdir(parents=True, exist_ok=True)
+            except OSError:
+                trash_dir = self.root / "_trash"
+                trash_dir.mkdir(parents=True, exist_ok=True)
+            wanted = set(rec_ids)
+            seen: list[str] = []
+            moved: list[str] = []
+            refused: list[str] = []
+            failed: list[str] = []
+            manifest: list[dict[str, Any]] = []
+            kept: list[dict[str, Any]] = []
+            for entry in entries:
+                rec_id = str(entry.get("id") or "")
+                if rec_id not in wanted:
+                    kept.append(entry)
+                    continue
+                seen.append(rec_id)
+                if rec_id.startswith("me2h"):
+                    refused.append(rec_id)
+                    kept.append(entry)
+                    continue
+                path = self.path_of(entry)
+                if path.is_file():
+                    try:
+                        shutil.move(str(path), str(trash_dir / path.name))
+                    except OSError:
+                        kept.append(entry)
+                        failed.append(rec_id)
+                        continue
+                moved.append(rec_id)
+                manifest.append({**entry, "trashed_at": stamp})
+            self._write(kept)
+            if manifest:
+                manifest_path = self.root / "trash_manifest.json"
+                try:
+                    history: list[Any] = []
+                    if manifest_path.is_file():
+                        raw = json.loads(manifest_path.read_text(encoding="utf-8"))
+                        if isinstance(raw, list):
+                            history = raw
+                    history.extend(manifest)
+                    manifest_path.write_text(
+                        json.dumps(history, indent=1), encoding="utf-8"
+                    )
+                except (OSError, json.JSONDecodeError):
+                    pass
+            missing = [rec_id for rec_id in rec_ids if rec_id not in seen]
+            return {
+                "moved": moved,
+                "refused": refused,
+                "missing": missing,
+                "failed": failed,
+                "trash_dir": trash_dir.name,
+            }
 
     def load(self, rec_id: str) -> np.ndarray | None:
         entry = self.get(rec_id)

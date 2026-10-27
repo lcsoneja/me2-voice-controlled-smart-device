@@ -166,9 +166,12 @@ async def api_recordings(request: web.Request) -> web.Response:
 
 
 async def api_recordings_delete(request: web.Request) -> web.Response:
-    """Delete takes by id, or every take with {"all": true}.
+    """Move takes to the trash folder by id, or every take with {"all": true}.
 
-    Holdout clips are refused rather than deleted: the Gate 2 ranking is measured on them.
+    Nothing the user recorded is hard-deleted: the wav moves to a dated
+    recordings/_trash_* folder and the entry stays in trash_manifest.json, so a
+    take can always be replayed after new models arrive. Holdout clips are
+    refused: the Gate 2 ranking is measured on them.
     """
     store = request.app["lab"].store
     try:
@@ -184,21 +187,13 @@ async def api_recordings_delete(request: web.Request) -> web.Response:
     )
     if body.get("all"):
         wanted = [row["id"] for row in _recording_rows(store)]
-    deleted: list[str] = []
-    refused: list[str] = []
-    missing: list[str] = []
-    for rec_id in wanted:
-        if rec_id.startswith(HOLDOUT_PREFIX):
-            refused.append(rec_id)
-        elif store.delete(rec_id):
-            deleted.append(rec_id)
-        else:
-            missing.append(rec_id)
+    outcome = store.trash_takes(wanted)
     return web.json_response(
         {
-            "deleted": deleted,
-            "refused_holdout": refused,
-            "missing": missing,
+            "deleted": outcome["moved"],
+            "refused_holdout": outcome["refused"],
+            "missing": outcome["missing"],
+            "trashed_to": outcome["trash_dir"],
             "remaining": len(_recording_rows(store)),
         }
     )

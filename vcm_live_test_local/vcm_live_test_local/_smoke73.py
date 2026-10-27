@@ -7,7 +7,9 @@ import urllib.request
 
 def main() -> int:
     try:
-        with urllib.request.urlopen("http://127.0.0.1:8765/api/oneshot/recordings", timeout=120) as resp:
+        with urllib.request.urlopen(
+            "http://127.0.0.1:8765/api/oneshot/recordings", timeout=120
+        ) as resp:
             rows = json.loads(resp.read().decode())["recordings"]
     except (urllib.error.URLError, OSError, ValueError) as exc:
         print("LIST_FAILED " + type(exc).__name__)
@@ -29,9 +31,19 @@ def main() -> int:
         print("SCORE_FAILED " + type(exc).__name__)
         return 1
     rank = result["ranking"]
-    new = [r for r in rank if r["model"] in ("gate2v69", "gate2v70", "gate2v71",
-                                             "gate2v86_speechoos_mid", "gate2v86b_v77mix",
-                                             "gate2v87_combo_intent")]
+    new = [
+        r
+        for r in rank
+        if r["model"]
+        in (
+            "gate2v69",
+            "gate2v70",
+            "gate2v71",
+            "gate2v86_speechoos_mid",
+            "gate2v86b_v77mix",
+            "gate2v87_combo_intent",
+        )
+    ]
     print("RANKED=" + str(len(rank)) + " new_models_present=" + str(len(new)))
     return 0
 

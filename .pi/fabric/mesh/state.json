@@ -1217,12 +1217,12 @@
         "model": "openrouter/~deepseek/deepseek-v4-flash-latest",
         "thinking": "max",
         "startedAt": 1793025345847,
-        "updatedAt": 1793093242259,
+        "updatedAt": 1793094774294,
         "pendingMessages": false,
         "local": false
       },
-      "version": 689777,
-      "updatedAt": 1793093242261,
+      "version": 690123,
+      "updatedAt": 1793094774296,
       "updatedBy": {
         "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
         "name": "main",
@@ -1253,14 +1253,14 @@
         "model": "openrouter/~deepseek/deepseek-v4-flash-latest",
         "thinking": "max",
         "startedAt": 1793025345847,
-        "updatedAt": 1793093242259,
+        "updatedAt": 1793094774294,
         "pendingMessages": false,
         "controlProtocol": "v1",
         "ownerIncarnation": "99257bcd-5f51-4cfc-89be-d69f9f8dc86f",
         "label": "E2-23"
       },
-      "version": 689778,
-      "updatedAt": 1793093242265,
+      "version": 690124,
+      "updatedAt": 1793094774299,
       "updatedBy": {
         "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
         "name": "main",
@@ -1361,11 +1361,11 @@
           "sessionId": "01a0fd11-7eef-756c-a99e-16cb847ed363"
         },
         "startedAt": 1793025345847,
-        "updatedAt": 1793093242267,
-        "expiresAt": 1793093257267
+        "updatedAt": 1793094774301,
+        "expiresAt": 1793094789301
       },
-      "version": 689781,
-      "updatedAt": 1793093242268,
+      "version": 690127,
+      "updatedAt": 1793094774302,
       "updatedBy": {
         "id": "session:01a0fd11-7eef-756c-a99e-16cb847ed363",
         "name": "main",
@@ -1374,12 +1374,12 @@
       }
     }
   },
-  "highWater": 747665,
+  "highWater": 748703,
   "versions": {
     "topology/peer-seq": 23,
-    "sessions/01a0fd11-7eef-756c-a99e-16cb847ed363": 689777,
-    "topology/participants/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": 689778,
-    "topology/hosts/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": 689781,
+    "sessions/01a0fd11-7eef-756c-a99e-16cb847ed363": 690123,
+    "topology/participants/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": 690124,
+    "topology/hosts/b114417cbbf0d230a816d45cb88908f321c2ca19223bb328ccba7248e7152bd4": 690127,
     "sessions/01a1075e-9f05-76ea-a37c-283f5c43724e": 64005,
     "topology/participants/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b": 64006,
     "topology/hosts/0f0e5a25c02ae9e3ed0db702a3cf5d7a38cb4f590792812c74f942e03127f98b": 64007,

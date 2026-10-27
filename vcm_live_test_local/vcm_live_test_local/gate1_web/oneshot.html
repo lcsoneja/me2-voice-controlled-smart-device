@@ -674,10 +674,20 @@
       one.addEventListener("click", function () {
         scoreTakes([r.id], "Take " + r.id + " against every model");
       });
+      var play = document.createElement("button");
+      play.type = "button";
+      play.textContent = "play";
+      play.style.fontSize = "10.5px";
+      play.title = "replay this take";
+      play.addEventListener("click", function () {
+        el("player").src = "/api/oneshot/recordings/audio?id=" + encodeURIComponent(r.id);
+        el("player").play().catch(function () {});
+      });
       li.appendChild(cb);
       li.appendChild(label);
       li.appendChild(meta);
       li.appendChild(one);
+      li.appendChild(play);
       host.appendChild(li);
     });
     updateTakeCount(visible.length, rows.length);
@@ -714,24 +724,27 @@
   el("tk-delete").addEventListener("click", function () {
     var ids = selectedIds();
     if (!ids.length) { el("tk-count").textContent = "nothing selected"; return; }
-    postJson("/api/oneshot/recordings/delete", { ids: ids }, "deleting " + ids.length + " take(s)")
-      .then(function () {
+    postJson("/api/oneshot/recordings/delete", { ids: ids }, "moving " + ids.length + " take(s) to trash")
+      .then(function (res) {
         ids.forEach(function (id) { delete takeSel[id]; });
         el("tk-result").hidden = true;
+        el("tk-count").textContent = "moved " + (res.deleted || []).length
+          + " take(s) to trash (" + (res.trashed_to || "recordings/_trash_*") + ") - nothing is lost";
         loadTakes();
       });
   });
 
   el("tk-delete-all").addEventListener("click", function () {
     var mine = takes.filter(function (r) { return !r.holdout; }).length;
-    if (!window.confirm("Delete all " + mine + " of your takes? Holdout clips are kept.")) { return; }
-    postJson("/api/oneshot/recordings/delete", { all: true }, "deleting all takes")
+    if (!window.confirm("Move all " + mine + " of your takes to trash? Nothing is deleted - holdout clips stay.")) { return; }
+    postJson("/api/oneshot/recordings/delete", { all: true }, "moving all takes to trash")
       .then(function (res) {
         takeSel = {};
         el("tk-result").hidden = true;
         loadTakes();
-        el("tk-count").textContent = "deleted " + res.deleted.length + " take(s); holdout kept: "
-          + res.refused_holdout.length;
+        el("tk-count").textContent = "moved " + (res.deleted || []).length + " take(s) to trash ("
+          + (res.trashed_to || "recordings/_trash_*") + "); holdout kept: "
+          + (res.refused_holdout || []).length;
       });
   });
 
