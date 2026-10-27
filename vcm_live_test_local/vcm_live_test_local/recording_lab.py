@@ -49,6 +49,7 @@ G2_WAKE_GRACE = 6.0
 WAKE_VOTES = 2
 WAKE_COOLDOWN_S = 5.0
 INDEX_NAME = "index.json"
+SESSIONS_DIR = "sessions"
 
 
 # The replay runner is duck-typed: gate1_server.RecordingLabRunner provides
@@ -168,16 +169,98 @@ class RecordingStore:
     def path_of(self, entry: dict[str, Any]) -> Path:
         return self.root / str(entry["file"])
 
+    @property
+    def sessions_dir(self) -> Path:
+        return self.root / SESSIONS_DIR
+
+    # ---- session folders: one folder per recording session, each with its own ----
+    # ---- session.json (label, created, phrase progress) and its takes' audio. ----
+
+    def list_sessions(self) -> list[dict[str, Any]]:
+        """Every session folder on disk with its current take count."""
+        folder = self.root / SESSIONS_DIR
+        out: list[dict[str, Any]] = []
+        if not folder.is_dir():
+            return out
+        for child in sorted(folder.iterdir(), reverse=True):
+            if not child.is_dir():
+                continue
+            meta_path = child / "session.json"
+            if not meta_path.is_file():
+                continue
+            try:
+                meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(meta, dict):
+                continue
+            meta = dict(meta)
+            meta["folder"] = child.name
+            meta["takes"] = len(list(child.glob("*.wav")))
+            out.append(meta)
+        return out
+
+    def session(self, session_id: str) -> dict[str, Any] | None:
+        folder = self.root / SESSIONS_DIR / str(session_id or "")
+        if not (folder / "session.json").is_file():
+            return None
+        try:
+            meta = json.loads((folder / "session.json").read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return meta if isinstance(meta, dict) else None
+
+    def create_session(self, label: str = "") -> dict[str, Any]:
+        stamp = datetime.now(UTC)
+        slug = (label.strip() or ("session " + stamp.strftime("%Y-%m-%d %H:%M:%S")))
+        sid = stamp.strftime("%Y%m%d_%H%M%S") + "_" + uuid.uuid4().hex[:4]
+        folder = self.root / SESSIONS_DIR / sid
+        folder.mkdir(parents=True, exist_ok=True)
+        meta = {
+            "id": sid,
+            "label": slug,
+            "created": stamp.isoformat(),
+            "phrase_pointer": 0,
+        }
+        try:
+            (folder / "session.json").write_text(
+                json.dumps(meta, indent=2), encoding="utf-8"
+            )
+        except OSError:
+            pass
+        return meta
+
+    def set_session_phrases(self, session_id: str, pointer: int) -> None:
+        folder = self.root / SESSIONS_DIR / str(session_id or "")
+        meta_path = folder / "session.json"
+        if not meta_path.is_file():
+            return
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return
+        if not isinstance(meta, dict):
+            return
+        try:
+            meta["phrase_pointer"] = max(0, int(pointer))
+            meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        except (OSError, ValueError, TypeError):
+            pass
+
     def save(
         self,
         audio: np.ndarray,
         label: str = "recording",
         meta: dict[str, Any] | None = None,
+        session: str | None = None,
     ) -> dict[str, Any]:
         """Persist an audio buffer as a new recording entry.
 
         meta may carry structured tags the UI filters on: wake_word (which wake
-        word the take speaks) and action (the main command spoken)."""
+        word the take speaks) and action (the main command spoken). When a session
+        id is given the clip lives inside recordings/sessions/<id>/ so every
+        session has its own folder; the entry keeps a relative file path so the
+        flat index keeps working unchanged."""
         stamp = datetime.now(UTC)
         rec_id = stamp.strftime("%Y%m%d_%H%M%S_") + uuid.uuid4().hex[:6]
         clean = (
@@ -188,10 +271,22 @@ class RecordingStore:
         )
         clean = clean.replace(" ", "_")[:48]
         fname = f"{rec_id}_{clean}.wav"
-        write_wav(self.root / fname, audio)
+        safe_session = str(session or "")
+        if not safe_session or not set(safe_session) <= set(
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+        ):
+            safe_session = ""
+        if safe_session:
+            session_folder = self.root / SESSIONS_DIR / safe_session
+            session_folder.mkdir(parents=True, exist_ok=True)
+            write_wav(session_folder / fname, audio)
+            rel_path = SESSIONS_DIR + "/" + safe_session + "/" + fname
+        else:
+            write_wav(self.root / fname, audio)
+            rel_path = fname
         entry = {
             "id": rec_id,
-            "file": fname,
+            "file": rel_path,
             "label": label.strip() or "recording",
             "created": stamp.isoformat(),
             "duration_s": round(audio.size / SR, 2),
@@ -200,6 +295,8 @@ class RecordingStore:
             "wake_word": _clean_tag((meta or {}).get("wake_word")),
             "action": _clean_tag((meta or {}).get("action")),
         }
+        if safe_session:
+            entry["session"] = safe_session
         with self._lock:
             entries = self._read()
             entries.append(entry)
@@ -227,6 +324,8 @@ class RecordingStore:
                         entry["wake_word"] = _clean_tag(meta.get("wake_word"))
                     if "action" in meta:
                         entry["action"] = _clean_tag(meta.get("action"))
+                    if "verdict" in meta:
+                        entry["verdict"] = meta["verdict"]
                 if audio is not None:
                     write_wav(self.path_of(entry), audio)
                     entry["duration_s"] = round(audio.size / SR, 2)

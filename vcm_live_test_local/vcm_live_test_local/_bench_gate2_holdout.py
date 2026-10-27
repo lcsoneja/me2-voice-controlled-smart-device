@@ -258,7 +258,9 @@ def main() -> int:
         del runner
         gc.collect()
 
-    rows.sort(key=lambda r: (-r["acc_real"], -r["acc"], -(r["oos_reject"] or 0), r["model"]))
+    rows.sort(
+        key=lambda r: (-r["acc_real"], -r["acc"], -(r["oos_reject"] or 0), r["model"])
+    )
     payload = {
         "schema": 2,
         "generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -278,7 +280,9 @@ def main() -> int:
     OUT.write_text(json.dumps(payload, indent=1), encoding="utf-8")
     print(
         "TOP5 real-voice "
-        + ", ".join(r["model"] + "=" + str(round(100 * r["acc_real"], 1)) for r in rows[:5])
+        + ", ".join(
+            r["model"] + "=" + str(round(100 * r["acc_real"], 1)) for r in rows[:5]
+        )
     )
     print("wrote " + str(OUT))
     return 0

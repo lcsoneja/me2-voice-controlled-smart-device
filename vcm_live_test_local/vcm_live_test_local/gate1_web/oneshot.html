@@ -146,7 +146,9 @@
   /* Voice chart: is my voice actually reaching the mic? */
   canvas#vu { width:100%; height:34px; background:#1b1f26; border:1px solid #39414c; margin-top:4px; }
   /* Live scoreboard: auto-scores every new take against all models. */
-  .scoreboard { flex:0 0 auto; margin-top:6px; border-top:1px solid #2a2f36; max-height:104px; overflow:auto; }
+  .scoreboard { flex:0 0 auto; margin-top:6px; border-top:1px solid #2a2f36; max-height:122px; overflow:auto; }
+  .scoreboard .note { font-size:10px; margin:2px 0 0; }
+  .scoreboard th, .scoreboard td { padding:0 5px; }
   .scoreboard table { width:100%; border-collapse:collapse; font-size:10px; }
   .scoreboard th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
   .scoreboard td.n, .scoreboard th.n { text-align:right; font-variant-numeric:tabular-nums; }
@@ -233,6 +235,9 @@
       <label class="k" for="sel-g1">Gate 1 wake model - measured best first</label>
       <select id="sel-g1"></select>
       <p class="note" id="sel-g1-note">loading wake models...</p>
+      <label class="k" for="sel-session">Session folder</label>
+      <select id="sel-session"></select>
+      <p class="note" id="sel-session-note">loading sessions...</p>
       <label class="k" for="sel-phrase">Phrase I will speak</label>
       <select id="sel-phrase"></select>
       <p class="note" id="sel-phrase-note">expecting: nothing (free test)</p>
@@ -267,6 +272,7 @@
     <section class="pane" id="pane-takes" hidden>
       <div class="takebar">
         <label class="k"><input type="checkbox" id="tk-all"> all</label>
+        <select id="tk-session"><option value="">all sessions</option></select>
         <input type="search" id="tk-filter" placeholder="filter id / label / intent">
       </div>
       <div class="tk-btns">
@@ -396,6 +402,18 @@
     for (var i = 0; i < items.length; i++) {
       items[i].classList.toggle("sel", items[i].getAttribute("data-phrase") === phrase);
     }
+    savePhrasePointer();
+  }
+
+  // Remember where the phrase list is in the active session, so tomorrow's session
+  // can continue from the same point instead of starting over.
+  function savePhrasePointer() {
+    var items = Array.prototype.slice.call(document.querySelectorAll("#ph-list li"));
+    var index = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].classList.contains("sel")) { index = i; break; }
+    }
+    if (index >= 0) { send({ type: "phrase_state", pointer: index }); }
   }
 
   // After a shot the list moves to the next phrase on its own, so recording flows without
@@ -450,6 +468,102 @@
         el("sel-g1-note").textContent = "wake model list unavailable";
       });
   }
+  // ---- session folders: pick the folder the next takes land in ----
+  var sessionsLoaded = false;
+
+  function paintSessionNote() {
+    var sel = el("sel-session");
+    var note = el("sel-session-note");
+    if (!sel || !note) { return; }
+    var opt = sel.selectedOptions && sel.selectedOptions[0];
+    note.textContent = opt && opt.value
+      ? ("folder: " + opt.textContent)
+      : "no session yet - one is created on your first Arm";
+  }
+
+  function loadSessions(selectId) {
+    fetch("/api/oneshot/sessions", { cache: "no-store" }).then(function (r) { return r.json(); })
+      .then(function (d) {
+        sessionsLoaded = true;
+        var sel = el("sel-session");
+        if (!sel) { return; }
+        var keep = selectId || sel.value;
+        sel.textContent = "";
+        var fresh = document.createElement("option");
+        fresh.value = "";
+        fresh.textContent = "(new session)";
+        sel.appendChild(fresh);
+        (d.sessions || []).forEach(function (s) {
+          var opt = document.createElement("option");
+          opt.value = s.id;
+          var label = String(s.label || s.folder || s.id).slice(0, 40);
+          opt.textContent = label + (typeof s.takes === "number" ? " - " + s.takes + " take(s)" : "");
+          sel.appendChild(opt);
+        });
+        if (keep) { sel.value = keep; }
+        var filter = el("tk-session");
+        if (filter) {
+          var kept = filter.value;
+          filter.textContent = "";
+          var all = document.createElement("option");
+          all.value = "";
+          all.textContent = "all sessions";
+          filter.appendChild(all);
+          (d.sessions || []).forEach(function (s) {
+            var opt = document.createElement("option");
+            opt.value = s.id;
+            opt.textContent = String(s.label || s.folder || s.id).slice(0, 40);
+            filter.appendChild(opt);
+          });
+          filter.value = kept || "";
+        }
+        paintSessionNote();
+      })
+      .catch(function () {
+        var note = el("sel-session-note");
+        if (note) { note.textContent = "sessions unavailable"; }
+      });
+  }
+
+  function useSession(id) {
+    if (!id) {
+      fetch("/api/oneshot/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}"
+      }).then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.session && d.session.id) { send({ type: "session_use", id: d.session.id }); }
+        })
+        .catch(function () {});
+      return;
+    }
+    send({ type: "session_use", id: id });
+  }
+
+  // A session message carries the phrase pointer: jump the list back to where that
+  // session stopped so the phrase list continues instead of restarting. The pointer is
+  // applied no matter what; the select value is set by loadSessions(selectId) once the
+  // freshly created folder appears in the option list.
+  function applyPhrasePointer(pointer) {
+    paintSessionNote();
+    if (pointer > 0) {
+      var items = Array.prototype.slice.call(document.querySelectorAll("#ph-list li"));
+      var target = items[Math.min(pointer, Math.max(0, items.length - 1))];
+      if (target) {
+        setExpectation(target.getAttribute("data-intent") || "", target.getAttribute("data-phrase"));
+      }
+    }
+  }
+
+  var selSession = el("sel-session");
+  if (selSession) {
+    selSession.addEventListener("change", function () { useSession(selSession.value); });
+  }
+  var tkSession = el("tk-session");
+  if (tkSession) { tkSession.addEventListener("change", renderTakes); }
+  loadSessions();
+
   var g1Sel = el("sel-g1");
   if (g1Sel) {
     g1Sel.addEventListener("change", function () {
@@ -489,7 +603,9 @@
 
   function renderTakes() {
     var filter = (el("tk-filter").value || "").toLowerCase();
+    var sesFilter = el("tk-session") ? el("tk-session").value : "";
     var rows = takes.filter(function (r) {
+      if (sesFilter && (r.session || "") !== sesFilter) { return false; }
       return !filter || (r.id + " " + r.label + " " + r.action).toLowerCase().indexOf(filter) >= 0;
     });
     var host = el("tk-list");
@@ -656,7 +772,7 @@
     var body = el("sb-body");
     if (!body) { return; }
     body.textContent = "";
-    ranking.slice(0, 3).forEach(function (row, index) {
+    ranking.slice(0, 5).forEach(function (row, index) {
       var tr = document.createElement("tr");
       if (index === 0) { tr.className = "top"; }
       tr.title = row.model;
@@ -968,6 +1084,7 @@
         send({ type: "gate2_model", model: sel.value });
       }
       loadWakeModels(msg.g1_model, msg.g1_order || []);
+      if (msg.sessions) { loadSessions(); }
     } else if (msg.type === "model") {
       if (msg.gate2_model) { el("c-g2").textContent = msg.gate2_model; }
       if (msg.g1_model) {
@@ -980,6 +1097,9 @@
       }
     } else if (msg.type === "state") {
       setState(msg.state || "idle");
+    } else if (msg.type === "session") {
+      loadSessions(msg.session || "");
+      applyPhrasePointer(msg.phrase_pointer || 0);
     } else if (msg.type === "g1") {
       if (msg.nova !== null && msg.nova !== undefined) {
         el("p-nova").textContent = Number(msg.nova).toFixed(2);

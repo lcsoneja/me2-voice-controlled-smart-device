@@ -732,9 +732,7 @@ class Gate2V124EnsembleRunner:
         try:
             spec = json.loads(spec_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
-            raise RuntimeError(
-                f"Cannot load V124 spec {spec_path}: {exc}"
-            ) from exc
+            raise RuntimeError(f"Cannot load V124 spec {spec_path}: {exc}") from exc
         self.mean = float(spec.get("stats_mean", float("nan")))
         self.std = float(spec.get("stats_std", float("nan")))
         if not np.isfinite(self.mean) or not np.isfinite(self.std) or self.std <= 0:
@@ -745,9 +743,7 @@ class Gate2V124EnsembleRunner:
         try:
             shipped = json.loads(labels_path.read_text(encoding="utf-8"))["labels"]
         except (OSError, json.JSONDecodeError) as exc:
-            raise RuntimeError(
-                f"Cannot load V124 labels {labels_path}: {exc}"
-            ) from exc
+            raise RuntimeError(f"Cannot load V124 labels {labels_path}: {exc}") from exc
         # The package ships the 19 intents; index 19 is NEG by convention. The V20pa
         # member has no NEG output and contributes zero there.
         self.labels = [str(label) for label in shipped] + ["NEG"]
@@ -798,27 +794,19 @@ class Gate2V124EnsembleRunner:
         slide = _slide_window_features(features, self.NINE_OFFSETS, self.pad_value)
         batch = np.asarray(slide, dtype=np.float32)[None, :, :, :]
         for interpreter in self._nine:
-            interpreter.set_tensor(
-                interpreter.get_input_details()[0]["index"], batch
-            )
+            interpreter.set_tensor(interpreter.get_input_details()[0]["index"], batch)
             interpreter.invoke()
             acc += 0.25 * np.asarray(
-                interpreter.get_tensor(
-                    interpreter.get_output_details()[0]["index"]
-                )[0],
+                interpreter.get_tensor(interpreter.get_output_details()[0]["index"])[0],
                 dtype=np.float32,
             )
-        center_batch = np.asarray(features[:, :, None], dtype=np.float32)[
-            None, :, :, :
-        ]
+        center_batch = np.asarray(features[:, :, None], dtype=np.float32)[None, :, :, :]
         self._center.set_tensor(
             self._center.get_input_details()[0]["index"], center_batch
         )
         self._center.invoke()
         center_probs = np.asarray(
-            self._center.get_tensor(
-                self._center.get_output_details()[0]["index"]
-            )[0],
+            self._center.get_tensor(self._center.get_output_details()[0]["index"])[0],
             dtype=np.float32,
         )
         acc[: len(center_probs)] += 0.25 * center_probs
@@ -1906,6 +1894,10 @@ def _g2_candidate_intent(p2, labels, g2thr, default_thr):
     """
     p2 = np.asarray(p2, dtype=float)
     top_i = int(np.argmax(p2))
+    if top_i >= len(labels):
+        # PID / threshold-reject layers append one extra reject score; a win there
+        # is a rejection, never a command index into the label list.
+        return "NEGATIVE", float(p2[top_i])
     intent = labels[top_i]
     conf = float(p2[top_i])
     if intent in ("NEGATIVE", "NEG"):

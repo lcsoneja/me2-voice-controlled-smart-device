@@ -14,7 +14,9 @@ BASE = "http://127.0.0.1:8765"
 
 def main() -> int:
     try:
-        with urllib.request.urlopen(BASE + "/api/oneshot/recordings", timeout=120) as resp:
+        with urllib.request.urlopen(
+            BASE + "/api/oneshot/recordings", timeout=120
+        ) as resp:
             rows = json.loads(resp.read().decode())["recordings"]
     except (urllib.error.URLError, OSError, ValueError) as exc:
         print("LIST_FAILED " + type(exc).__name__ + " " + str(exc)[:120])

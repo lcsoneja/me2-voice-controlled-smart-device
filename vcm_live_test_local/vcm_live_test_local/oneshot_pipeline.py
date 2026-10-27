@@ -72,6 +72,8 @@ def register_routes(app: web.Application) -> None:
     app.router.add_post("/api/oneshot/recordings/delete", api_recordings_delete)
     app.router.add_get("/api/oneshot/recordings/audio", api_recordings_audio)
     app.router.add_post("/api/oneshot/recordings/tag", api_recordings_tag)
+    app.router.add_get("/api/oneshot/sessions", api_sessions)
+    app.router.add_post("/api/oneshot/sessions", api_sessions_new)
     app.router.add_get("/api/oneshot/leaderboard", api_leaderboard)
     app.router.add_post("/api/oneshot/leaderboard/score", api_leaderboard_score)
     app.router.add_post("/api/oneshot/leaderboard/reset", api_leaderboard_reset)
@@ -137,6 +139,7 @@ def _recording_rows(store: Any) -> list[dict[str, Any]]:
             {
                 "id": rec_id,
                 "file": str(entry.get("file") or ""),
+                "session": str(entry.get("session") or ""),
                 "label": entry.get("label") or "",
                 "action": str(entry.get("action") or ""),
                 "wake_word": entry.get("wake_word") or "",
@@ -486,6 +489,21 @@ async def api_recordings_tag(request: web.Request) -> web.Response:
     )
 
 
+async def api_sessions(request: web.Request) -> web.Response:
+    store = request.app["lab"].store
+    return web.json_response({"sessions": store.list_sessions()})
+
+
+async def api_sessions_new(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    label = str((body or {}).get("label") or "") if isinstance(body, dict) else ""
+    store = request.app["lab"].store
+    return web.json_response({"session": store.create_session(label)})
+
+
 async def page(_request: web.Request) -> web.FileResponse:
     if not PAGE.is_file():
         raise web.HTTPNotFound(text="oneshot.html is missing from gate1_web/")
@@ -620,6 +638,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
     shots = 0
     arm_intent = ""
     arm_phrase = ""
+    current_session = ""
 
     async def send(obj: dict[str, Any]) -> None:
         try:
@@ -637,6 +656,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             "g1_order": list(G1_PREFERENCE),
             "gate2_model": gate2_name,
             "g1_tick_seconds": G1_TICK_SECONDS,
+            "sessions": store.list_sessions(),
         }
     )
 
@@ -651,7 +671,27 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             if not isinstance(data, dict):
                 continue
             kind = str(data.get("type") or "")
-            if kind == "arm" and state != "recording":
+            if kind == "session_use":
+                requested = str(data.get("id") or "")
+                session_meta = store.session(requested)
+                if session_meta is None:
+                    await send({"type": "session", "session": "", "label": "",
+                                "phrase_pointer": 0, "error": "unknown session"})
+                else:
+                    current_session = requested
+                    await send({"type": "session", "session": requested,
+                                "label": str(session_meta.get("label") or ""),
+                                "phrase_pointer": int(session_meta.get("phrase_pointer") or 0)})
+            elif kind == "session_new":
+                session_meta = store.create_session(str(data.get("label") or ""))
+                current_session = str(session_meta.get("id") or "")
+                await send({"type": "session", "session": current_session,
+                            "label": str(session_meta.get("label") or ""),
+                            "phrase_pointer": 0, "created": True})
+            elif kind == "phrase_state":
+                if current_session:
+                    store.set_session_phrases(current_session, data.get("pointer", 0))
+            elif kind == "arm" and state != "recording":
                 state = "armed"
                 recent.clear()
                 last_g1_at = total
@@ -659,6 +699,12 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 # take is scoreable and the trial list can replay or re-tag it.
                 arm_intent = str(data.get("intent") or "").strip()
                 arm_phrase = str(data.get("phrase") or "").strip()
+                if not current_session:
+                    session_meta = store.create_session("auto")
+                    current_session = str(session_meta.get("id") or "")
+                    await send({"type": "session", "session": current_session,
+                                "label": str(session_meta.get("label") or ""),
+                                "phrase_pointer": 0, "created": True})
                 await send({"type": "state", "state": state})
             elif kind == "disarm" and state != "recording":
                 state = "idle"
@@ -759,10 +805,31 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             meta = {"action": arm_intent} if arm_intent else None
             take_id = ""
             try:
-                saved = store.save(clip, label=label, meta=meta)
+                saved = store.save(
+                    clip, label=label, meta=meta, session=current_session or None
+                )
                 take_id = str(saved.get("id") or "")
             except (OSError, ValueError, KeyError):
                 take_id = ""
+            if take_id:
+                verdict = {
+                    "intent": str(best["intent"]) if best else "NEGATIVE",
+                    "conf": round(float(best["conf"]), 4)
+                    if best
+                    and best["conf"] is not None
+                    and np.isfinite(best["conf"])
+                    else None,
+                    "match": bool(
+                        best
+                        and best["intent"]
+                        and arm_intent
+                        and str(best["intent"]) == arm_intent
+                    ),
+                }
+                try:
+                    store.update(take_id, meta={"verdict": verdict})
+                except (OSError, ValueError, KeyError):
+                    pass
             state = "done"
             await send(
                 {
@@ -778,6 +845,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                     "gate2_model": model_name,
                     "latency_ms": round(latency_ms, 1),
                     "capture_seconds": round(clip.size / gs.SR, 2),
+                    "session": current_session,
                 }
             )
 

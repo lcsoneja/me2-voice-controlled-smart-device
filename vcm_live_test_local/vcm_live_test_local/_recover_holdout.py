@@ -30,8 +30,14 @@ def main() -> int:
     except (OSError, json.JSONDecodeError, KeyError) as exc:
         print("BAD_MANIFEST " + str(folder) + " " + type(exc).__name__)
         return 1
-    print("SOURCE=" + folder.name + " wavs=" + str(len(wavs))
-          + " entries=" + str(len(archived)))
+    print(
+        "SOURCE="
+        + folder.name
+        + " wavs="
+        + str(len(wavs))
+        + " entries="
+        + str(len(archived))
+    )
     restored = 0
     for entry in archived:
         source = folder / str(entry.get("file") or "")
