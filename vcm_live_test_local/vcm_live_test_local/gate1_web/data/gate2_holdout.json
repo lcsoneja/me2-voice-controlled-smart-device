@@ -1,6 +1,6 @@
 {
  "schema": 2,
- "generated": "2026-10-27T02:52:27Z",
+ "generated": "2026-10-27T09:26:12Z",
  "dataset": {
   "name": "ME2 class holdout",
   "clips": 202,
@@ -24,7 +24,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.125,
-   "ms_clip": 7.34
+   "ms_clip": 8.27
   },
   {
    "model": "gate2v109_ownerft_v96c",
@@ -38,7 +38,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.125,
-   "ms_clip": 2.84
+   "ms_clip": 3.01
   },
   {
    "model": "gate2v124_ensemble4way",
@@ -52,7 +52,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 5.58
+   "ms_clip": 6.78
   },
   {
    "model": "gate2v96c_v93b_rerun",
@@ -66,7 +66,21 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 2.75
+   "ms_clip": 2.87
+  },
+  {
+   "model": "gate2v86_speechoos_mid",
+   "acc": 0.9624,
+   "correct": 179,
+   "n": 186,
+   "acc_real": 0.9186,
+   "correct_real": 79,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.875,
+   "ms_clip": 2.72
   },
   {
    "model": "gate2v64d_expandedneg",
@@ -80,7 +94,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.375,
-   "ms_clip": 2.66
+   "ms_clip": 2.76
   },
   {
    "model": "gate2v64p_paired_owner",
@@ -94,7 +108,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.25,
-   "ms_clip": 2.64
+   "ms_clip": 2.68
   },
   {
    "model": "gate2v81_timeshift_add",
@@ -108,7 +122,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.1875,
-   "ms_clip": 2.59
+   "ms_clip": 2.75
   },
   {
    "model": "gate2v96a_confweight2x",
@@ -122,7 +136,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.125,
-   "ms_clip": 2.74
+   "ms_clip": 2.86
   },
   {
    "model": "gate2v110_ownerft_aggr",
@@ -136,7 +150,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 2.89
+   "ms_clip": 2.77
   },
   {
    "model": "gate2v97d_warmuplr",
@@ -150,7 +164,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 2.88
+   "ms_clip": 2.56
   },
   {
    "model": "gate2v56_v54",
@@ -164,7 +178,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 10.38
+   "ms_clip": 10.92
   },
   {
    "model": "gate2v82b_speechoos2_w035",
@@ -178,7 +192,21 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.875,
-   "ms_clip": 2.62
+   "ms_clip": 2.8
+  },
+  {
+   "model": "gate2v86b_v77mix",
+   "acc": 0.957,
+   "correct": 178,
+   "n": 186,
+   "acc_real": 0.907,
+   "correct_real": 78,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.875,
+   "ms_clip": 2.8
   },
   {
    "model": "gate2v76_v64d_tr",
@@ -192,7 +220,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.5625,
-   "ms_clip": 2.72
+   "ms_clip": 2.7
   },
   {
    "model": "gate2v64_paired_negatives",
@@ -234,7 +262,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.625,
-   "ms_clip": 2.69
+   "ms_clip": 2.77
   },
   {
    "model": "gate2v22",
@@ -248,7 +276,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.3125,
-   "ms_clip": 3.78
+   "ms_clip": 4.18
   },
   {
    "model": "gate2v64c_stochmel",
@@ -262,7 +290,21 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.1875,
-   "ms_clip": 2.61
+   "ms_clip": 2.7
+  },
+  {
+   "model": "gate2v87_combo_intent",
+   "acc": 0.9516,
+   "correct": 177,
+   "n": 186,
+   "acc_real": 0.8953,
+   "correct_real": 77,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.125,
+   "ms_clip": 2.73
   },
   {
    "model": "gate2v56_v54b",
@@ -276,7 +318,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 10.25
+   "ms_clip": 10.26
   },
   {
    "model": "gate2v85_keywordsonly",
@@ -290,7 +332,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 2.64
+   "ms_clip": 2.84
   },
   {
    "model": "gate2v46_impwarp",
@@ -304,7 +346,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.76
+   "ms_clip": 3.08
   },
   {
    "model": "gate2v82_speechoos2",
@@ -318,7 +360,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.9375,
-   "ms_clip": 2.64
+   "ms_clip": 2.75
   },
   {
    "model": "gate2v72_v64d_pid",
@@ -332,7 +374,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.25,
-   "ms_clip": 10.16
+   "ms_clip": 10.21
   },
   {
    "model": "gate2v84_phonemeaux2",
@@ -360,7 +402,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.62
+   "ms_clip": 2.91
   },
   {
    "model": "gate2v66m_mutation",
@@ -374,7 +416,21 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.61
+   "ms_clip": 2.78
+  },
+  {
+   "model": "gate2v69",
+   "acc": 0.9409,
+   "correct": 175,
+   "n": 186,
+   "acc_real": 0.8721,
+   "correct_real": 75,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 2.72
   },
   {
    "model": "gate2v21",
@@ -388,7 +444,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.375,
-   "ms_clip": 2.11
+   "ms_clip": 2.19
   },
   {
    "model": "gate2v21p",
@@ -402,7 +458,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.1875,
-   "ms_clip": 2.04
+   "ms_clip": 2.23
   },
   {
    "model": "gate2v22s",
@@ -416,7 +472,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.375,
-   "ms_clip": 3.88
+   "ms_clip": 4.24
   },
   {
    "model": "gate2v20_aux",
@@ -430,7 +486,21 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.03
+   "ms_clip": 2.31
+  },
+  {
+   "model": "gate2v71",
+   "acc": 0.9301,
+   "correct": 173,
+   "n": 186,
+   "acc_real": 0.8488,
+   "correct_real": 73,
+   "n_real": 86,
+   "acc_syn": 1.0,
+   "correct_syn": 100,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 2.65
   },
   {
    "model": "gate2v19p",
@@ -444,7 +514,7 @@
    "correct_syn": 98,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.29
+   "ms_clip": 2.19
   },
   {
    "model": "gate2v19",
@@ -458,7 +528,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.09
+   "ms_clip": 2.05
   },
   {
    "model": "gate2v36_17win",
@@ -472,7 +542,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 3.38
+   "ms_clip": 3.77
   },
   {
    "model": "gate2v41_specaugmix",
@@ -486,7 +556,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.62
+   "ms_clip": 3.14
   },
   {
    "model": "gate2v24_crnn148x60",
@@ -500,7 +570,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 4.27
+   "ms_clip": 4.82
   },
   {
    "model": "gate2v42_reverb",
@@ -514,7 +584,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.63
+   "ms_clip": 3.07
   },
   {
    "model": "gate2v18",
@@ -528,7 +598,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.16
+   "ms_clip": 2.17
   },
   {
    "model": "gate2v29b_wide9",
@@ -542,7 +612,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 4.13
+   "ms_clip": 5.28
   },
   {
    "model": "gate2v50_channelshuffle",
@@ -556,7 +626,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.72
+   "ms_clip": 2.9
   },
   {
    "model": "gate2v38_crnn9",
@@ -570,7 +640,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 5.1
+   "ms_clip": 5.64
   },
   {
    "model": "gate2v57_pidgate",
@@ -584,7 +654,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.72
+   "ms_clip": 2.71
   },
   {
    "model": "gate2v28a_5win",
@@ -598,7 +668,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.46
+   "ms_clip": 2.62
   },
   {
    "model": "gate2v29_deep9",
@@ -612,7 +682,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 3.23
+   "ms_clip": 4.17
   },
   {
    "model": "gate2v52_adjswap",
@@ -626,7 +696,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.7
+   "ms_clip": 3.02
   },
   {
    "model": "gate2v28b_9win",
@@ -640,7 +710,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.72
+   "ms_clip": 2.98
   },
   {
    "model": "gate2v62_speechtrim",
@@ -654,7 +724,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.56
+   "ms_clip": 3.12
   },
   {
    "model": "gate2v16",
@@ -668,7 +738,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.12
+   "ms_clip": 2.29
   },
   {
    "model": "gate2v53_melbin_dropout",
@@ -682,7 +752,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.67
+   "ms_clip": 3.06
   },
   {
    "model": "gate2v49_warpdilatedneg",
@@ -696,7 +766,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.3125,
-   "ms_clip": 4.42
+   "ms_clip": 5.1
   },
   {
    "model": "gate2v67_timeshift_only",
@@ -710,7 +780,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.74
+   "ms_clip": 2.8
   },
   {
    "model": "gate2v58_smooth_pidgate",
@@ -724,7 +794,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.76
+   "ms_clip": 2.8
   },
   {
    "model": "gate2v48_audiopack",
@@ -738,7 +808,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.69
+   "ms_clip": 3.02
   },
   {
    "model": "gate2v37_9win_neg",
@@ -752,7 +822,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.1875,
-   "ms_clip": 2.69
+   "ms_clip": 3.01
   },
   {
    "model": "gate2v47_windrop_melwarp",
@@ -766,7 +836,7 @@
    "correct_syn": 99,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.71
+   "ms_clip": 2.89
   },
   {
    "model": "gate2v68_timeshift_neg",
@@ -780,7 +850,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 2.75
+   "ms_clip": 2.78
   },
   {
    "model": "gate2v63_pca_frontend",
@@ -794,7 +864,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.33
+   "ms_clip": 2.65
   },
   {
    "model": "gate2v23_crnn50x30",
@@ -808,7 +878,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.61
+   "ms_clip": 2.87
   },
   {
    "model": "gate2v40b_9win_attention",
@@ -822,7 +892,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.75
+   "ms_clip": 3.31
   },
   {
    "model": "gate2v59_focal_warp",
@@ -836,7 +906,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.65
+   "ms_clip": 2.71
   },
   {
    "model": "gate2v60_phone_warp",
@@ -850,7 +920,7 @@
    "correct_syn": 100,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.81
+   "ms_clip": 2.82
   },
   {
    "model": "gate2v34b_finehop",
@@ -864,7 +934,7 @@
    "correct_syn": 81,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 7.89
+   "ms_clip": 8.73
   },
   {
    "model": "gate2v34a_std",
@@ -878,7 +948,7 @@
    "correct_syn": 93,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.51
+   "ms_clip": 2.83
   },
   {
    "model": "gate2v66_clean_only",
@@ -892,7 +962,7 @@
    "correct_syn": 86,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.7
+   "ms_clip": 2.67
   },
   {
    "model": "gate2v26_phraseconcat_neg",
@@ -906,7 +976,7 @@
    "correct_syn": 79,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.04
+   "ms_clip": 2.31
   },
   {
    "model": "gate2v25_phraseconcat",
@@ -920,7 +990,7 @@
    "correct_syn": 69,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.06
+   "ms_clip": 2.3
   },
   {
    "model": "gate2v26",
@@ -934,7 +1004,7 @@
    "correct_syn": 19,
    "n_syn": 100,
    "oos_reject": 0.0625,
-   "ms_clip": 2.14
+   "ms_clip": 2.32
   },
   {
    "model": "gate2v25",
@@ -948,7 +1018,21 @@
    "correct_syn": 17,
    "n_syn": 100,
    "oos_reject": 0.0,
-   "ms_clip": 2.12
+   "ms_clip": 2.35
+  },
+  {
+   "model": "gate2v70",
+   "acc": 0.0806,
+   "correct": 15,
+   "n": 186,
+   "acc_real": 0.0465,
+   "correct_real": 4,
+   "n_real": 86,
+   "acc_syn": 0.11,
+   "correct_syn": 11,
+   "n_syn": 100,
+   "oos_reject": 0.0,
+   "ms_clip": 2.72
   }
  ]
 }

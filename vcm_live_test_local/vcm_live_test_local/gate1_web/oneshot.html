@@ -292,7 +292,8 @@
         <input type="search" id="tk-filter" placeholder="filter id / label / intent">
       </div>
       <div class="tk-btns">
-        <button id="tk-score" class="primary" type="button">Score selected x all models</button>
+        <button id="tk-test-all" class="primary" type="button">Test all mine x all models</button>
+        <button id="tk-score" type="button">Score selected x all models</button>
         <button id="tk-score-one" type="button">Score selected x chosen Gate 2</button>
         <button id="tk-each" type="button">All intents per take</button>
         <button id="tk-live" type="button">Start continuous x all models</button>
@@ -929,7 +930,8 @@
     if (!ids.length) { el("tk-count").textContent = "no takes to " + kind; return; }
     postJson("/api/oneshot/results/" + kind, { ids: ids, models: "all" }, headline)
       .then(function (d) {
-        var count = (typeof d.takes === "number") ? d.takes : (typeof d.rows === "number" ? d.rows : 0);
+        var count = (typeof d.take_count === "number") ? d.take_count
+                   : (typeof d.rows === "number" ? d.rows : 0);
         el("tk-count").textContent = d.path + " - " + count + " entries";
         var host = el("tk-result");
         host.hidden = false;
@@ -955,6 +957,24 @@
 
   el("tk-save").addEventListener("click", function () { runResults("save", "saving results"); });
   el("tk-export").addEventListener("click", function () { runResults("export", "exporting CSV"); });
+
+  // Test every recorded take against every model and save the report into the
+  // session folder - the one-click version of "re-test each phrase".
+  el("tk-test-all").addEventListener("click", function () {
+    var mine = takes.filter(function (r) { return !r.holdout && (r.action || "").trim(); });
+    if (!mine.length) { el("tk-count").textContent = "no recorded takes yet - record phrases first"; return; }
+    var ids = mine.map(function (r) { return r.id; });
+    postJson("/api/oneshot/results/save", { ids: ids, models: "all", folder: "auto" },
+             "testing " + ids.length + " take(s) on every model")
+      .then(function (d) {
+        el("tk-count").textContent = (d.path || "") + " - " + (d.take_count || 0)
+          + " take(s) x " + (d.models || 0) + " models saved";
+        renderScore({ takes: d.takes || [], summary: d.summary || [] },
+                    "All " + (d.take_count || 0) + " takes x " + (d.models || 0)
+                    + " models - saved to " + (d.path || ""));
+      })
+      .catch(function () { el("tk-count").textContent = "test all failed"; });
+  });
 
   loadRanking();
 

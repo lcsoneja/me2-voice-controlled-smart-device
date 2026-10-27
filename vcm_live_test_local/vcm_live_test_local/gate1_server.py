@@ -509,6 +509,39 @@ GATE2_PACKAGE_RUNNERS = {
         "tflite/gate2v96c_float16.tflite",
         None,
     ),
+    # 2026-10-27 sweep of every shipping package with weights: six more loadable
+    # intent heads. V69/V70/V71 carry their own 19-class labels and spec; the
+    # V86/V86B/V87-combo fine-tunes inherit the V64D spec and label order.
+    "gate2v69": (
+        SHIP_DIR / "Gate2V69_ship_EXPERIMENTAL_20261022",
+        "tflite/v69_float16.tflite",
+        None,
+    ),
+    "gate2v70": (
+        SHIP_DIR / "Gate2V70_ship_EXPERIMENTAL_20261022",
+        "tflite/v70_float16.tflite",
+        None,
+    ),
+    "gate2v71": (
+        SHIP_DIR / "Gate2V71_ship_EXPERIMENTAL_20261022",
+        "tflite/v71_float16.tflite",
+        None,
+    ),
+    "gate2v86_speechoos_mid": (
+        SHIP_DIR / "Gate2V86_SpeechOOSMid_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v86_speechoos_mid_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v86b_v77mix": (
+        SHIP_DIR / "Gate2V86B_V77mix_from_V64d_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v86b_v77mix_from_v64d_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v87_combo_intent": (
+        SHIP_DIR / "Gate2V87_Combo_ship_EXPERIMENTAL_20261025",
+        "tflite/gate2v87_combo_intent_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
 }
 
 GATE2_DISABLED_CANDIDATES = {

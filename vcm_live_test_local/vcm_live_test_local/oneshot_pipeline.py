@@ -534,13 +534,25 @@ async def _write_results(
     """Score and persist a results artifact under recordings/exports/."""
     payload = _results_matrix(request, body)
     store = request.app["lab"].store
-    export_dir = store.root / "exports"
-    export_dir.mkdir(parents=True, exist_ok=True)
     stamp = time.strftime("%Y%m%d_%H%M%S")
-    relative = (
-        "exports/" + kind + "_" + stamp + (".csv" if kind == "export" else ".json")
-    )
-    target = store.root / relative
+    # The test-all flow saves the report straight into the session's own folder
+    # (one folder per run: audio + metadata + results together, the standard ML
+    # experiment layout); the plain Save/Export buttons use the shared exports/.
+    prefix = kind + "_" + stamp if kind == "export" else "report_" + stamp
+    if str(body.get("folder") or "") == "auto":
+        sessions = {
+            str(t.get("session") or "") for t in payload["takes"] if t.get("session")
+        }
+        if len(sessions) == 1:
+            target_dir = store.sessions_dir / next(iter(sessions))
+        else:
+            target_dir = store.root / "exports"
+    else:
+        target_dir = store.root / "exports"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    fname = prefix + (".csv" if kind == "export" else ".json")
+    relative = (target_dir.relative_to(store.root) / fname).as_posix()
+    target = target_dir / fname
     if kind == "export":
         import csv as csv_module
         from io import StringIO
@@ -602,8 +614,12 @@ async def _write_results(
         raise web.HTTPInternalServerError(text="cannot write " + str(relative)) from exc
     return relative, {
         "path": relative,
-        "takes": len(data["takes"]),
+        "take_count": len(data["takes"]),
         "models": len(data["summary"]),
+        "rows": len(data["takes"]) * len(data["summary"]),
+        "sessions": data["sessions"],
+        "takes": data["takes"],
+        "summary": data["summary"],
     }
 
 
