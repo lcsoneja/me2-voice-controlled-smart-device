@@ -551,15 +551,9 @@
 
   function useSession(id) {
     if (!id) {
-      fetch("/api/oneshot/sessions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "{}"
-      }).then(function (r) { return r.json(); })
-        .then(function (d) {
-          if (d.session && d.session.id) { send({ type: "session_use", id: d.session.id }); }
-        })
-        .catch(function () {});
+      // A brand-new session goes through session_new so the server answers with
+      // created:true and the page can reset the scoreboard and result panes.
+      send({ type: "session_new", label: "" });
       return;
     }
     send({ type: "session_use", id: id });
@@ -577,6 +571,45 @@
       if (target) {
         setExpectation(target.getAttribute("data-intent") || "", target.getAttribute("data-phrase"));
       }
+    }
+  }
+
+  // A brand-new session starts from a clean slate: the scoreboard (the persisted
+  // running ranking) resets to zero, the result panes and shot log clear, and the
+  // phrase list starts back at phrase 1. Recordings themselves are never touched.
+  function resetForNewSession() {
+    postJson("/api/oneshot/leaderboard/reset", {}, "resetting scoreboard")
+      .then(function () {
+        ranking = [];
+        paintRanking();
+        el("tk-count").textContent = "new session - scoreboard reset";
+      })
+      .catch(function () {});
+    var result = el("tk-result");
+    if (result) { result.hidden = true; result.textContent = ""; }
+    var log = el("log");
+    if (log) {
+      log.textContent = "";
+      var row = document.createElement("tr");
+      var td = document.createElement("td");
+      td.className = "mut";
+      td.colSpan = 5;
+      td.textContent = "new session - no shots yet";
+      row.appendChild(td);
+      log.appendChild(row);
+    }
+    shots = 0;
+    if (el("c-shots")) { el("c-shots").textContent = "0"; }
+    var intent = el("r-intent");
+    if (intent) {
+      intent.textContent = "no shot yet";
+      intent.className = "big none";
+    }
+    var detail = el("r-detail");
+    if (detail) { detail.textContent = "Arm, then say the wake word followed by a command."; }
+    var items = Array.prototype.slice.call(document.querySelectorAll("#ph-list li"));
+    if (items.length) {
+      setExpectation(items[0].getAttribute("data-intent") || "", items[0].getAttribute("data-phrase"));
     }
   }
 
@@ -1232,6 +1265,7 @@
     } else if (msg.type === "session") {
       loadSessions(msg.session || "");
       applyPhrasePointer(msg.phrase_pointer || 0);
+      if (msg.created) { resetForNewSession(); }
     } else if (msg.type === "options") {
       if (el("opt-nc")) { el("opt-nc").checked = !!msg.nc; }
       if (el("opt-eos")) { el("opt-eos").checked = !!msg.eos; }

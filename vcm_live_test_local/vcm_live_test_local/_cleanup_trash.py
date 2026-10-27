@@ -28,15 +28,20 @@ def main() -> int:
             raw = []
         if isinstance(raw, list):
             history = [
-                entry for entry in raw
+                entry
+                for entry in raw
                 if not str(entry.get("label") or "").startswith("trash probe")
             ]
     try:
         MANIFEST.write_text(json.dumps(history, indent=1), encoding="utf-8")
     except OSError:
         pass
-    print("TRASH_DIRS_REMOVED=" + str(removed_dirs)
-          + " manifest_left=" + str(len(history)))
+    print(
+        "TRASH_DIRS_REMOVED="
+        + str(removed_dirs)
+        + " manifest_left="
+        + str(len(history))
+    )
     return 0
 
 
