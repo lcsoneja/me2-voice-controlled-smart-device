@@ -33,8 +33,11 @@ def raw(path: str, payload: dict) -> tuple[int, str]:
 def main() -> int:
     row = next((r for r in store.list() if (r.get("action") or "").strip()), {})
     if not row:
-        entry = store.save(np.zeros(16000, dtype=np.float32), label="api probe take",
-                           meta={"action": "WEATHER"})
+        entry = store.save(
+            np.zeros(16000, dtype=np.float32),
+            label="api probe take",
+            meta={"action": "WEATHER"},
+        )
         row = entry
         store.delete(entry["id"])
     take_id = str(row["id"] or "")

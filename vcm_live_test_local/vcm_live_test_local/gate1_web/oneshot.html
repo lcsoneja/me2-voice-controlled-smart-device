@@ -131,6 +131,10 @@
   /* Running ranking: continuous scoring accumulates here; it owns its own short scroll so the
     page still never scrolls. */
   .rank { flex:0 0 auto; max-height:112px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
+  .rank.expanded { max-height:330px; }
+  .rkbar { display:flex; gap:4px; align-items:center; margin:2px 0 4px; }
+  .rkbar input { flex:1 1 auto; min-width:0; font-size:10.5px; padding:2px 6px; }
+  .rkbar button { font-size:10.5px; padding:2px 8px; }
   .rank table { width:100%; border-collapse:collapse; }
   .rank th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
   .rank td.n, .rank th.n { text-align:right; font-variant-numeric:tabular-nums; }
@@ -225,7 +229,7 @@
     </div>
     <p class="hint">Re-arm after each shot - one capture per arm.</p>
     <div class="scoreboard" id="sb">
-      <p class="note" id="sb-title">Scoreboard - every new take auto-scores against all models</p>
+      <p class="note" id="sb-title" title="click: open every model in the Recordings tab" style="cursor:pointer">Scoreboard - top 5 (click for every model)</p>
       <table>
         <thead><tr><th>#</th><th>model</th><th class="n">correct</th><th class="n">acc</th></tr></thead>
         <tbody id="sb-body"></tbody>
@@ -300,6 +304,11 @@
       </div>
       <div class="rank" id="tk-rank" hidden>
         <p class="note" id="rk-title">Running ranking</p>
+        <div class="rkbar">
+          <input type="search" id="rk-filter" placeholder="find model...">
+          <button id="rk-expand" type="button">Expand all</button>
+          <span class="note" id="rk-count"></span>
+        </div>
         <table>
           <thead><tr><th>#</th><th>model</th><th class="n">correct</th><th class="n">acc</th><th class="n">runs</th></tr></thead>
           <tbody id="rk-body"></tbody>
@@ -752,7 +761,7 @@
   // ---- running ranking: the chosen model alone, or every model on a loop ----
   // Continuous mode scores a bounded window per round (a round over every take would outlast the
   // interval and overlap), and skips a round while the previous one is still running.
-  var ranking = [], liveTimer = null, liveBusy = false, LIVE_MS = 15000, LIVE_TAKES = 10;
+  var ranking = [], liveTimer = null, liveBusy = false, rankExpanded = false, LIVE_MS = 15000, LIVE_TAKES = 10;
 
   function stopLive() {
     if (liveTimer) { window.clearInterval(liveTimer); liveTimer = null; }
@@ -767,7 +776,12 @@
     if (!box || !body) { return; }
     box.hidden = ranking.length === 0;
     body.textContent = "";
-    ranking.slice(0, 4).forEach(function (row, index) {
+    var q = (el("rk-filter") ? el("rk-filter").value : "").toLowerCase();
+    var rows = ranking.filter(function (r) {
+      return !q || String(r.model).toLowerCase().indexOf(q) >= 0;
+    });
+    if (!rankExpanded && !q) { rows = rows.slice(0, 4); }
+    rows.forEach(function (row, index) {
       var tr = document.createElement("tr");
       if (index === 0) { tr.className = "top"; }
       tr.title = row.model;
@@ -791,6 +805,11 @@
       title.textContent = "Running ranking - " + ranking.length + " model(s), "
         + (liveTimer ? "continuous ON (every " + (LIVE_MS / 1000) + "s)" : "continuous off");
     }
+    var count = el("rk-count");
+    if (count) { count.textContent = "showing " + rows.length + " / " + ranking.length; }
+    var expand = el("rk-expand");
+    if (expand) { expand.textContent = rankExpanded ? "Top 4" : "Expand all"; }
+    box.classList.toggle("expanded", rankExpanded);
     paintScoreboard();
   }
 
@@ -874,6 +893,20 @@
     liveTimer = window.setInterval(round, LIVE_MS);
     round();
     paintRanking();
+  });
+
+  el("rk-filter").addEventListener("input", paintRanking);
+  el("rk-expand").addEventListener("click", function () {
+    rankExpanded = !rankExpanded;
+    paintRanking();
+  });
+  // The scoreboard is the "top models" glance; a click opens the full list.
+  el("sb-title").addEventListener("click", function () {
+    showTab("takes");
+    rankExpanded = true;
+    paintRanking();
+    var filter = el("rk-filter");
+    if (filter) { filter.focus(); }
   });
 
   el("tk-live-reset").addEventListener("click", function () {

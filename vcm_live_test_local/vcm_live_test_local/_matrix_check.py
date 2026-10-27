@@ -14,8 +14,11 @@ store = RecordingStore(APP / "recordings")
 
 
 def main() -> int:
-    entry = store.save(np.zeros(16000, dtype=np.float32), label="matrix probe",
-                       meta={"action": "WEATHER"})
+    entry = store.save(
+        np.zeros(16000, dtype=np.float32),
+        label="matrix probe",
+        meta={"action": "WEATHER"},
+    )
     try:
         request = urllib.request.Request(
             "http://127.0.0.1:8765/api/oneshot/results/save",
@@ -33,10 +36,24 @@ def main() -> int:
         data = json.loads(path.read_text(encoding="utf-8"))
         take = data["takes"][0]
         print("PATH=" + saved["path"])
-        print("TAKES=" + str(len(data["takes"])) + " MODELS=" + str(len(take["results"]))
-              + " FIRST=" + str(take["results"][0]["model"]) + ":" + str(take["results"][0]["intent"])
-              + " conf=" + str(take["results"][0]["conf"]))
-        print("SUMMARY_TOP=" + str(data["summary"][0]["model"]) + " acc=" + str(data["summary"][0]["acc"]))
+        print(
+            "TAKES="
+            + str(len(data["takes"]))
+            + " MODELS="
+            + str(len(take["results"]))
+            + " FIRST="
+            + str(take["results"][0]["model"])
+            + ":"
+            + str(take["results"][0]["intent"])
+            + " conf="
+            + str(take["results"][0]["conf"])
+        )
+        print(
+            "SUMMARY_TOP="
+            + str(data["summary"][0]["model"])
+            + " acc="
+            + str(data["summary"][0]["acc"])
+        )
         path.unlink()
     finally:
         store.delete(entry["id"])

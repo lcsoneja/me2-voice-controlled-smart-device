@@ -38,8 +38,14 @@ def main() -> int:
     except OSError as exc:
         print("INDEX_WRITE " + type(exc).__name__)
         return 1
-    print("KEPT=" + str(len(keep)) + " dropped=" + str(dropped)
-          + " files_removed=" + str(removed_files))
+    print(
+        "KEPT="
+        + str(len(keep))
+        + " dropped="
+        + str(dropped)
+        + " files_removed="
+        + str(removed_files)
+    )
     return 0
 
 
