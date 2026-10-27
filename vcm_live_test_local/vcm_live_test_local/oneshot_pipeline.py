@@ -500,7 +500,10 @@ def _load_runner(gs, gates, name: str) -> Any:
     """
     runner = gates._gate2_extra.get(name)
     if runner is None:
-        runner = gs.Gate2PackageRunner(name)
+        if name == "gate2v124_ensemble4way":
+            runner = gs.Gate2V124EnsembleRunner(name)
+        else:
+            runner = gs.Gate2PackageRunner(name)
         gates._gate2_extra[name] = runner
     return runner
 

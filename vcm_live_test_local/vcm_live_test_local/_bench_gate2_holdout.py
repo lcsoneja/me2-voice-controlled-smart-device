@@ -177,7 +177,10 @@ def main() -> int:
     names = sorted(gs.GATE2_PACKAGE_RUNNERS)
     for index_no, name in enumerate(names, 1):
         try:
-            runner = gs.Gate2PackageRunner(name)
+            if name == "gate2v124_ensemble4way":
+                runner = gs.Gate2V124EnsembleRunner(name)
+            else:
+                runner = gs.Gate2PackageRunner(name)
         except (OSError, RuntimeError, ValueError, ImportError) as exc:
             print("SKIP " + name + " (" + type(exc).__name__ + ")")
             continue

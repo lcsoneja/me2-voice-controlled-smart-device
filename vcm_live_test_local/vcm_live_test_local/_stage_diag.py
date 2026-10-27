@@ -31,13 +31,24 @@ def main() -> int:
         page.wait_for_selector("#ph-list li", timeout=60000)
         panel = page.evaluate(
             "() => { const p = document.querySelector('.panel.stage'); "
-            "return p.clientWidth + '/' + p.scrollWidth; }")
+            "return p.clientWidth + '/' + p.scrollWidth; }"
+        )
         wide = page.evaluate(PROBE)
         print("PANEL=" + str(panel))
         for item in wide[:12]:
-            print(str(item["tag"]) + " #" + item["id"] + " ." + item["cls"]
-                  + " sw=" + str(item["sw"]) + "/" + str(item["cw"])
-                  + " " + repr(item["text"]))
+            print(
+                str(item["tag"])
+                + " #"
+                + item["id"]
+                + " ."
+                + item["cls"]
+                + " sw="
+                + str(item["sw"])
+                + "/"
+                + str(item["cw"])
+                + " "
+                + repr(item["text"])
+            )
         browser.close()
     return 0
 

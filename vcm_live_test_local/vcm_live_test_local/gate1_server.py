@@ -500,6 +500,15 @@ GATE2_PACKAGE_RUNNERS = {
         "tflite/gate2v110_v93b_owner_ft_high_float16.tflite",
         SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
     ),
+    # V124 is the 2026-10-27 deploy stack: a softmax-average of V96c + V93b + V81
+    # (nine-window members) and V20-PhonemeAux (center channel), with its own runner
+    # class. The tflite path is a placeholder for the tuple shape; the ensemble loads
+    # all four member weights itself from the package directory.
+    "gate2v124_ensemble4way": (
+        SHIP_DIR / "Gate2V124_Ensemble4way_ship_DEPLOY_20261027",
+        "tflite/gate2v96c_float16.tflite",
+        None,
+    ),
 }
 
 GATE2_DISABLED_CANDIDATES = {
@@ -670,6 +679,150 @@ def _slide_window_features(
         if j1 > j0:
             out[j0:j1, :, channel] = speech[offset + j0 : offset + j1]
     return out
+
+
+def _extract_mel_features(runner, waveform: np.ndarray) -> np.ndarray:
+    """Shared V19-style log-mel frontend for the single packages and the V124 ensemble.
+
+    Everything a runner needs is taken from its attributes, so the V124 ensemble runner
+    sets the same spec fields and reuses this exact path.
+    """
+    span = runner.source_frames * runner.hop_length + runner.n_fft
+    y = np.asarray(waveform, dtype=np.float32).reshape(-1)[-span:]
+    mel = librosa.feature.melspectrogram(
+        y=y,
+        sr=runner.sample_rate,
+        n_fft=runner.n_fft,
+        hop_length=runner.hop_length,
+        win_length=runner.win_length,
+        n_mels=runner.source_mels,
+        center=runner.center,
+        power=runner.power,
+    )
+    features = np.log1p(mel).T.astype(np.float32)
+    if len(features) < runner.source_frames:
+        features = np.pad(
+            features,
+            ((0, runner.source_frames - len(features)), (0, 0)),
+            mode="constant",
+        )
+    elif len(features) > runner.source_frames:
+        start = (len(features) - runner.source_frames) // 2
+        features = features[start : start + runner.source_frames]
+    features = ((features - runner.mean) / (runner.std + 1e-8)).astype(np.float32)
+    if features.shape != (runner.frames, runner.n_mels):
+        features = _resize_area(features, runner.frames, runner.n_mels)
+    return features
+
+
+class Gate2V124EnsembleRunner:
+    """V124: softmax-average of V96c, V93b, V81 (nine-window) + V20-PhonemeAux (center).
+
+    The package ships its own member weights and the V19 preprocessing spec; the
+    frontend and the nine-window slide reuse the single-package machinery. Equal
+    member weights (0.25 each); the V20pa head has 19 outputs and enters the average
+    with a zero NEG (index 19) contribution.
+    """
+
+    NINE_OFFSETS = (-50, -38, -25, -12, 0, 12, 25, 38, 50)
+
+    def __init__(self, name: str):
+        pkg_dir = GATE2_PACKAGE_RUNNERS[name][0]
+        spec_path = pkg_dir / "preprocessing_spec.json"
+        try:
+            spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError(
+                f"Cannot load V124 spec {spec_path}: {exc}"
+            ) from exc
+        self.mean = float(spec.get("stats_mean", float("nan")))
+        self.std = float(spec.get("stats_std", float("nan")))
+        if not np.isfinite(self.mean) or not np.isfinite(self.std) or self.std <= 0:
+            raise RuntimeError(
+                f"V124 package has no valid normalization stats: {spec_path}"
+            )
+        labels_path = pkg_dir / "labels.json"
+        try:
+            shipped = json.loads(labels_path.read_text(encoding="utf-8"))["labels"]
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError(
+                f"Cannot load V124 labels {labels_path}: {exc}"
+            ) from exc
+        # The package ships the 19 intents; index 19 is NEG by convention. The V20pa
+        # member has no NEG output and contributes zero there.
+        self.labels = [str(label) for label in shipped] + ["NEG"]
+        self.frames = int(spec.get("input_frames", 148))
+        self.source_frames = int(
+            spec.get("source_input_frames", spec.get("input_frames", self.frames))
+        )
+        self.n_mels = int(spec.get("n_mels", 60))
+        self.source_mels = int(
+            spec.get("source_n_mels", spec.get("n_mels", self.n_mels))
+        )
+        self.sample_rate = int(spec.get("sample_rate", SR))
+        self.n_fft = int(spec.get("n_fft", 1024))
+        self.hop_length = int(spec.get("hop_length", spec.get("hop", 640)))
+        self.win_length = int(spec.get("win_length", spec.get("win", self.n_fft)))
+        self.center = bool(spec.get("center", True))
+        self.power = float(spec.get("power", 2.0))
+        self.pad_value = float(spec.get("pad_value", -self.mean / self.std))
+        self.resize_method = str(spec.get("feature_resize", ""))
+        member_names = (
+            "gate2v96c_float16.tflite",
+            "gate2v93b_depth_detail_float16.tflite",
+            "gate2v81_timeshift_add_float16.tflite",
+        )
+        self._nine = [
+            _make_interpreter(pkg_dir / "tflite" / name_) for name_ in member_names
+        ]
+        self._center = _make_interpreter(
+            pkg_dir / "tflite" / "gate2v20_phoneme_aux_intent_float16.tflite"
+        )
+        for interpreter in self._nine:
+            out = int(np.prod(interpreter.get_output_details()[0]["shape"]))
+            if out != len(self.labels):
+                raise RuntimeError(
+                    f"V124 nine-window member outputs {out} scores for "
+                    f"{len(self.labels)} labels"
+                )
+        center_out = int(np.prod(self._center.get_output_details()[0]["shape"]))
+        if center_out != len(self.labels) - 1:
+            raise RuntimeError(
+                f"V124 center member outputs {center_out} scores for "
+                f"{len(self.labels) - 1} intent labels"
+            )
+
+    def predict(self, waveform: np.ndarray) -> list[float]:
+        acc: np.ndarray = np.zeros(len(self.labels), dtype=np.float32)
+        features = _extract_mel_features(self, waveform)
+        slide = _slide_window_features(features, self.NINE_OFFSETS, self.pad_value)
+        batch = np.asarray(slide, dtype=np.float32)[None, :, :, :]
+        for interpreter in self._nine:
+            interpreter.set_tensor(
+                interpreter.get_input_details()[0]["index"], batch
+            )
+            interpreter.invoke()
+            acc += 0.25 * np.asarray(
+                interpreter.get_tensor(
+                    interpreter.get_output_details()[0]["index"]
+                )[0],
+                dtype=np.float32,
+            )
+        center_batch = np.asarray(features[:, :, None], dtype=np.float32)[
+            None, :, :, :
+        ]
+        self._center.set_tensor(
+            self._center.get_input_details()[0]["index"], center_batch
+        )
+        self._center.invoke()
+        center_probs = np.asarray(
+            self._center.get_tensor(
+                self._center.get_output_details()[0]["index"]
+            )[0],
+            dtype=np.float32,
+        )
+        acc[: len(center_probs)] += 0.25 * center_probs
+        return [float(value) for value in acc]
 
 
 def _resize_area(
@@ -1099,32 +1252,7 @@ class Gate2PackageRunner:
             )
 
     def _extract_features(self, waveform: np.ndarray) -> np.ndarray:
-        span = self.source_frames * self.hop_length + self.n_fft
-        y = np.asarray(waveform, dtype=np.float32).reshape(-1)[-span:]
-        mel = librosa.feature.melspectrogram(
-            y=y,
-            sr=self.sample_rate,
-            n_fft=self.n_fft,
-            hop_length=self.hop_length,
-            win_length=self.win_length,
-            n_mels=self.source_mels,
-            center=self.center,
-            power=self.power,
-        )
-        features = np.log1p(mel).T.astype(np.float32)
-        if len(features) < self.source_frames:
-            features = np.pad(
-                features,
-                ((0, self.source_frames - len(features)), (0, 0)),
-                mode="constant",
-            )
-        elif len(features) > self.source_frames:
-            start = (len(features) - self.source_frames) // 2
-            features = features[start : start + self.source_frames]
-        features = ((features - self.mean) / (self.std + 1e-8)).astype(np.float32)
-        if features.shape != (self.frames, self.n_mels):
-            features = _resize_area(features, self.frames, self.n_mels)
-        return features
+        return _extract_mel_features(self, waveform)
 
     def _infer_features(self, features: np.ndarray) -> list[float]:
         x = np.asarray(features, dtype=self.in_dtype)[None, :, :, :]
@@ -1659,7 +1787,10 @@ class Gates:
                     self.registry["gate2"]["labels"]
                 )
             if name in GATE2_PACKAGE_RUNNERS and name not in self._gate2_extra:
-                self._gate2_extra[name] = Gate2PackageRunner(name)
+                if name == "gate2v124_ensemble4way":
+                    self._gate2_extra[name] = Gate2V124EnsembleRunner(name)
+                else:
+                    self._gate2_extra[name] = Gate2PackageRunner(name)
                 # Gate2V6KerasRunner hard-fails at load if the packaged label order
                 # differs from the registry gate2 labels.
                 self._gate2_extra["gate2v6_keras"] = Gate2V6KerasRunner(

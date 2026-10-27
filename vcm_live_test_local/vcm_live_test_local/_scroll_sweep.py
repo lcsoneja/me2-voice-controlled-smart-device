@@ -37,7 +37,8 @@ def main() -> int:
             print("  phrases scrollbars: " + str(page.evaluate(PROBE)))
             page.click("#tab-takes")
             page.wait_for_function(
-                "() => !document.getElementById('tk-count').textContent.includes('loading')")
+                "() => !document.getElementById('tk-count').textContent.includes('loading')"
+            )
             print("  takes    scrollbars: " + str(page.evaluate(PROBE)))
             page.screenshot(path="_fit_" + str(width) + ".png", full_page=False)
             page.close()
