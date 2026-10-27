@@ -19,14 +19,18 @@ store = RecordingStore(APP / "recordings")
 def api(path: str, payload: dict | None = None, post: bool = True) -> dict:
     data = json.dumps(payload).encode() if payload is not None else None
     request = urllib.request.Request(
-        BASE + path, data=data, method="POST" if post else "GET",
+        BASE + path,
+        data=data,
+        method="POST" if post else "GET",
         headers={"Content-Type": "application/json"} if data else {},
     )
     try:
         with urllib.request.urlopen(request, timeout=600) as response:
             return json.loads(response.read().decode())
     except (urllib.error.URLError, OSError, ValueError) as exc:
-        raise SystemExit("call failed " + path + ": " + type(exc).__name__ + " " + str(exc)[:120])
+        raise SystemExit(
+            "call failed " + path + ": " + type(exc).__name__ + " " + str(exc)[:120]
+        )
 
 
 def cleanup_trash(before_dirs: set[str], before_text: str) -> None:
@@ -54,31 +58,62 @@ def main() -> int:
     trash_root = APP / "recordings"
     before_dirs = {d.name for d in trash_root.glob("_trash_*")}
     manifest_path = trash_root / "trash_manifest.json"
-    before_text = (manifest_path.read_text(encoding="utf-8")
-                   if manifest_path.is_file() else "[]")
+    before_text = (
+        manifest_path.read_text(encoding="utf-8") if manifest_path.is_file() else "[]"
+    )
     empty = api("/api/oneshot/sessions", {"label": "sman probe empty"})["session"]
     one = api("/api/oneshot/sessions", {"label": "sman probe one"})["session"]
     two = api("/api/oneshot/sessions", {"label": "sman probe two"})["session"]
-    take_a = store.save(np.zeros(16000, dtype=np.float32), label="sman probe a",
-                        meta={"action": "WEATHER"}, session=one["id"])
-    store.save(np.zeros(16000, dtype=np.float32), label="sman probe b",
-               meta={"action": "TIME"}, session=two["id"])
-    store.save(np.zeros(16000, dtype=np.float32), label="sman probe c",
-               meta={"action": "NEXT"}, session=two["id"])
+    take_a = store.save(
+        np.zeros(16000, dtype=np.float32),
+        label="sman probe a",
+        meta={"action": "WEATHER"},
+        session=one["id"],
+    )
+    store.save(
+        np.zeros(16000, dtype=np.float32),
+        label="sman probe b",
+        meta={"action": "TIME"},
+        session=two["id"],
+    )
+    store.save(
+        np.zeros(16000, dtype=np.float32),
+        label="sman probe c",
+        meta={"action": "NEXT"},
+        session=two["id"],
+    )
     listed = api("/api/oneshot/sessions", post=False)["sessions"]
     counts = {s["id"]: s["takes"] for s in listed}
-    print("LISTED=" + str(len(listed)) + " empty=" + str(counts.get(empty["id"]))
-          + " one=" + str(counts.get(one["id"])) + " two=" + str(counts.get(two["id"])))
+    print(
+        "LISTED="
+        + str(len(listed))
+        + " empty="
+        + str(counts.get(empty["id"]))
+        + " one="
+        + str(counts.get(one["id"]))
+        + " two="
+        + str(counts.get(two["id"]))
+    )
 
     gone = api("/api/oneshot/sessions/delete", {"id": empty["id"]})
     print("EMPTY deleted=" + str(gone["deleted"]) + " moved=" + str(gone["moved_to"]))
 
     trashed = api("/api/oneshot/sessions/delete", {"id": two["id"]})
-    print("TWO deleted=" + str(trashed["deleted"]) + " moved=" + str(trashed["moved_to"])
-          + " takes=" + str(trashed["takes_removed"]))
+    print(
+        "TWO deleted="
+        + str(trashed["deleted"])
+        + " moved="
+        + str(trashed["moved_to"])
+        + " takes="
+        + str(trashed["takes_removed"])
+    )
     trash_folder = APP / "recordings" / trashed["moved_to"]
-    print("TRASH_HOLDS_SESSION=" + str((trash_folder / "session.json").is_file())
-          + " wavs=" + str(len(list(trash_folder.glob("*.wav")))))
+    print(
+        "TRASH_HOLDS_SESSION="
+        + str((trash_folder / "session.json").is_file())
+        + " wavs="
+        + str(len(list(trash_folder.glob("*.wav"))))
+    )
     rows = api("/api/oneshot/recordings", post=False)["recordings"]
     ids = {row["id"] for row in rows}
     print("INDEX_CLEAN=" + str(take_a["id"] not in ids))
@@ -96,12 +131,18 @@ def main() -> int:
             page.wait_for_selector("#sman-box", timeout=60000)
             page.get_by_text("Sessions - manage").click()
             page.wait_for_selector("#sman .srow", timeout=30000)
-            print("MANAGER_ROWS=" + str(page.eval_on_selector_all(
-                "#sman .srow", "els => els.length")))
-            page.locator("#sman .srow", has_text="sman probe one").locator("button").click()
+            print(
+                "MANAGER_ROWS="
+                + str(page.eval_on_selector_all("#sman .srow", "els => els.length"))
+            )
+            page.locator("#sman .srow", has_text="sman probe one").locator(
+                "button"
+            ).click()
             page.wait_for_function(
                 "() => !document.getElementById('sman').textContent.includes('sman probe one')",
-                timeout=30000, polling=400)
+                timeout=30000,
+                polling=400,
+            )
             print("UI_DELETE=ok")
             browser.close()
     finally:
@@ -111,7 +152,10 @@ def main() -> int:
                 shutil.rmtree(APP / "recordings" / "sessions" / sid)
             except OSError:
                 pass
-    print("SESSIONS_LEFT=" + str(len(api("/api/oneshot/sessions", post=False)["sessions"])))
+    print(
+        "SESSIONS_LEFT="
+        + str(len(api("/api/oneshot/sessions", post=False)["sessions"]))
+    )
     return 0
 
 

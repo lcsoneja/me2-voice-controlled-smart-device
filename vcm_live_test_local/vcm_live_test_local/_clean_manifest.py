@@ -20,11 +20,17 @@ def main() -> int:
         entries = []
     print("ENTRIES=" + str(len(entries)))
     for entry in entries:
-        print("  id=" + str(entry.get("id") or "-")[:26]
-              + " label=" + repr(str(entry.get("label") or "")[:36])
-              + " session=" + str(entry.get("deleted_session") or entry.get("session") or "-"))
+        print(
+            "  id="
+            + str(entry.get("id") or "-")[:26]
+            + " label="
+            + repr(str(entry.get("label") or "")[:36])
+            + " session="
+            + str(entry.get("deleted_session") or entry.get("session") or "-")
+        )
     kept = [
-        entry for entry in entries
+        entry
+        for entry in entries
         if not str(entry.get("label") or "").startswith(
             ("probe", "trash probe", "sman probe", "export probe")
         )

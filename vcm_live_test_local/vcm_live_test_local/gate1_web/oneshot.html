@@ -75,14 +75,15 @@
          animation:pulse 1s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(229,72,77,.55); }
                      50%{ box-shadow:0 0 0 22px rgba(229,72,77,0); } }
-  .stage .label { font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:var(--mut); }
+  .stage .label { font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--mut); }
   body.recording .stage .label { color:var(--red); font-weight:700; }
   .count { font-size:26px; font-variant-numeric:tabular-nums; }
   .bar { height:7px; background:#20262f; border-radius:4px; overflow:hidden; margin-top:4px; }
   .bar > i { display:block; height:100%; width:0; background:var(--blu); transition:width .12s; }
   .row { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:5px; }
   .row .k { color:var(--mut); font-size:12.5px; }
-  .btns { display:flex; gap:8px; margin-top:8px; }
+  .btns { display:flex; gap:8px; margin-top:5px; flex-wrap:nowrap; }
+  .btns button { padding:7px 10px; font-size:12.5px; }
   button { background:#21262d; color:var(--ink); border:1px solid #30363d; border-radius:8px;
            padding:9px 15px; font-size:13.5px; cursor:pointer; }
   button:hover { background:#2a313a; }
@@ -130,7 +131,7 @@
   .takebar { display:flex; gap:6px; align-items:center; flex-wrap:wrap; flex:0 0 auto; }
   /* Running ranking: continuous scoring accumulates here; it owns its own short scroll so the
     page still never scrolls. */
-  .rank { flex:0 0 auto; max-height:112px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
+  .rank { flex:0 0 auto; max-height:132px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
   .rank.expanded { max-height:330px; }
   .rkbar { display:flex; gap:4px; align-items:center; margin:2px 0 4px; }
   .rkbar input { flex:1 1 auto; min-width:0; font-size:10.5px; padding:2px 6px; }
@@ -145,6 +146,7 @@
   .rank td.n, .rank th.n { text-align:right; font-variant-numeric:tabular-nums; }
   .rank tr.top td { color:var(--blu); font-weight:700; }
   #tk-live.on { background:var(--blu); border-color:var(--blu); color:#fff; }
+  #btn-cont.on { background:var(--blu); border-color:var(--blu); color:#fff; }
   /* Mismatch is red wherever a verdict is shown; hits stay default/green. */
   .big.miss { color:var(--red); }
   .score .rmiss { color:var(--red); font-weight:600; }
@@ -154,7 +156,7 @@
   tr.trial-actions td { border-top:none; padding:0 6px 6px 6px; font-size:11px; }
   tr.trial-actions button, tr.trial-actions select { font-size:11px; }
   /* Voice chart: is my voice actually reaching the mic? */
-  canvas#vu { width:100%; height:28px; background:#1b1f26; border:1px solid #39414c; margin-top:4px; }
+  canvas#vu { width:100%; height:24px; background:#1b1f26; border:1px solid #39414c; margin-top:4px; }
   /* Live scoreboard: auto-scores every new take against all models. */
   .scoreboard { flex:0 0 auto; margin-top:6px; border-top:1px solid #2a2f36; max-height:122px; overflow:auto; }
   .scoreboard .note { font-size:9.5px; margin:1px 0 0; }
@@ -229,10 +231,11 @@
     <canvas id="vu" width="280" height="56"></canvas>
     <div class="expect" id="stage-expect">expecting: nothing (free test)</div>
     <div class="btns">
-      <button id="btn-arm" class="primary">Arm + start mic</button>
+      <button id="btn-arm" class="primary" title="Arm + start mic">Arm + mic</button>
+      <button id="btn-cont" type="button" title="stay armed: after each shot just say the wake word + command">Continue</button>
       <button id="btn-disarm">Disarm</button>
     </div>
-    <p class="hint">Re-arm after each shot - one capture per arm.</p>
+    <p class="hint">Re-arm after each shot. Continue keeps it armed: just say the wake word for every shot.</p>
     <div class="scoreboard" id="sb">
       <p class="note" id="sb-title" title="click: open every model in the Recordings tab" style="cursor:pointer">Scoreboard - top 5 (click for every model)</p>
       <table>
@@ -343,6 +346,7 @@
   var vuAnalyser = null, vuRaf = 0;
   var shots = 0, recording = false, captureStart = 0, rafId = 0;
   var expectIntent = null;   // what the picked phrase should produce, or null for a free test
+  var continueMode = false;  // stay armed after each shot: only the wake word is needed
   var wakeModelsLoaded = false;
 
   var el = function (id) { return document.getElementById(id); };
@@ -707,7 +711,8 @@
   function sendOptions() {
     send({ type: "options",
            nc: optNc ? optNc.checked : false,
-           eos: optEos ? optEos.checked : false });
+           eos: optEos ? optEos.checked : false,
+           cont: continueMode });
   }
   if (optNc) { optNc.addEventListener("change", sendOptions); }
   if (optEos) { optEos.addEventListener("change", sendOptions); }
@@ -1343,6 +1348,9 @@
       }
     } else if (msg.type === "state") {
       setState(msg.state || "idle");
+      if (msg.continue && el("countdown")) {
+        el("countdown").textContent = "say the wake word";
+      }
     } else if (msg.type === "session") {
       loadSessions(msg.session || "");
       applyPhrasePointer(msg.phrase_pointer || 0);
@@ -1350,8 +1358,12 @@
     } else if (msg.type === "options") {
       if (el("opt-nc")) { el("opt-nc").checked = !!msg.nc; }
       if (el("opt-eos")) { el("opt-eos").checked = !!msg.eos; }
+      continueMode = !!msg.cont;
+      var contBtn = el("btn-cont");
+      if (contBtn) { contBtn.classList.toggle("on", continueMode); }
       window.__oneshot = window.__oneshot || {};
-      window.__oneshot.options = { nc: !!msg.nc, eos: !!msg.eos };
+      window.__oneshot.options = { nc: !!msg.nc, eos: !!msg.eos, cont: continueMode };
+      window.__oneshot.continueMode = continueMode;
     } else if (msg.type === "eos") {
       el("countdown").textContent = Number(msg.capture_seconds || 0).toFixed(1)
         + " s (speech ended)";
@@ -1422,6 +1434,17 @@
         scoreNewTake(String(msg.take_id));
       }
       advancePhrase();
+      if (continueMode) {
+        // Stay armed: tell the server the phrase for the next capture so the
+        // take is labelled correctly, then just say the wake word again.
+        var picked = document.querySelector("#ph-list li.sel");
+        send({
+          type: "arm",
+          intent: expectIntent || "",
+          phrase: picked ? (picked.getAttribute("data-phrase") || "") : ""
+        });
+        if (el("countdown")) { el("countdown").textContent = "say the wake word"; }
+      }
     }
   }
 
@@ -1591,7 +1614,14 @@
       phrase: picked ? (picked.getAttribute("data-phrase") || "") : ""
     });
   });
-  el("btn-disarm").addEventListener("click", function () { send({ type: "disarm" }); });
+  el("btn-cont").addEventListener("click", function () {
+    continueMode = !continueMode;
+    sendOptions();
+  });
+  el("btn-disarm").addEventListener("click", function () {
+    if (continueMode) { continueMode = false; sendOptions(); }
+    send({ type: "disarm" });
+  });
   el("sel-g2").addEventListener("change", function (event) {
     send({ type: "gate2_model", model: event.target.value });
   });

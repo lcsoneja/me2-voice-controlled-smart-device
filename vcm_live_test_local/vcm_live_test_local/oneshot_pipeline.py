@@ -799,6 +799,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
     eos_capture_end: int | None = None
     speech_last = 0
     last_floor = 0.0
+    continue_mode = False
 
     async def send(obj: dict[str, Any]) -> None:
         try:
@@ -874,12 +875,20 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             elif kind == "options":
                 nc_enabled = bool(data.get("nc", False))
                 eos_enabled = bool(data.get("eos", False))
+                continue_mode = bool(data.get("cont", False))
                 if nc_enabled:
                     nc["enabled"] = True
                 else:
                     nc.clear()
                     nc["enabled"] = False
-                await send({"type": "options", "nc": nc_enabled, "eos": eos_enabled})
+                await send(
+                    {
+                        "type": "options",
+                        "nc": nc_enabled,
+                        "eos": eos_enabled,
+                        "cont": continue_mode,
+                    }
+                )
             elif kind == "arm" and state != "recording":
                 state = "armed"
                 recent.clear()
@@ -1089,5 +1098,16 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                     "session": current_session,
                 }
             )
+            if continue_mode:
+                # Continue mode: stay armed, so the next wake word starts the next
+                # capture without touching the app. The wake vote needs two fresh
+                # ticks, so a lingering utterance cannot re-trigger by itself.
+                state = "armed"
+                recent.clear()
+                last_g1_at = total
+                capture_from = 0
+                eos_capture_end = None
+                speech_last = 0
+                await send({"type": "state", "state": state, "continue": True})
 
     return ws

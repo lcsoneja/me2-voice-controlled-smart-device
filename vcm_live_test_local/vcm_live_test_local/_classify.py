@@ -12,7 +12,7 @@ print("--- sessions ---")
 for folder in sorted(sessions_dir.glob("*")):
     meta_path = folder / "session.json"
     if not meta_path.is_file():
-        print(folder.name + "  NO_META  wavs=" + str(len(list(folder.glob('*.wav')))))
+        print(folder.name + "  NO_META  wavs=" + str(len(list(folder.glob("*.wav")))))
         continue
     try:
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
@@ -24,5 +24,10 @@ for folder in sorted(sessions_dir.glob("*")):
 print("--- mine takes (labels) ---")
 mine = [e for e in index if not str(e.get("id") or "").startswith("me2h")]
 for entry in sorted(mine, key=lambda e: str(e.get("session") or "")):
-    print(str(entry.get("session") or "-")[:20] + "  " + str(entry.get("label") or "")[:40]
-          + "  session_key=" + str(bool(entry.get("session"))))
+    print(
+        str(entry.get("session") or "-")[:20]
+        + "  "
+        + str(entry.get("label") or "")[:40]
+        + "  session_key="
+        + str(bool(entry.get("session")))
+    )
