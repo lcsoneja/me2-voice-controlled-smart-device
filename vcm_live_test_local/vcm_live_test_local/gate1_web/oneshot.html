@@ -40,7 +40,8 @@
   .wake { width:100%; }
   h2.ph { margin:0 0 4px; font-size:11.5px; text-transform:uppercase; letter-spacing:.07em;
           color:var(--mut); font-weight:600; }
-  .setup label { display:block; margin-top:9px; }
+  .setup label { display:block; margin-top:5px; }
+  .setup .note { font-size:10px; }
   .setup select { width:100%; }
   .note { margin:3px 0 0; font-size:11px; color:var(--mut);
           white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -129,7 +130,7 @@
   .takebar { display:flex; gap:6px; align-items:center; flex-wrap:wrap; flex:0 0 auto; }
   /* Running ranking: continuous scoring accumulates here; it owns its own short scroll so the
     page still never scrolls. */
-  .rank { flex:0 1 auto; max-height:170px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
+  .rank { flex:0 0 auto; max-height:112px; overflow:auto; border-top:1px solid #2a2f36; margin-top:6px; }
   .rank table { width:100%; border-collapse:collapse; }
   .rank th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
   .rank td.n, .rank th.n { text-align:right; font-variant-numeric:tabular-nums; }
@@ -144,16 +145,22 @@
   tr.trial-actions td { border-top:none; padding:0 6px 6px 6px; font-size:11px; }
   tr.trial-actions button, tr.trial-actions select { font-size:11px; }
   /* Voice chart: is my voice actually reaching the mic? */
-  canvas#vu { width:100%; height:34px; background:#1b1f26; border:1px solid #39414c; margin-top:4px; }
+  canvas#vu { width:100%; height:28px; background:#1b1f26; border:1px solid #39414c; margin-top:4px; }
   /* Live scoreboard: auto-scores every new take against all models. */
   .scoreboard { flex:0 0 auto; margin-top:6px; border-top:1px solid #2a2f36; max-height:122px; overflow:auto; }
-  .scoreboard .note { font-size:10px; margin:2px 0 0; }
-  .scoreboard th, .scoreboard td { padding:0 5px; }
-  .scoreboard table { width:100%; border-collapse:collapse; font-size:10px; }
+  .scoreboard .note { font-size:9.5px; margin:1px 0 0; }
+  /* Capture options: one compact row so the Setup pane stays short enough to fit. */
+  .opts { display:flex; gap:6px; align-items:center; margin-top:5px; }
+  .opts label { display:flex; gap:3px; align-items:center; font-size:10.5px; }
+  .scoreboard th, .scoreboard td { padding:0 4px; }
+  .scoreboard th { font-size:9.5px; }
+  .scoreboard table { width:100%; border-collapse:collapse; font-size:9.5px; }
+  .rank table { width:100%; border-collapse:collapse; font-size:9.5px; }
   .scoreboard th { position:sticky; top:0; text-align:left; font-weight:600; color:var(--mut); background:#2a2f36; }
   .scoreboard td.n, .scoreboard th.n { text-align:right; font-variant-numeric:tabular-nums; }
   .scoreboard tr.top td { color:var(--blu); font-weight:700; }
-  .rank td, .rank th, .scoreboard td, .scoreboard th { padding:1px 6px; }
+  .rank td, .rank th, .scoreboard td, .scoreboard th { padding:0 4px; }
+  .takebar button, .tk-btns button { font-size:10.5px; padding:4px 9px; }
   .takebar input[type=search] { flex:1 1 110px; min-width:80px; font-size:11.5px; }
   .tk-btns { display:flex; gap:6px; flex-wrap:wrap; flex:0 0 auto; }
   .tk-btns button { font-size:11.5px; padding:4px 8px; }
@@ -238,6 +245,10 @@
       <label class="k" for="sel-session">Session folder</label>
       <select id="sel-session"></select>
       <p class="note" id="sel-session-note">loading sessions...</p>
+      <div class="opts">
+        <label class="k"><input type="checkbox" id="opt-nc"> noise canceller</label>
+        <label class="k"><input type="checkbox" id="opt-eos"> cut at end of speech</label>
+      </div>
       <label class="k" for="sel-phrase">Phrase I will speak</label>
       <select id="sel-phrase"></select>
       <p class="note" id="sel-phrase-note">expecting: nothing (free test)</p>
@@ -272,6 +283,7 @@
     <section class="pane" id="pane-takes" hidden>
       <div class="takebar">
         <label class="k"><input type="checkbox" id="tk-all"> all</label>
+        <label class="k"><input type="checkbox" id="tk-holdout" checked> holdout</label>
         <select id="tk-session"><option value="">all sessions</option></select>
         <input type="search" id="tk-filter" placeholder="filter id / label / intent">
       </div>
@@ -281,6 +293,8 @@
         <button id="tk-each" type="button">All intents per take</button>
         <button id="tk-live" type="button">Start continuous x all models</button>
         <button id="tk-live-reset" type="button">Reset ranking</button>
+        <button id="tk-save" type="button">Save results</button>
+        <button id="tk-export" type="button">Export CSV</button>
         <button id="tk-delete" type="button">Delete selected</button>
         <button id="tk-delete-all" type="button">Delete all takes</button>
       </div>
@@ -564,6 +578,16 @@
   if (tkSession) { tkSession.addEventListener("change", renderTakes); }
   loadSessions();
 
+  // ---- capture options: noise canceller and end-of-speech cut ----
+  var optNc = el("opt-nc"), optEos = el("opt-eos");
+  function sendOptions() {
+    send({ type: "options",
+           nc: optNc ? optNc.checked : false,
+           eos: optEos ? optEos.checked : false });
+  }
+  if (optNc) { optNc.addEventListener("change", sendOptions); }
+  if (optEos) { optEos.addEventListener("change", sendOptions); }
+
   var g1Sel = el("sel-g1");
   if (g1Sel) {
     g1Sel.addEventListener("change", function () {
@@ -604,7 +628,9 @@
   function renderTakes() {
     var filter = (el("tk-filter").value || "").toLowerCase();
     var sesFilter = el("tk-session") ? el("tk-session").value : "";
+    var showHoldout = !el("tk-holdout") || el("tk-holdout").checked;
     var rows = takes.filter(function (r) {
+      if (!showHoldout && r.holdout) { return false; }
       if (sesFilter && (r.session || "") !== sesFilter) { return false; }
       return !filter || (r.id + " " + r.label + " " + r.action).toLowerCase().indexOf(filter) >= 0;
     });
@@ -658,6 +684,7 @@
   }
 
   el("tk-filter").addEventListener("input", renderTakes);
+  el("tk-holdout").addEventListener("change", renderTakes);
   el("tk-all").addEventListener("change", function () {
     var on = el("tk-all").checked;
     // Holdouts are selectable too: they are scoreable, and deletion is refused server-side.
@@ -740,7 +767,7 @@
     if (!box || !body) { return; }
     box.hidden = ranking.length === 0;
     body.textContent = "";
-    ranking.slice(0, 5).forEach(function (row, index) {
+    ranking.slice(0, 4).forEach(function (row, index) {
       var tr = document.createElement("tr");
       if (index === 0) { tr.className = "top"; }
       tr.title = row.model;
@@ -856,6 +883,45 @@
       el("tk-count").textContent = "ranking reset";
     });
   });
+
+  // ---- save / export: the full results matrix with each model's softmax ----
+  function chosenOrVisibleIds() {
+    var ids = selectedIds();
+    if (ids.length) { return ids; }
+    return takes.filter(function (r) { return !r.holdout; }).map(function (r) { return r.id; });
+  }
+
+  function runResults(kind, headline) {
+    var ids = chosenOrVisibleIds();
+    if (!ids.length) { el("tk-count").textContent = "no takes to " + kind; return; }
+    postJson("/api/oneshot/results/" + kind, { ids: ids, models: "all" }, headline)
+      .then(function (d) {
+        var count = (typeof d.takes === "number") ? d.takes : (typeof d.rows === "number" ? d.rows : 0);
+        el("tk-count").textContent = d.path + " - " + count + " entries";
+        var host = el("tk-result");
+        host.hidden = false;
+        var note = document.createElement("p");
+        note.className = "note";
+        note.textContent = d.path + " written - " + count
+          + (typeof d.models === "number" ? " x " + d.models + " models" : " rows");
+        host.insertBefore(note, host.firstChild);
+        if (d.csv) {
+          var pre = document.createElement("details");
+          var sum = document.createElement("summary");
+          sum.textContent = "CSV preview (first rows)";
+          var box = document.createElement("div");
+          box.style.cssText = "white-space:pre-wrap; font-size:10px;";
+          box.textContent = d.csv.split("\n").slice(0, 6).join("\n");
+          pre.appendChild(sum);
+          pre.appendChild(box);
+          host.appendChild(pre);
+        }
+      })
+      .catch(function () { el("tk-count").textContent = kind + " failed"; });
+  }
+
+  el("tk-save").addEventListener("click", function () { runResults("save", "saving results"); });
+  el("tk-export").addEventListener("click", function () { runResults("export", "exporting CSV"); });
 
   loadRanking();
 
@@ -1100,6 +1166,14 @@
     } else if (msg.type === "session") {
       loadSessions(msg.session || "");
       applyPhrasePointer(msg.phrase_pointer || 0);
+    } else if (msg.type === "options") {
+      if (el("opt-nc")) { el("opt-nc").checked = !!msg.nc; }
+      if (el("opt-eos")) { el("opt-eos").checked = !!msg.eos; }
+      window.__oneshot = window.__oneshot || {};
+      window.__oneshot.options = { nc: !!msg.nc, eos: !!msg.eos };
+    } else if (msg.type === "eos") {
+      el("countdown").textContent = Number(msg.capture_seconds || 0).toFixed(1)
+        + " s (speech ended)";
     } else if (msg.type === "g1") {
       if (msg.nova !== null && msg.nova !== undefined) {
         el("p-nova").textContent = Number(msg.nova).toFixed(2);
@@ -1140,6 +1214,7 @@
         : ("confidence " + Number(msg.conf).toFixed(3) + " at " + msg.at_s + " s into the capture"
            + " - " + msg.windows_scored + " window(s) scored with " + msg.gate2_model
            + ", " + msg.latency_ms + " ms");
+      if (msg.eos) { el("r-detail").textContent += " [cut at end of speech]"; }
       var row = document.createElement("tr");
       // Five columns: the wake scores, window count and capture offset live in the detail line,
       // so the table stays readable in the narrower middle pane without a horizontal scrollbar.

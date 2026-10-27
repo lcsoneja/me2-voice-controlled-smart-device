@@ -46,6 +46,11 @@ HERE = Path(__file__).resolve().parent
 PAGE = HERE / "gate1_web" / "oneshot.html"
 
 CAPTURE_SECONDS = 5.0
+# End-of-speech cut: end the capture when speech has been silent for the tail
+# interval, but never before the minimum (a wake word alone must not be a take).
+EOS_MIN_SECONDS = 0.8
+EOS_TAIL_SECONDS = 0.7
+EOS_SPEECH_FLOOR = 0.02
 G1_TICK_SECONDS = 0.5
 G1_VOTES = 3
 G1_VOTES_NEEDED = 2
@@ -74,6 +79,8 @@ def register_routes(app: web.Application) -> None:
     app.router.add_post("/api/oneshot/recordings/tag", api_recordings_tag)
     app.router.add_get("/api/oneshot/sessions", api_sessions)
     app.router.add_post("/api/oneshot/sessions", api_sessions_new)
+    app.router.add_post("/api/oneshot/results/export", api_results_export)
+    app.router.add_post("/api/oneshot/results/save", api_results_save)
     app.router.add_get("/api/oneshot/leaderboard", api_leaderboard)
     app.router.add_post("/api/oneshot/leaderboard/score", api_leaderboard_score)
     app.router.add_post("/api/oneshot/leaderboard/reset", api_leaderboard_reset)
@@ -504,6 +511,126 @@ async def api_sessions_new(request: web.Request) -> web.Response:
     return web.json_response({"session": store.create_session(label)})
 
 
+def _results_matrix(request: web.Request, body: dict) -> dict:
+    """Score the requested takes across the requested models: rows + tallies."""
+    gs = importlib.import_module("gate1_server")
+    gates = request.app["gates"]
+    store = request.app["lab"].store
+    selected, models, capped = _selection(gs, store, body)
+    if not selected or not models:
+        raise web.HTTPBadRequest(text="no scoreable takes or models")
+    takes, tally = _score_matrix(gs, gates, store, selected, models)
+    return {
+        "takes": takes,
+        "summary": _summary_rows(models, tally),
+        "capped": capped,
+        "limit": MAX_SCORE_RECORDINGS,
+    }
+
+
+async def _write_results(
+    request: web.Request, body: dict, kind: str
+) -> tuple[str, dict]:
+    """Score and persist a results artifact under recordings/exports/."""
+    payload = _results_matrix(request, body)
+    store = request.app["lab"].store
+    export_dir = store.root / "exports"
+    export_dir.mkdir(parents=True, exist_ok=True)
+    stamp = time.strftime("%Y%m%d_%H%M%S")
+    relative = (
+        "exports/" + kind + "_" + stamp + (".csv" if kind == "export" else ".json")
+    )
+    target = store.root / relative
+    if kind == "export":
+        import csv as csv_module
+        from io import StringIO
+
+        buffer = StringIO()
+        writer = csv_module.writer(buffer)
+        writer.writerow(
+            [
+                "take_id",
+                "created",
+                "session",
+                "label",
+                "expected_action",
+                "model",
+                "predicted_intent",
+                "probability",
+                "match",
+                "duration_s",
+            ]
+        )
+        for take in payload["takes"]:
+            for result in take["results"]:
+                writer.writerow(
+                    [
+                        take.get("id", ""),
+                        take.get("created", ""),
+                        take.get("session", ""),
+                        take.get("label", ""),
+                        take.get("action", ""),
+                        result["model"],
+                        result["intent"],
+                        result["conf"],
+                        "1" if result["match"] else "0",
+                        take.get("duration_s", ""),
+                    ]
+                )
+        try:
+            target.write_text(buffer.getvalue(), encoding="utf-8")
+        except OSError as exc:
+            raise web.HTTPInternalServerError(
+                text="cannot write " + str(relative)
+            ) from exc
+        return relative, {
+            **payload,
+            "path": relative,
+            "rows": len(payload["takes"]) * len(payload["summary"]),
+            "csv": buffer.getvalue(),
+        }
+    data = {
+        "exported_at": stamp,
+        "sessions": sorted({str(t.get("session") or "") for t in payload["takes"]}),
+        **{key: payload[key] for key in ("takes", "summary", "capped", "limit")},
+    }
+    try:
+        target.write_text(
+            json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+        )
+    except OSError as exc:
+        raise web.HTTPInternalServerError(text="cannot write " + str(relative)) from exc
+    return relative, {
+        "path": relative,
+        "takes": len(data["takes"]),
+        "models": len(data["summary"]),
+    }
+
+
+async def api_results_export(request: web.Request) -> web.Response:
+    """Score selected takes across every model, write a CSV, return its path and text."""
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    _relative, payload = await _write_results(request, body, "export")
+    return web.json_response(payload)
+
+
+async def api_results_save(request: web.Request) -> web.Response:
+    """Score selected takes across every model and save the full matrix as JSON."""
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    _relative, payload = await _write_results(request, body, "results")
+    return web.json_response(payload)
+
+
 async def page(_request: web.Request) -> web.FileResponse:
     if not PAGE.is_file():
         raise web.HTTPNotFound(text="oneshot.html is missing from gate1_web/")
@@ -639,6 +766,12 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
     arm_intent = ""
     arm_phrase = ""
     current_session = ""
+    nc_enabled = False
+    nc: dict[str, Any] = {"enabled": False}
+    eos_enabled = False
+    eos_capture_end: int | None = None
+    speech_last = 0
+    last_floor = 0.0
 
     async def send(obj: dict[str, Any]) -> None:
         try:
@@ -675,22 +808,51 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 requested = str(data.get("id") or "")
                 session_meta = store.session(requested)
                 if session_meta is None:
-                    await send({"type": "session", "session": "", "label": "",
-                                "phrase_pointer": 0, "error": "unknown session"})
+                    await send(
+                        {
+                            "type": "session",
+                            "session": "",
+                            "label": "",
+                            "phrase_pointer": 0,
+                            "error": "unknown session",
+                        }
+                    )
                 else:
                     current_session = requested
-                    await send({"type": "session", "session": requested,
-                                "label": str(session_meta.get("label") or ""),
-                                "phrase_pointer": int(session_meta.get("phrase_pointer") or 0)})
+                    await send(
+                        {
+                            "type": "session",
+                            "session": requested,
+                            "label": str(session_meta.get("label") or ""),
+                            "phrase_pointer": int(
+                                session_meta.get("phrase_pointer") or 0
+                            ),
+                        }
+                    )
             elif kind == "session_new":
                 session_meta = store.create_session(str(data.get("label") or ""))
                 current_session = str(session_meta.get("id") or "")
-                await send({"type": "session", "session": current_session,
-                            "label": str(session_meta.get("label") or ""),
-                            "phrase_pointer": 0, "created": True})
+                await send(
+                    {
+                        "type": "session",
+                        "session": current_session,
+                        "label": str(session_meta.get("label") or ""),
+                        "phrase_pointer": 0,
+                        "created": True,
+                    }
+                )
             elif kind == "phrase_state":
                 if current_session:
                     store.set_session_phrases(current_session, data.get("pointer", 0))
+            elif kind == "options":
+                nc_enabled = bool(data.get("nc", False))
+                eos_enabled = bool(data.get("eos", False))
+                if nc_enabled:
+                    nc["enabled"] = True
+                else:
+                    nc.clear()
+                    nc["enabled"] = False
+                await send({"type": "options", "nc": nc_enabled, "eos": eos_enabled})
             elif kind == "arm" and state != "recording":
                 state = "armed"
                 recent.clear()
@@ -699,12 +861,20 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 # take is scoreable and the trial list can replay or re-tag it.
                 arm_intent = str(data.get("intent") or "").strip()
                 arm_phrase = str(data.get("phrase") or "").strip()
+                eos_capture_end = None
+                speech_last = 0
                 if not current_session:
                     session_meta = store.create_session("auto")
                     current_session = str(session_meta.get("id") or "")
-                    await send({"type": "session", "session": current_session,
-                                "label": str(session_meta.get("label") or ""),
-                                "phrase_pointer": 0, "created": True})
+                    await send(
+                        {
+                            "type": "session",
+                            "session": current_session,
+                            "label": str(session_meta.get("label") or ""),
+                            "phrase_pointer": 0,
+                            "created": True,
+                        }
+                    )
                 await send({"type": "state", "state": state})
             elif kind == "disarm" and state != "recording":
                 state = "idle"
@@ -745,6 +915,30 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             buf = buf[trim:]
             base += trim
 
+        # While recording: keep the noise profile fresh and watch for the end of
+        # speech so the capture can be cut early instead of always holding 5 s.
+        if state == "recording":
+            if nc_enabled:
+                gs._nc_noise_update(chunk, nc)
+            if eos_enabled and eos_capture_end is None:
+                tail = chunk if chunk.size >= 800 else buf[-min(buf.size, 800) :]
+                tail_rms = gs._level_rms(tail)
+                speech_floor = max(last_floor * 2.0 + 1e-4, EOS_SPEECH_FLOOR)
+                if tail_rms > speech_floor:
+                    speech_last = total
+                elif total - capture_from >= int(
+                    EOS_MIN_SECONDS * gs.SR
+                ) and total - speech_last >= int(EOS_TAIL_SECONDS * gs.SR):
+                    eos_capture_end = total - int(EOS_TAIL_SECONDS * gs.SR)
+                    await send(
+                        {
+                            "type": "eos",
+                            "capture_seconds": round(
+                                max(0, eos_capture_end - capture_from) / gs.SR, 2
+                            ),
+                        }
+                    )
+
         # Gate 1 listens only while armed, so a capture always starts from a fresh wake word.
         while (
             state == "armed"
@@ -755,6 +949,12 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             win = buf[-window_samples:]
             wrms = gs._level_rms(win)
             floor = gs._track_ambient(ambient, wrms)
+            last_floor = float(floor)
+            if nc_enabled:
+                # Same canceller the streaming dashboard and the replay use: learn from
+                # the raw window, clean the inference window only.
+                gs._nc_noise_update(win, nc)
+                win = gs._nc_apply(win, nc)
             probs, _labels, _two = gates.infer_g1_variant(g1_model, win)
             wake = gs._wake_candidate(probs, thresholds, wrms, floor)
             recent.append(wake)
@@ -788,12 +988,27 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 )
                 break
 
-        # The single Gate 2 pass runs once the 5 s window is complete.
-        if state == "recording" and total - capture_from >= capture_samples:
+        # The single Gate 2 pass runs once the window is complete: 5 s by default,
+        # or sooner when the end-of-speech option cut the capture early.
+        if state == "recording" and (
+            eos_capture_end is not None or total - capture_from >= capture_samples
+        ):
             lo = capture_from - base
-            hi = lo + capture_samples
+            if eos_capture_end is not None:
+                clip_len = eos_capture_end - capture_from
+            else:
+                clip_len = capture_samples
+            hi = lo + clip_len
+            if hi > len(buf):
+                hi = len(buf)
+                clip_len = max(0, hi - lo)
             clip = buf[lo:hi].copy()
             pre = buf[:lo].copy()
+            if nc_enabled and nc.get("profile") is not None:
+                clip = gs._nc_apply(clip, nc)
+                pre = gs._nc_apply(pre, nc)
+            eos_capture_end = None
+            speech_last = 0
             started = time.perf_counter()
             best, scored, model_name = _classify_capture(
                 gs, gates, gate2_name, clip, pre, thresholds
@@ -815,9 +1030,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 verdict = {
                     "intent": str(best["intent"]) if best else "NEGATIVE",
                     "conf": round(float(best["conf"]), 4)
-                    if best
-                    and best["conf"] is not None
-                    and np.isfinite(best["conf"])
+                    if best and best["conf"] is not None and np.isfinite(best["conf"])
                     else None,
                     "match": bool(
                         best
@@ -845,6 +1058,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                     "gate2_model": model_name,
                     "latency_ms": round(latency_ms, 1),
                     "capture_seconds": round(clip.size / gs.SR, 2),
+                    "eos": clip.size < capture_samples,
                     "session": current_session,
                 }
             )

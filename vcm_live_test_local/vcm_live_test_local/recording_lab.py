@@ -212,7 +212,7 @@ class RecordingStore:
 
     def create_session(self, label: str = "") -> dict[str, Any]:
         stamp = datetime.now(UTC)
-        slug = (label.strip() or ("session " + stamp.strftime("%Y-%m-%d %H:%M:%S")))
+        slug = label.strip() or ("session " + stamp.strftime("%Y-%m-%d %H:%M:%S"))
         sid = stamp.strftime("%Y%m%d_%H%M%S") + "_" + uuid.uuid4().hex[:4]
         folder = self.root / SESSIONS_DIR / sid
         folder.mkdir(parents=True, exist_ok=True)
