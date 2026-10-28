@@ -34,7 +34,9 @@ def main() -> int:
         return 1
     existing = {row["phrase"] for row in phrases}
     for intent, forms in SHORT_FORMS.items():
-        insert_at = next((i for i, row in enumerate(phrases) if row["intent"] == intent), None)
+        insert_at = next(
+            (i for i, row in enumerate(phrases) if row["intent"] == intent), None
+        )
         for form in reversed(forms):
             if form in existing:
                 continue
