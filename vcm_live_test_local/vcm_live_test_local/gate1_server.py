@@ -542,9 +542,58 @@ GATE2_PACKAGE_RUNNERS = {
         "tflite/gate2v87_combo_intent_float16.tflite",
         SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
     ),
+    # 2026-10-28 sweep of the v100+ packages: seven of them are standard
+    # 20-class, 148x60x9 heads that ship weights only, so they inherit the V64D
+    # spec and label order (the same fallback the other fine-tunes use). The
+    # rest either ship no tflite or a shape this adapter cannot feed; those are
+    # documented in GATE2_DISABLED_CANDIDATES below.
+    "gate2v111c_bcresnet": (
+        SHIP_DIR / "Gate2V111C_BCResNet_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v111c_bcresnet_softmax_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v112c_gmlp": (
+        SHIP_DIR / "Gate2V112C_GMLP_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v112c_gmlp_softmax_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v113c_matchbox": (
+        SHIP_DIR / "Gate2V113C_Matchbox_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v113c_matchbox_softmax_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v117a_miniecho": (
+        SHIP_DIR / "Gate2V117A_MiniEcho_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v117a_mini_echo_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v118_ambienttail": (
+        SHIP_DIR / "Gate2V118_AmbientTail_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v118_ambient_tail_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v119a_speedwide": (
+        SHIP_DIR / "Gate2V119A_SpeedWide_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v119a_speed_wide_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v119b_speedbounded": (
+        SHIP_DIR / "Gate2V119B_SpeedBounded_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v119b_speed_bounded_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
 }
 
 GATE2_DISABLED_CANDIDATES = {
+    # v100+ packages that cannot be fed or scored by this adapter:
+    "gate2v102_distance": "18-channel frontend (1,148,60,18): needs the distance-channel builder the package does not ship.",
+    "gate2v107_distcompact": "Flattened 549-mel input (1,148,549): needs the compact-distance frontend.",
+    "gate2v114_phonemeslots": "245 outputs (phoneme slot logits): no decoding spec shipped for the intent head.",
+    "gate2v116_groupdistance": "5 group-distance outputs, not a 19/20-class intent head.",
+    "gate2v100_attngap": "Package ships no tflite (report and docs only).",
+    "gate2v101_crnn_v93b": "Package ships no tflite (docs only).",
+    "gate2v106_pairdiscriminators": "Package ships no tflite (docs only).",
+    "gate2v115_discslotlogits": "Void run - no tflite (string-vs-int bug, fix queued upstream).",
     "gate2v20_phonecascade": "Two-stage phone-posterior cascade needs a custom cascade adapter.",
     "gate2v27a_3winalign": "Three-window alignment frontend needs a custom aligner.",
     "gate2v27c_meldelta": "Mel/delta/delta-delta frontend needs a custom feature builder.",
