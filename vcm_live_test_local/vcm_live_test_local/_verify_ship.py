@@ -15,7 +15,11 @@ for sub in sorted(package.iterdir()):
     if not sub.is_dir():
         continue
     wavs = list((sub / "audio").glob("*.wav"))
-    results = json.loads((sub / "results.json").read_text(encoding="utf-8"))
+    try:
+        results = json.loads((sub / "results.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, KeyError) as exc:
+        print("RESULTS_READ " + type(exc).__name__)
+        continue
     scored = results["takes"]
     free = sum(1 for t in scored if not (t.get("intent") or "").strip())
     with_action = len(scored) - free
