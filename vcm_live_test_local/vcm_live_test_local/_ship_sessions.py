@@ -38,9 +38,12 @@ def probs_for(name: str, runner, clip: np.ndarray) -> list[float]:
 
 def sha256_digest(path: pathlib.Path) -> str:
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1 << 16), b""):
-            digest.update(chunk)
+    try:
+        with path.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1 << 16), b""):
+                digest.update(chunk)
+    except OSError:
+        return ""
     return digest.hexdigest()
 
 
