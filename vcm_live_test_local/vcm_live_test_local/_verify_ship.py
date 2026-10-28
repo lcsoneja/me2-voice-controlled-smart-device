@@ -3,7 +3,7 @@
 import json
 import pathlib
 
-SHIPPING = pathlib.Path(__file__).resolve().parent.parent / "Shipping"
+SHIPPING = pathlib.Path(__file__).resolve().parents[2] / "Shipping"
 packages = sorted(SHIPPING.glob("VoiceSessions_ship_*"))
 if not packages:
     print("NO_PACKAGE")

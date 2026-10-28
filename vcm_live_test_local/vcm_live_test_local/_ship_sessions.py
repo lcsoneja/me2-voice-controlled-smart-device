@@ -17,7 +17,7 @@ from recording_lab import RecordingStore
 
 APP = pathlib.Path(__file__).resolve().parent
 STORE = RecordingStore(APP / "recordings")
-SHIPPING = pathlib.Path(__file__).resolve().parent.parent / "Shipping"
+SHIPPING = pathlib.Path(__file__).resolve().parents[2] / "Shipping"
 WANT_COUNTS = (86, 68)
 
 
