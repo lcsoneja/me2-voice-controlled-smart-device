@@ -260,7 +260,8 @@
       <div class="opts">
         <label class="k"><input type="checkbox" id="opt-nc"> noise canceller</label>
         <label class="k"><input type="checkbox" id="opt-eos"> cut at end of speech</label>
-        <label class="k"><input type="checkbox" id="opt-trim" title="cut the capture to the speech span and re-center it in a silent window, matching the training recipe; also drops wake-word bleed at the start"> trim to speech</label>
+        <label class="k" for="opt-prep">prep</label>
+        <select id="opt-prep" title="How the capture is prepared before the decision: raw as recorded, trimmed to its speech span, or with the wake-word lead-in dropped"><option value="">raw</option><option value="trim">trim to speech</option><option value="drop250">drop 0.25s</option><option value="drop500">drop 0.5s</option></select>
       </div>
       <label class="k" for="sel-phrase">Phrase I will speak</label>
       <select id="sel-phrase"></select>
@@ -297,7 +298,8 @@
       <div class="takebar">
         <label class="k"><input type="checkbox" id="tk-all"> all</label>
         <label class="k"><input type="checkbox" id="tk-holdout" checked> holdout</label>
-        <label class="k" title="Score the takes trimmed to their speech span and re-centered, like the training data"><input type="checkbox" id="tk-trim"> trimmed</label>
+        <label class="k" for="tk-prep">prep</label>
+        <select id="tk-prep" title="How each take is prepared before scoring: raw as recorded, trimmed to speech, or with the wake-word lead-in dropped"><option value="">raw</option><option value="trim">trimmed</option><option value="drop250">drop 0.25s</option><option value="drop500">drop 0.5s</option></select>
         <select id="tk-session"><option value="">all sessions</option></select>
         <input type="search" id="tk-filter" placeholder="filter id / label / intent">
       </div>
@@ -709,20 +711,30 @@
   loadSessions();
 
   // ---- capture options: noise canceller and end-of-speech cut ----
-  var optNc = el("opt-nc"), optEos = el("opt-eos"), optTrim = el("opt-trim");
+  var optNc = el("opt-nc"), optEos = el("opt-eos"), optPrep = el("opt-prep");
+  function capturePrep() {
+    var v = optPrep ? optPrep.value : "";
+    if (v === "trim") { return { trim: true, leadin: 0 }; }
+    if (v === "drop250") { return { trim: false, leadin: 0.25 }; }
+    if (v === "drop500") { return { trim: false, leadin: 0.5 }; }
+    return { trim: false, leadin: 0 };
+  }
   function sendOptions() {
+    var prep = capturePrep();
     var o = { nc: optNc ? optNc.checked : false,
               eos: optEos ? optEos.checked : false,
-              trim: optTrim ? optTrim.checked : false,
+              trim: prep.trim,
+              leadin: prep.leadin,
               cont: continueMode };
     // Persist the toggles so they survive a page reload or an app restart;
     // the server's option state is per-connection and resets on its own.
     try { localStorage.setItem("oneshot.options", JSON.stringify(o)); } catch (e) {}
-    send({ type: "options", nc: o.nc, eos: o.eos, trim: o.trim, cont: o.cont });
+    send({ type: "options", nc: o.nc, eos: o.eos, trim: o.trim,
+           leadin: o.leadin, cont: o.cont });
   }
   if (optNc) { optNc.addEventListener("change", sendOptions); }
   if (optEos) { optEos.addEventListener("change", sendOptions); }
-  if (optTrim) { optTrim.addEventListener("change", sendOptions); }
+  if (optPrep) { optPrep.addEventListener("change", sendOptions); }
   // Restore the last toggle state before anything can send defaults; the
   // actual re-sync to the server happens when the socket opens.
   var savedOpts = null;
@@ -730,7 +742,11 @@
   if (savedOpts) {
     if (optNc) { optNc.checked = !!savedOpts.nc; }
     if (optEos) { optEos.checked = !!savedOpts.eos; }
-    if (optTrim) { optTrim.checked = !!savedOpts.trim; }
+    if (optPrep) {
+      var savedLeadin = Number(savedOpts.leadin || 0);
+      optPrep.value = savedOpts.trim ? "trim"
+        : (savedLeadin >= 0.5 ? "drop500" : (savedLeadin > 0 ? "drop250" : ""));
+    }
     continueMode = !!savedOpts.cont;
     var contBtn0 = el("btn-cont");
     if (contBtn0) { contBtn0.classList.toggle("on", continueMode); }
@@ -852,10 +868,24 @@
 
   function postJson(path, payload, what) {
     el("tk-count").textContent = what + " ...";
+    // Every scoring call carries the prep choice from the takes toolbar, so no
+    // caller has to remember to include it (non-scoring payloads have no models key).
+    var body = payload;
+    if (payload && payload.models) {
+      var key;
+      body = {};
+      for (key in payload) {
+        if (Object.prototype.hasOwnProperty.call(payload, key)) { body[key] = payload[key]; }
+      }
+      var extra = prepFields();
+      for (key in extra) {
+        if (Object.prototype.hasOwnProperty.call(extra, key)) { body[key] = extra[key]; }
+      }
+    }
     return fetch(path, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(body)
     }).then(function (r) { return r.json(); });
   }
 
@@ -886,11 +916,25 @@
       });
   });
 
-  function scoringTrim() {
-    var t = el("tk-trim");
-    return t ? t.checked : false;
+  function prepValue() {
+    var s = el("tk-prep");
+    return s ? s.value : "";
   }
-  function trimSuffix() { return scoringTrim() ? " (trimmed)" : ""; }
+  function prepFields() {
+    var v = prepValue();
+    if (v === "trim") { return { trim: true, leadin: 0 }; }
+    if (v === "drop250") { return { trim: false, leadin: 0.25 }; }
+    if (v === "drop500") { return { trim: false, leadin: 0.5 }; }
+    return { trim: false, leadin: 0 };
+  }
+  function scoringTrim() { return prepValue() === "trim"; }
+  function trimSuffix() {
+    var v = prepValue();
+    if (v === "trim") { return " (trimmed)"; }
+    if (v === "drop250") { return " (drop 0.25s)"; }
+    if (v === "drop500") { return " (drop 0.5s)"; }
+    return "";
+  }
 
   function scoreTakes(ids, headline) {
     postJson("/api/oneshot/recordings/score", { ids: ids, models: "all", trim: scoringTrim() }, "scoring" + trimSuffix())
@@ -1383,12 +1427,16 @@
     } else if (msg.type === "options") {
       if (el("opt-nc")) { el("opt-nc").checked = !!msg.nc; }
       if (el("opt-eos")) { el("opt-eos").checked = !!msg.eos; }
-      if (el("opt-trim")) { el("opt-trim").checked = !!msg.trim; }
+      if (el("opt-prep")) {
+        var msgLeadin = Number(msg.leadin || 0);
+        el("opt-prep").value = msg.trim ? "trim"
+          : (msgLeadin >= 0.5 ? "drop500" : (msgLeadin > 0 ? "drop250" : ""));
+      }
       continueMode = !!msg.cont;
       var contBtn = el("btn-cont");
       if (contBtn) { contBtn.classList.toggle("on", continueMode); }
       window.__oneshot = window.__oneshot || {};
-      window.__oneshot.options = { nc: !!msg.nc, eos: !!msg.eos, trim: !!msg.trim, cont: continueMode };
+      window.__oneshot.options = { nc: !!msg.nc, eos: !!msg.eos, trim: !!msg.trim, leadin: Number(msg.leadin || 0), cont: continueMode };
       window.__oneshot.continueMode = continueMode;
     } else if (msg.type === "eos") {
       el("countdown").textContent = Number(msg.capture_seconds || 0).toFixed(1)

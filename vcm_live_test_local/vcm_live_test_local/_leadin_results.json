@@ -1,0 +1,230 @@
+{
+ "generated": "2026-10-28T16:45:54Z",
+ "package": "VoiceSessions_ship_20261028_125010",
+ "takes": 153,
+ "conditions": [
+  "raw",
+  "center",
+  "drop250",
+  "drop500"
+ ],
+ "models": [
+  {
+   "model": "gate2v21p",
+   "n": 153,
+   "acc": {
+    "raw": 63.4,
+    "center": 62.1,
+    "drop250": 62.7,
+    "drop500": 62.7
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "acc": {
+      "raw": 53.7,
+      "center": 52.2,
+      "drop250": 52.2,
+      "drop500": 58.2
+     }
+    },
+    "86": {
+     "n": 86,
+     "acc": {
+      "raw": 70.9,
+      "center": 69.8,
+      "drop250": 70.9,
+      "drop500": 66.3
+     }
+    }
+   },
+   "ms": 7.07
+  },
+  {
+   "model": "gate2v110_ownerft_aggr",
+   "n": 153,
+   "acc": {
+    "raw": 62.7,
+    "center": 60.8,
+    "drop250": 60.8,
+    "drop500": 58.8
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "acc": {
+      "raw": 59.7,
+      "center": 53.7,
+      "drop250": 59.7,
+      "drop500": 58.2
+     }
+    },
+    "86": {
+     "n": 86,
+     "acc": {
+      "raw": 65.1,
+      "center": 66.3,
+      "drop250": 61.6,
+      "drop500": 59.3
+     }
+    }
+   },
+   "ms": 7.05
+  },
+  {
+   "model": "gate2v19p",
+   "n": 153,
+   "acc": {
+    "raw": 58.8,
+    "center": 60.8,
+    "drop250": 61.4,
+    "drop500": 61.4
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "acc": {
+      "raw": 52.2,
+      "center": 58.2,
+      "drop250": 59.7,
+      "drop500": 58.2
+     }
+    },
+    "86": {
+     "n": 86,
+     "acc": {
+      "raw": 64.0,
+      "center": 62.8,
+      "drop250": 62.8,
+      "drop500": 64.0
+     }
+    }
+   },
+   "ms": 6.22
+  },
+  {
+   "model": "gate2v56_v54",
+   "n": 153,
+   "acc": {
+    "raw": 61.4,
+    "center": 62.7,
+    "drop250": 60.8,
+    "drop500": 62.1
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "acc": {
+      "raw": 62.7,
+      "center": 59.7,
+      "drop250": 58.2,
+      "drop500": 55.2
+     }
+    },
+    "86": {
+     "n": 86,
+     "acc": {
+      "raw": 60.5,
+      "center": 65.1,
+      "drop250": 62.8,
+      "drop500": 67.4
+     }
+    }
+   },
+   "ms": 28.93
+  },
+  {
+   "model": "gate2v96c_v93b_rerun",
+   "n": 153,
+   "acc": {
+    "raw": 49.7,
+    "center": 53.6,
+    "drop250": 54.2,
+    "drop500": 53.6
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "acc": {
+      "raw": 49.3,
+      "center": 50.7,
+      "drop250": 49.3,
+      "drop500": 47.8
+     }
+    },
+    "86": {
+     "n": 86,
+     "acc": {
+      "raw": 50.0,
+      "center": 55.8,
+      "drop250": 58.1,
+      "drop500": 58.1
+     }
+    }
+   },
+   "ms": 8.74
+  },
+  {
+   "model": "gate2v108_ownerft_v93b",
+   "n": 153,
+   "acc": {
+    "raw": 53.6,
+    "center": 54.2,
+    "drop250": 55.6,
+    "drop500": 57.5
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "acc": {
+      "raw": 50.7,
+      "center": 46.3,
+      "drop250": 52.2,
+      "drop500": 52.2
+     }
+    },
+    "86": {
+     "n": 86,
+     "acc": {
+      "raw": 55.8,
+      "center": 60.5,
+      "drop250": 58.1,
+      "drop500": 61.6
+     }
+    }
+   },
+   "ms": 8.75
+  },
+  {
+   "model": "gate2v124_ensemble4way",
+   "n": 153,
+   "acc": {
+    "raw": 54.2,
+    "center": 54.2,
+    "drop250": 58.8,
+    "drop500": 60.1
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "acc": {
+      "raw": 46.3,
+      "center": 44.8,
+      "drop250": 52.2,
+      "drop500": 53.7
+     }
+    },
+    "86": {
+     "n": 86,
+     "acc": {
+      "raw": 60.5,
+      "center": 61.6,
+      "drop250": 64.0,
+      "drop500": 65.1
+     }
+    }
+   },
+   "ms": 15.1
+  }
+ ]
+}
