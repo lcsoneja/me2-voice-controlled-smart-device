@@ -26,8 +26,20 @@ for sub in sorted(package.iterdir()):
     per_model = len(scored[0]["results"]) if scored else 0
     size_mb = sum(path.stat().st_size for path in sub.rglob("*")) / (1 << 20)
     total += size_mb
-    print(str(sub.name) + ": wavs=" + str(len(wavs)) + " scored=" + str(len(scored))
-          + " with_expected_intent=" + str(with_action) + " free=" + str(free)
-          + " per_model=" + str(per_model) + " size_mb=" + str(round(size_mb, 1)))
+    print(
+        str(sub.name)
+        + ": wavs="
+        + str(len(wavs))
+        + " scored="
+        + str(len(scored))
+        + " with_expected_intent="
+        + str(with_action)
+        + " free="
+        + str(free)
+        + " per_model="
+        + str(per_model)
+        + " size_mb="
+        + str(round(size_mb, 1))
+    )
     print("  files=" + ",".join(sorted(path.name for path in sub.iterdir())))
 print("TOTAL_MB=" + str(round(total, 1)))

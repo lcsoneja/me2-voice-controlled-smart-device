@@ -44,9 +44,8 @@ def sha256_digest(path: pathlib.Path) -> str:
     return digest.hexdigest()
 
 
-def score_takes(takes, models, loaded) -> list[dict]:
+def score_takes(takes, models) -> list[dict]:
     results = []
-    labels = {}
     runners = {}
     for entry in takes:
         path = STORE.path_of(entry)
@@ -59,28 +58,36 @@ def score_takes(takes, models, loaded) -> list[dict]:
             if runner is None:
                 runner = runner_for(name)
                 runners[name] = runner
-                labels[name] = list(runner.labels)
+                model_labels = list(runner.labels)
             try:
                 probs = probs_for(name, runner, clip)
             except (RuntimeError, ValueError):
                 continue
-            intent, conf = gs._g2_candidate_intent(probs, labels[name], {}, 0.0)
-            rows.append({
-                "model": name,
-                "intent": str(intent) if intent else "NEGATIVE",
-                "conf": round(float(conf), 4) if conf is not None and np.isfinite(conf) else None,
-                "match": bool(intent and bench.same_command(intent, entry.get("action"))),
-            })
-        results.append({
-            "take_id": entry.get("id"),
-            "phrase": entry.get("label"),
-            "intent": entry.get("action"),
-            "created": entry.get("created"),
-            "duration_s": entry.get("duration_s"),
-            "session": entry.get("session"),
-            "results": rows,
-        })
-    return results, {name: labels[name] for name in models}
+            intent, conf = gs._g2_candidate_intent(probs, model_labels, {}, 0.0)
+            rows.append(
+                {
+                    "model": name,
+                    "intent": str(intent) if intent else "NEGATIVE",
+                    "conf": round(float(conf), 4)
+                    if conf is not None and np.isfinite(conf)
+                    else None,
+                    "match": bool(
+                        intent and bench.same_command(intent, entry.get("action"))
+                    ),
+                }
+            )
+        results.append(
+            {
+                "take_id": entry.get("id"),
+                "phrase": entry.get("label"),
+                "intent": entry.get("action"),
+                "created": entry.get("created"),
+                "duration_s": entry.get("duration_s"),
+                "session": entry.get("session"),
+                "results": rows,
+            }
+        )
+    return results
 
 
 def main() -> int:
@@ -99,8 +106,7 @@ def main() -> int:
         audio = sub / "audio"
         audio.mkdir(parents=True, exist_ok=True)
         takes = [
-            entry for entry in STORE.list()
-            if str(entry.get("session") or "") == sid
+            entry for entry in STORE.list() if str(entry.get("session") or "") == sid
         ]
         copy_names: dict[str, str] = {}
         for entry in sorted(takes, key=lambda e: str(e.get("created") or "")):
@@ -110,37 +116,74 @@ def main() -> int:
             target = audio / (str(entry.get("id") or "take") + ".wav")
             shutil.copy2(str(src), str(target))
             copy_names[str(entry.get("id"))] = target.name
-        scored, headers = score_takes(takes, models, {})
+        scored = score_takes(takes, models)
         for result in scored:
             result["audio"] = copy_names.get(str(result["take_id"]), "")
         (sub / "takes.json").write_text(
-            json.dumps([{**t, "audio": copy_names.get(str(t.get("id")), "")} for t in takes],
-                       indent=1, ensure_ascii=False), encoding="utf-8")
+            json.dumps(
+                [{**t, "audio": copy_names.get(str(t.get("id")), "")} for t in takes],
+                indent=1,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
         (sub / "results.json").write_text(
-            json.dumps({"generated": stamp, "models_benchmarked": models,
-                        "takes": scored}, indent=1, ensure_ascii=False), encoding="utf-8")
+            json.dumps(
+                {"generated": stamp, "models_benchmarked": models, "takes": scored},
+                indent=1,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
         buffer = io.StringIO()
         writer = csv.writer(buffer)
-        writer.writerow(["take_id", "phrase", "intent", "session", "audio",
-                         "model", "predicted_intent", "probability", "match", "duration_s"])
+        writer.writerow(
+            [
+                "take_id",
+                "phrase",
+                "intent",
+                "session",
+                "audio",
+                "model",
+                "predicted_intent",
+                "probability",
+                "match",
+                "duration_s",
+            ]
+        )
         for result in scored:
             for row in result["results"]:
-                writer.writerow([result["take_id"], result["phrase"], result["intent"],
-                                 result["session"], result["audio"], row["model"],
-                                 row["intent"], row["conf"], 1 if row["match"] else 0,
-                                 result.get("duration_s", "")])
+                writer.writerow(
+                    [
+                        result["take_id"],
+                        result["phrase"],
+                        result["intent"],
+                        result["session"],
+                        result["audio"],
+                        row["model"],
+                        row["intent"],
+                        row["conf"],
+                        1 if row["match"] else 0,
+                        result.get("duration_s", ""),
+                    ]
+                )
         (sub / "results.csv").write_text(buffer.getvalue(), encoding="utf-8")
         (sub / "MANIFEST.json").write_text(
-            json.dumps({
-                "package": "VoiceSession_" + str(count) + "_takes",
-                "created_at": stamp,
-                "source_session": sid,
-                "source_label": str(session.get("label")),
-                "takes": len(takes),
-                "scored": len(scored),
-                "models_benchmarked": len(models),
-                "provenance": "recorded locally in the VCM One-Shot app",
-            }, indent=1), encoding="utf-8")
+            json.dumps(
+                {
+                    "package": "VoiceSession_" + str(count) + "_takes",
+                    "created_at": stamp,
+                    "source_session": sid,
+                    "source_label": str(session.get("label")),
+                    "takes": len(takes),
+                    "scored": len(scored),
+                    "models_benchmarked": len(models),
+                    "provenance": "recorded locally in the VCM One-Shot app",
+                },
+                indent=1,
+            ),
+            encoding="utf-8",
+        )
         sums = []
         for path in sorted(sub.rglob("*")):
             if path.is_file():
@@ -154,7 +197,8 @@ def main() -> int:
             "- Full 73-model scoring matrix in results.json / results.csv "
             "(predicted intent, softmax probability, match per take x model)\n"
             "- Reproduce in the app: open this session, then Test all mine x all models\n",
-            encoding="utf-8")
+            encoding="utf-8",
+        )
         print(str(count) + " takes shipped -> " + str(sub.relative_to(SHIPPING)))
     return 0
 
