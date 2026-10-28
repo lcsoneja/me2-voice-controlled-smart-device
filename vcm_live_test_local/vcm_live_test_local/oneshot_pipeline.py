@@ -215,6 +215,7 @@ async def api_recordings_score(request: web.Request) -> web.Response:
         body = {}
     if not isinstance(body, dict):
         body = {}
+    trim = bool(body.get("trim", False))
 
     labelled = [row for row in _recording_rows(store) if row["action"].strip()]
     by_id = {row["id"]: row for row in labelled}
@@ -242,7 +243,7 @@ async def api_recordings_score(request: web.Request) -> web.Response:
             {"error": "no known Gate 2 models requested"}, status=400
         )
 
-    takes, tally = _score_matrix(gs, gates, store, selected, models)
+    takes, tally = _score_matrix(gs, gates, store, selected, models, trim=trim)
     summary = _summary_rows(models, tally)
     return web.json_response(
         {
@@ -250,6 +251,7 @@ async def api_recordings_score(request: web.Request) -> web.Response:
             "summary": summary,
             "capped": capped,
             "limit": MAX_SCORE_RECORDINGS,
+            "trim": trim,
         }
     )
 
@@ -300,9 +302,13 @@ def _leaderboard_rows(board: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _score_matrix(
-    gs, gates, store: Any, selected: list, models: list
+    gs, gates, store: Any, selected: list, models: list, trim: bool = False
 ) -> tuple[list, dict]:
-    """Run every selected take through every model: one row per take, one result per model."""
+    """Run every selected take through every model: one row per take, one result per model.
+
+    With trim=True each take is first cut to its speech span and re-centered in a window of
+    digital silence — the same preprocessing the live one-shot path applies when trimming is on.
+    """
     takes = []
     tally: dict[str, list[int]] = {name: [0, 0] for name in models}
     for take in selected:
@@ -316,10 +322,24 @@ def _score_matrix(
         if not candidate.is_file():
             continue
         clip = _load_clip(candidate)
+        speech = None
+        if trim:
+            trimmed = _trim_to_speech(clip, gs.SR)
+            if trimmed is not None:
+                speech = trimmed[0]
         results = []
         for name in models:
             runner = _load_runner(gs, gates, name)
-            probs = _gate2_probs(gs, gates, name, runner, clip)
+            scored_clip = clip
+            if speech is not None:
+                window = max(1, int(getattr(runner, "frames", gs.TARGET_148)) * gs.HOP)
+                if speech.shape[0] >= window:
+                    scored_clip = speech[:window]
+                else:
+                    left = (window - speech.shape[0]) // 2
+                    scored_clip = np.zeros(window, dtype=speech.dtype)
+                    scored_clip[left : left + speech.shape[0]] = speech
+            probs = _gate2_probs(gs, gates, name, runner, scored_clip)
             intent, conf = gs._g2_candidate_intent(probs, list(runner.labels), {}, 0.0)
             hit = _same_command(intent, take["action"])
             if conf is not None and np.isfinite(conf):
@@ -408,6 +428,7 @@ async def api_leaderboard_score(request: web.Request) -> web.Response:
         body = {}
     if not isinstance(body, dict):
         body = {}
+    trim = bool(body.get("trim", False))
 
     selected, models, capped = _selection(gs, store, body)
     if not selected:
@@ -422,7 +443,7 @@ async def api_leaderboard_score(request: web.Request) -> web.Response:
         epoch += 1
         board = {}
         _save_board(store, epoch, {})
-    takes, tally = _score_matrix(gs, gates, store, selected, models)
+    takes, tally = _score_matrix(gs, gates, store, selected, models, trim=trim)
     for name in models:
         entry = board.setdefault(name, {"correct": 0, "scored": 0, "runs": 0})
         entry["correct"] = int(entry.get("correct", 0)) + tally[name][0]
@@ -440,6 +461,7 @@ async def api_leaderboard_score(request: web.Request) -> web.Response:
                 "reset_detected": True,
                 "capped": capped,
                 "limit": MAX_SCORE_RECORDINGS,
+                "trim": trim,
             }
         )
     _save_board(store, epoch, board)
@@ -450,6 +472,7 @@ async def api_leaderboard_score(request: web.Request) -> web.Response:
             "ranking": _leaderboard_rows(board),
             "capped": capped,
             "limit": MAX_SCORE_RECORDINGS,
+            "trim": trim,
         }
     )
 
@@ -527,14 +550,16 @@ def _results_matrix(request: web.Request, body: dict) -> dict:
     gs = importlib.import_module("gate1_server")
     gates = request.app["gates"]
     store = request.app["lab"].store
+    trim = bool(body.get("trim", False))
     selected, models, capped = _selection(gs, store, body)
     if not selected or not models:
         raise web.HTTPBadRequest(text="no scoreable takes or models")
-    takes, tally = _score_matrix(gs, gates, store, selected, models)
+    takes, tally = _score_matrix(gs, gates, store, selected, models, trim=trim)
     return {
         "takes": takes,
         "summary": _summary_rows(models, tally),
         "capped": capped,
+        "trim": trim,
         "limit": MAX_SCORE_RECORDINGS,
     }
 
@@ -707,18 +732,77 @@ def _decide(
     }
 
 
+def _trim_to_speech(clip: np.ndarray, sample_rate: int):
+    """Energy-based voice trim: the speech-only span of the capture.
+
+    The models were trained on one command centered in a fixed window with digital
+    silence at both ends; a live capture places the command anywhere and often
+    carries wake-word bleed at its start. Trimming to the speech span and
+    re-centering it inside a window of digital silence reproduces the training
+    shape. Returns (trimmed_audio, start_sample), or None when nothing rises
+    above the noise floor (silence or a wake word only).
+    """
+    frame = int(sample_rate * 0.02)
+    if clip.shape[0] < frame * 3:
+        return None
+    rms = np.array(
+        [
+            float(np.sqrt(np.mean(clip[i : i + frame] ** 2) + 1e-9))
+            for i in range(0, clip.shape[0] - frame, frame)
+        ]
+    )
+    if rms.size < 5:
+        return None
+    floor = float(np.percentile(rms, 15))
+    loud = float(np.percentile(rms, 95))
+    # Normally the gate is 4x the noise floor, but it must never sit above the loud
+    # frames: in a loud room (or on a normalized recording) the floor can be so close
+    # to the peak that 4x the floor exceeds every frame, and the trim would silently
+    # report "no speech" for a take that clearly has a command in it.
+    gate = min(max(floor * 4.0, 0.012), floor + 0.5 * (loud - floor))
+    hot = np.flatnonzero(rms > gate)
+    if hot.size == 0:
+        return None
+    margin = max(1, int(sample_rate * 0.06) // frame)
+    start = max(0, (int(hot[0]) - margin) * frame)
+    end = min(clip.shape[0], (min(int(hot[-1]) + margin, rms.size - 1) + 1) * frame)
+    trimmed = clip[start:end]
+    if trimmed.shape[0] < int(sample_rate * 0.4):
+        return None
+    return trimmed, start
+
+
 def _classify_capture(
-    gs, gates, name: str, clip: np.ndarray, pre: np.ndarray, thresholds: dict[str, Any]
+    gs, gates, name: str, clip: np.ndarray, pre: np.ndarray, thresholds: dict[str, Any],
+    trim: bool = False,
 ):
     """ONE decision from the capture.
 
-    ``clip`` is the 5 s capture; ``pre`` is the audio immediately before it, used when the
+    "clip" is the 5 s capture; "pre" is the audio immediately before it, used when the
     model's native window is longer than the capture. NEGATIVE is masked by
-    ``_g2_candidate_intent``, so a rejection can never be reported as a command.
+    "_g2_candidate_intent", so a rejection can never be reported as a command.
+
+    With trim=True the capture is cut to its speech span and re-centered inside a
+    window of digital silence, matching the training recipe (command centered,
+    silence at both ends); this also drops wake-word bleed at the capture start.
     """
     runner = _load_runner(gs, gates, name)
     frames = int(getattr(runner, "frames", gs.TARGET_148))
     window = max(1, frames * gs.HOP)
+    if trim:
+        trimmed = _trim_to_speech(clip, gs.SR)
+        if trimmed is not None:
+            speech, speech_start = trimmed
+            if speech.shape[0] >= window:
+                segment = speech[:window]
+            else:
+                left = (window - speech.shape[0]) // 2
+                segment = np.zeros(window, dtype=speech.dtype)
+                segment[left : left + speech.shape[0]] = speech
+            best = _decide(gs, gates, name, runner, thresholds, segment)
+            if best is not None:
+                best["at_s"] = round(speech_start / gs.SR, 2)
+            return best, 1, name
     if window >= clip.shape[0]:
         # Native window at least as long as the capture: one window ending at the capture
         # end. Sliding inside a shorter clip would feed the model mostly padding.
@@ -800,6 +884,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
     speech_last = 0
     last_floor = 0.0
     continue_mode = False
+    trim_mode = False
 
     async def send(obj: dict[str, Any]) -> None:
         try:
@@ -876,6 +961,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                 nc_enabled = bool(data.get("nc", False))
                 eos_enabled = bool(data.get("eos", False))
                 continue_mode = bool(data.get("cont", False))
+                trim_mode = bool(data.get("trim", False))
                 if nc_enabled:
                     nc["enabled"] = True
                 else:
@@ -887,6 +973,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
                         "nc": nc_enabled,
                         "eos": eos_enabled,
                         "cont": continue_mode,
+                        "trim": trim_mode,
                     }
                 )
             elif kind == "arm" and state != "recording":
@@ -1047,7 +1134,7 @@ async def ws_oneshot(request: web.Request) -> web.WebSocketResponse:
             speech_last = 0
             started = time.perf_counter()
             best, scored, model_name = _classify_capture(
-                gs, gates, gate2_name, clip, pre, thresholds
+                gs, gates, gate2_name, clip, pre, thresholds, trim=trim_mode
             )
             latency_ms = (time.perf_counter() - started) * 1000.0
             # Every capture becomes a take: the trial list, playback, re-tagging and the

@@ -260,6 +260,7 @@
       <div class="opts">
         <label class="k"><input type="checkbox" id="opt-nc"> noise canceller</label>
         <label class="k"><input type="checkbox" id="opt-eos"> cut at end of speech</label>
+        <label class="k"><input type="checkbox" id="opt-trim" title="cut the capture to the speech span and re-center it in a silent window, matching the training recipe; also drops wake-word bleed at the start"> trim to speech</label>
       </div>
       <label class="k" for="sel-phrase">Phrase I will speak</label>
       <select id="sel-phrase"></select>
@@ -296,6 +297,7 @@
       <div class="takebar">
         <label class="k"><input type="checkbox" id="tk-all"> all</label>
         <label class="k"><input type="checkbox" id="tk-holdout" checked> holdout</label>
+        <label class="k" title="Score the takes trimmed to their speech span and re-centered, like the training data"><input type="checkbox" id="tk-trim"> trimmed</label>
         <select id="tk-session"><option value="">all sessions</option></select>
         <input type="search" id="tk-filter" placeholder="filter id / label / intent">
       </div>
@@ -707,15 +709,32 @@
   loadSessions();
 
   // ---- capture options: noise canceller and end-of-speech cut ----
-  var optNc = el("opt-nc"), optEos = el("opt-eos");
+  var optNc = el("opt-nc"), optEos = el("opt-eos"), optTrim = el("opt-trim");
   function sendOptions() {
-    send({ type: "options",
-           nc: optNc ? optNc.checked : false,
-           eos: optEos ? optEos.checked : false,
-           cont: continueMode });
+    var o = { nc: optNc ? optNc.checked : false,
+              eos: optEos ? optEos.checked : false,
+              trim: optTrim ? optTrim.checked : false,
+              cont: continueMode };
+    // Persist the toggles so they survive a page reload or an app restart;
+    // the server's option state is per-connection and resets on its own.
+    try { localStorage.setItem("oneshot.options", JSON.stringify(o)); } catch (e) {}
+    send({ type: "options", nc: o.nc, eos: o.eos, trim: o.trim, cont: o.cont });
   }
   if (optNc) { optNc.addEventListener("change", sendOptions); }
   if (optEos) { optEos.addEventListener("change", sendOptions); }
+  if (optTrim) { optTrim.addEventListener("change", sendOptions); }
+  // Restore the last toggle state before anything can send defaults; the
+  // actual re-sync to the server happens when the socket opens.
+  var savedOpts = null;
+  try { savedOpts = JSON.parse(localStorage.getItem("oneshot.options") || "null"); } catch (e) { savedOpts = null; }
+  if (savedOpts) {
+    if (optNc) { optNc.checked = !!savedOpts.nc; }
+    if (optEos) { optEos.checked = !!savedOpts.eos; }
+    if (optTrim) { optTrim.checked = !!savedOpts.trim; }
+    continueMode = !!savedOpts.cont;
+    var contBtn0 = el("btn-cont");
+    if (contBtn0) { contBtn0.classList.toggle("on", continueMode); }
+  }
 
   var g1Sel = el("sel-g1");
   if (g1Sel) {
@@ -867,9 +886,15 @@
       });
   });
 
+  function scoringTrim() {
+    var t = el("tk-trim");
+    return t ? t.checked : false;
+  }
+  function trimSuffix() { return scoringTrim() ? " (trimmed)" : ""; }
+
   function scoreTakes(ids, headline) {
-    postJson("/api/oneshot/recordings/score", { ids: ids, models: "all" }, "scoring")
-      .then(function (d) { renderScore(d, headline); })
+    postJson("/api/oneshot/recordings/score", { ids: ids, models: "all", trim: scoringTrim() }, "scoring" + trimSuffix())
+      .then(function (d) { renderScore(d, headline + trimSuffix()); })
       .catch(function () { el("tk-count").textContent = "scoring failed"; });
   }
 
@@ -983,7 +1008,7 @@
     var model = el("sel-g2").value;
     if (!ids.length) { el("tk-count").textContent = "select takes first"; return; }
     if (!model) { el("tk-count").textContent = "pick a Gate 2 model in Setup first"; return; }
-    postJson("/api/oneshot/leaderboard/score", { ids: ids, models: [model] }, "scoring " + model)
+    postJson("/api/oneshot/leaderboard/score", { ids: ids, models: [model], trim: scoringTrim() }, "scoring " + model + trimSuffix())
       .then(function (d) {
         ranking = d.ranking || [];
         paintRanking();
@@ -1014,7 +1039,7 @@
     var round = function () {
       if (liveBusy) { return; }
       liveBusy = true;
-      postJson("/api/oneshot/leaderboard/score", { ids: ids, models: "all" }, "scoring all models")
+      postJson("/api/oneshot/leaderboard/score", { ids: ids, models: "all", trim: scoringTrim() }, "scoring all models" + trimSuffix())
         .then(function (d) { ranking = d.ranking || []; paintRanking(); })
         .catch(function () {
           stopLive();
@@ -1060,7 +1085,7 @@
   function runResults(kind, headline) {
     var ids = chosenOrVisibleIds();
     if (!ids.length) { el("tk-count").textContent = "no takes to " + kind; return; }
-    postJson("/api/oneshot/results/" + kind, { ids: ids, models: "all" }, headline)
+    postJson("/api/oneshot/results/" + kind, { ids: ids, models: "all", trim: scoringTrim() }, headline + trimSuffix())
       .then(function (d) {
         var count = (typeof d.take_count === "number") ? d.take_count
                    : (typeof d.rows === "number" ? d.rows : 0);
@@ -1096,8 +1121,8 @@
     var mine = takes.filter(function (r) { return !r.holdout && (r.action || "").trim(); });
     if (!mine.length) { el("tk-count").textContent = "no recorded takes yet - record phrases first"; return; }
     var ids = mine.map(function (r) { return r.id; });
-    postJson("/api/oneshot/results/save", { ids: ids, models: "all", folder: "auto" },
-             "testing " + ids.length + " take(s) on every model")
+    postJson("/api/oneshot/results/save", { ids: ids, models: "all", folder: "auto", trim: scoringTrim() },
+             "testing " + ids.length + " take(s) on every model" + trimSuffix())
       .then(function (d) {
         el("tk-count").textContent = (d.path || "") + " - " + (d.take_count || 0)
           + " take(s) x " + (d.models || 0) + " models saved";
@@ -1358,11 +1383,12 @@
     } else if (msg.type === "options") {
       if (el("opt-nc")) { el("opt-nc").checked = !!msg.nc; }
       if (el("opt-eos")) { el("opt-eos").checked = !!msg.eos; }
+      if (el("opt-trim")) { el("opt-trim").checked = !!msg.trim; }
       continueMode = !!msg.cont;
       var contBtn = el("btn-cont");
       if (contBtn) { contBtn.classList.toggle("on", continueMode); }
       window.__oneshot = window.__oneshot || {};
-      window.__oneshot.options = { nc: !!msg.nc, eos: !!msg.eos, cont: continueMode };
+      window.__oneshot.options = { nc: !!msg.nc, eos: !!msg.eos, trim: !!msg.trim, cont: continueMode };
       window.__oneshot.continueMode = continueMode;
     } else if (msg.type === "eos") {
       el("countdown").textContent = Number(msg.capture_seconds || 0).toFixed(1)
@@ -1591,7 +1617,12 @@
   function connect() {
     var proto = (location.protocol === "https:") ? "wss://" : "ws://";
     ws = new WebSocket(proto + location.host + "/ws/oneshot");
-    ws.onopen = function () { el("c-link").textContent = "ok"; };
+    ws.onopen = function () {
+      el("c-link").textContent = "ok";
+      // Re-sync the restored toggle state on every (re)connect: the server
+      // would otherwise start the new connection with default options.
+      sendOptions();
+    };
     ws.onmessage = function (event) {
       if (typeof event.data !== "string") return;
       var msg = null;

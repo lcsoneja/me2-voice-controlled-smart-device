@@ -15,8 +15,12 @@ from recording_lab import RecordingStore
 
 APP = pathlib.Path(__file__).resolve().parent
 store = RecordingStore(APP / "recordings")
-MODELS = ["gate2v21p", "gate2v110_ownerft_aggr", "gate2v56_v54",
-          "gate2v108_ownerft_v93b"]
+MODELS = [
+    "gate2v21p",
+    "gate2v110_ownerft_aggr",
+    "gate2v56_v54",
+    "gate2v108_ownerft_v93b",
+]
 NC = {"enabled": True}
 
 
@@ -45,12 +49,15 @@ def hit(name: str, runner, clip: np.ndarray, expected: str) -> bool:
 
 
 def select_takes() -> list[dict]:
-    rows = [entry for entry in store.list()
-            if not str(entry.get("id") or "").startswith("me2h")
-            and str(entry.get("action") or "").strip()
-            and str(entry.get("session") or "").startswith("20261027_1")
-            and str(entry.get("session") or "") in ("20261027_163214_6775",
-                                                    "20261027_111121_e383")]
+    rows = [
+        entry
+        for entry in store.list()
+        if not str(entry.get("id") or "").startswith("me2h")
+        and str(entry.get("action") or "").strip()
+        and str(entry.get("session") or "").startswith("20261027_1")
+        and str(entry.get("session") or "")
+        in ("20261027_163214_6775", "20261027_111121_e383")
+    ]
     by_session: dict[str, list] = {}
     for entry in rows:
         by_session.setdefault(str(entry.get("session")), []).append(entry)
@@ -98,8 +105,21 @@ def main() -> int:
         raw_pct = round(100 * raw_hits[name] / n, 1)
         nc_pct = round(100 * nc_hits[name] / n, 1)
         diff = round(nc_pct - raw_pct, 1)
-        print(name + ": " + str(raw_pct) + "%/" + str(nc_pct) + "%  diff=" + str(diff)
-              + "  " + str(flips[name][0]) + "/" + str(flips[name][1]) + "/" + str(flips[name][2]))
+        print(
+            name
+            + ": "
+            + str(raw_pct)
+            + "%/"
+            + str(nc_pct)
+            + "%  diff="
+            + str(diff)
+            + "  "
+            + str(flips[name][0])
+            + "/"
+            + str(flips[name][1])
+            + "/"
+            + str(flips[name][2])
+        )
     return 0
 
 
