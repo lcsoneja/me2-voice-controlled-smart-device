@@ -61,7 +61,7 @@ def score_takes(takes, models) -> list[dict]:
             if runner is None:
                 runner = runner_for(name)
                 runners[name] = runner
-                model_labels = list(runner.labels)
+            model_labels = list(runner.labels)
             try:
                 probs = probs_for(name, runner, clip)
             except (RuntimeError, ValueError):
