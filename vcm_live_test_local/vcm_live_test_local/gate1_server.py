@@ -652,6 +652,11 @@ GATE2_DISABLED_CANDIDATES = {
     # 2026-10-29 batch: shipped but not feedable / not an intent head.
     "gate2v130_groupmultihot": "250 outputs (group multi-hot aux head): no decoding spec for the intent logits.",
     "gate2v66b_18extra": "27-channel frontend (1,148,60,27): needs the 18-extra channel builder the package does not ship.",
+    "gate2v88_finegrained_d02": "94 outputs (fine-grained aux head), not a 19/20-class intent head.",
+    "gate2v88b_finegrained_d005": "94 outputs (fine-grained aux head), not a 19/20-class intent head.",
+    "gate2v88c_leakykw": "109 outputs (leaky-keyword aux head), not a 19/20-class intent head.",
+    "gate2v89_multihot": "128 outputs (multi-hot aux head), not a 19/20-class intent head.",
+    "gate2v126_mels180": "180-mel frontend whose filterbank recipe is not shipped. Loads and runs, but scores near chance (1-3/20 real clips) under every mel variant tried (librosa default, fmin/fmax variants, htk=True), so its features do not match training.",
     "gate2v121_specaugmixup": "Package ships no tflite (docs only).",
     "gate2v122_v20pamodern": "Package ships no tflite (docs only).",
     "gate2v138_doubledescent": "Analysis package (double-descent trajectory study): no tflite by design.",
