@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T16:40:09Z",
+ "generated": "2026-10-29T00:33:52Z",
  "package": "VoiceSessions_ship_20261028_125010",
  "takes": 153,
  "models": [
@@ -30,7 +30,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 12.71
+   "ms": 8.05
   },
   {
    "model": "gate2v109_ownerft_v96c",
@@ -59,7 +59,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.56
+   "ms": 4.28
   },
   {
    "model": "gate2v110_ownerft_aggr",
@@ -88,7 +88,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.83
+   "ms": 4.32
   },
   {
    "model": "gate2v111c_bcresnet",
@@ -117,7 +117,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 26.64
+   "ms": 13.63
   },
   {
    "model": "gate2v112c_gmlp",
@@ -146,7 +146,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.92
+   "ms": 4.38
   },
   {
    "model": "gate2v113c_matchbox",
@@ -175,7 +175,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.89
+   "ms": 4.04
   },
   {
    "model": "gate2v117a_miniecho",
@@ -204,7 +204,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.86
+   "ms": 4.38
   },
   {
    "model": "gate2v118_ambienttail",
@@ -233,7 +233,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.79
+   "ms": 4.47
   },
   {
    "model": "gate2v119a_speedwide",
@@ -262,7 +262,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.02
+   "ms": 4.38
   },
   {
    "model": "gate2v119b_speedbounded",
@@ -291,7 +291,65 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.09
+   "ms": 4.38
+  },
+  {
+   "model": "gate2v120_timewarp",
+   "raw": 43.8,
+   "trim": 48.4,
+   "delta": 4.6,
+   "raw_correct": 67,
+   "trim_correct": 74,
+   "n": 153,
+   "flips": {
+    "trim_wins": 15,
+    "raw_wins": 8,
+    "tie": 130
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 40.3,
+     "trim": 41.8
+    },
+    "86": {
+     "n": 86,
+     "raw": 46.5,
+     "trim": 53.5
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.43
+  },
+  {
+   "model": "gate2v121b_specaugonly",
+   "raw": 50.3,
+   "trim": 49.7,
+   "delta": -0.6,
+   "raw_correct": 77,
+   "trim_correct": 76,
+   "n": 153,
+   "flips": {
+    "trim_wins": 17,
+    "raw_wins": 18,
+    "tie": 118
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 47.8,
+     "trim": 43.3
+    },
+    "86": {
+     "n": 86,
+     "raw": 52.3,
+     "trim": 54.7
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.31
   },
   {
    "model": "gate2v124_ensemble4way",
@@ -320,7 +378,239 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 13.46
+   "ms": 7.01
+  },
+  {
+   "model": "gate2v126_mels180",
+   "raw": 3.9,
+   "trim": 6.5,
+   "delta": 2.6,
+   "raw_correct": 6,
+   "trim_correct": 10,
+   "n": 153,
+   "flips": {
+    "trim_wins": 8,
+    "raw_wins": 4,
+    "tie": 141
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 4.5,
+     "trim": 7.5
+    },
+    "86": {
+     "n": 86,
+     "raw": 3.5,
+     "trim": 5.8
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 5.57
+  },
+  {
+   "model": "gate2v129_kw",
+   "raw": 43.8,
+   "trim": 51.0,
+   "delta": 7.2,
+   "raw_correct": 67,
+   "trim_correct": 78,
+   "n": 153,
+   "flips": {
+    "trim_wins": 22,
+    "raw_wins": 11,
+    "tie": 120
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 44.8,
+     "trim": 43.3
+    },
+    "86": {
+     "n": 86,
+     "raw": 43.0,
+     "trim": 57.0
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.45
+  },
+  {
+   "model": "gate2v131_multiscaleauxkw",
+   "raw": 42.5,
+   "trim": 45.1,
+   "delta": 2.6,
+   "raw_correct": 65,
+   "trim_correct": 69,
+   "n": 153,
+   "flips": {
+    "trim_wins": 20,
+    "raw_wins": 16,
+    "tie": 117
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 44.8,
+     "trim": 38.8
+    },
+    "86": {
+     "n": 86,
+     "raw": 40.7,
+     "trim": 50.0
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.49
+  },
+  {
+   "model": "gate2v132_singlewordmassive",
+   "raw": 43.1,
+   "trim": 39.9,
+   "delta": -3.2,
+   "raw_correct": 66,
+   "trim_correct": 61,
+   "n": 153,
+   "flips": {
+    "trim_wins": 15,
+    "raw_wins": 20,
+    "tie": 118
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 43.3,
+     "trim": 34.3
+    },
+    "86": {
+     "n": 86,
+     "raw": 43.0,
+     "trim": 44.2
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.44
+  },
+  {
+   "model": "gate2v142_121b_ownerft",
+   "raw": 53.6,
+   "trim": 52.3,
+   "delta": -1.3,
+   "raw_correct": 82,
+   "trim_correct": 80,
+   "n": 153,
+   "flips": {
+    "trim_wins": 15,
+    "raw_wins": 17,
+    "tie": 121
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 50.7,
+     "trim": 43.3
+    },
+    "86": {
+     "n": 86,
+     "raw": 55.8,
+     "trim": 59.3
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.39
+  },
+  {
+   "model": "gate2v142_129_kw_ownerft",
+   "raw": 41.2,
+   "trim": 49.0,
+   "delta": 7.8,
+   "raw_correct": 63,
+   "trim_correct": 75,
+   "n": 153,
+   "flips": {
+    "trim_wins": 22,
+    "raw_wins": 10,
+    "tie": 121
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 56.7,
+     "trim": 52.2
+    },
+    "86": {
+     "n": 86,
+     "raw": 29.1,
+     "trim": 46.5
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.47
+  },
+  {
+   "model": "gate2v142_132_singleword_ownerft",
+   "raw": 43.8,
+   "trim": 35.9,
+   "delta": -7.9,
+   "raw_correct": 67,
+   "trim_correct": 55,
+   "n": 153,
+   "flips": {
+    "trim_wins": 14,
+    "raw_wins": 26,
+    "tie": 113
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 44.8,
+     "trim": 31.3
+    },
+    "86": {
+     "n": 86,
+     "raw": 43.0,
+     "trim": 39.5
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.42
+  },
+  {
+   "model": "gate2v142_135_distilled_ownerft",
+   "raw": 47.1,
+   "trim": 43.8,
+   "delta": -3.3,
+   "raw_correct": 72,
+   "trim_correct": 67,
+   "n": 153,
+   "flips": {
+    "trim_wins": 16,
+    "raw_wins": 21,
+    "tie": 116
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 50.7,
+     "trim": 46.3
+    },
+    "86": {
+     "n": 86,
+     "raw": 44.2,
+     "trim": 41.9
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 4.35
   },
   {
    "model": "gate2v16",
@@ -349,7 +639,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.66
+   "ms": 3.72
   },
   {
    "model": "gate2v18",
@@ -378,7 +668,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.75
+   "ms": 3.64
   },
   {
    "model": "gate2v19",
@@ -407,7 +697,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.63
+   "ms": 3.7
   },
   {
    "model": "gate2v19p",
@@ -436,7 +726,36 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.47
+   "ms": 3.75
+  },
+  {
+   "model": "gate2v19p2_owner_vc",
+   "raw": 59.5,
+   "trim": 63.4,
+   "delta": 3.9,
+   "raw_correct": 91,
+   "trim_correct": 97,
+   "n": 153,
+   "flips": {
+    "trim_wins": 12,
+    "raw_wins": 6,
+    "tie": 135
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 55.2,
+     "trim": 62.7
+    },
+    "86": {
+     "n": 86,
+     "raw": 62.8,
+     "trim": 64.0
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 3.8
   },
   {
    "model": "gate2v20_aux",
@@ -465,7 +784,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.49
+   "ms": 3.82
   },
   {
    "model": "gate2v21",
@@ -494,7 +813,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.7
+   "ms": 3.77
   },
   {
    "model": "gate2v21p",
@@ -523,7 +842,36 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.64
+   "ms": 3.78
+  },
+  {
+   "model": "gate2v21p2_owner_vc",
+   "raw": 58.2,
+   "trim": 60.1,
+   "delta": 1.9,
+   "raw_correct": 89,
+   "trim_correct": 92,
+   "n": 153,
+   "flips": {
+    "trim_wins": 14,
+    "raw_wins": 11,
+    "tie": 128
+   },
+   "per_session": {
+    "68": {
+     "n": 67,
+     "raw": 50.7,
+     "trim": 50.7
+    },
+    "86": {
+     "n": 86,
+     "raw": 64.0,
+     "trim": 67.4
+    }
+   },
+   "speech_s": 2.98,
+   "trimmed_ok": 153,
+   "ms": 3.62
   },
   {
    "model": "gate2v22",
@@ -552,7 +900,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 9.46
+   "ms": 5.21
   },
   {
    "model": "gate2v22s",
@@ -581,7 +929,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 9.56
+   "ms": 5.59
   },
   {
    "model": "gate2v23_crnn50x30",
@@ -610,7 +958,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.47
+   "ms": 3.48
   },
   {
    "model": "gate2v24_crnn148x60",
@@ -639,7 +987,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 10.65
+   "ms": 6.06
   },
   {
    "model": "gate2v25",
@@ -668,7 +1016,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.49
+   "ms": 3.75
   },
   {
    "model": "gate2v25_phraseconcat",
@@ -697,7 +1045,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.79
+   "ms": 3.6
   },
   {
    "model": "gate2v26",
@@ -726,7 +1074,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.74
+   "ms": 3.69
   },
   {
    "model": "gate2v26_phraseconcat_neg",
@@ -755,7 +1103,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 5.75
+   "ms": 3.74
   },
   {
    "model": "gate2v28a_5win",
@@ -784,7 +1132,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.41
+   "ms": 4.04
   },
   {
    "model": "gate2v28b_9win",
@@ -813,7 +1161,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.94
+   "ms": 4.34
   },
   {
    "model": "gate2v29_deep9",
@@ -842,7 +1190,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 8.55
+   "ms": 5.17
   },
   {
    "model": "gate2v29b_wide9",
@@ -871,7 +1219,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 10.31
+   "ms": 5.75
   },
   {
    "model": "gate2v34a_std",
@@ -900,7 +1248,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.58
+   "ms": 4.16
   },
   {
    "model": "gate2v34b_finehop",
@@ -929,7 +1277,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 18.84
+   "ms": 9.44
   },
   {
    "model": "gate2v36_17win",
@@ -958,7 +1306,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 8.55
+   "ms": 5.08
   },
   {
    "model": "gate2v37_9win_neg",
@@ -987,7 +1335,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.16
+   "ms": 4.26
   },
   {
    "model": "gate2v38_crnn9",
@@ -1016,7 +1364,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 12.25
+   "ms": 6.62
   },
   {
    "model": "gate2v40b_9win_attention",
@@ -1045,7 +1393,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.19
+   "ms": 4.33
   },
   {
    "model": "gate2v41_specaugmix",
@@ -1074,7 +1422,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.19
+   "ms": 4.37
   },
   {
    "model": "gate2v42_reverb",
@@ -1103,7 +1451,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.15
+   "ms": 4.4
   },
   {
    "model": "gate2v46_impwarp",
@@ -1132,7 +1480,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.25
+   "ms": 4.18
   },
   {
    "model": "gate2v47_windrop_melwarp",
@@ -1161,7 +1509,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.31
+   "ms": 4.2
   },
   {
    "model": "gate2v48_audiopack",
@@ -1190,7 +1538,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.01
+   "ms": 4.24
   },
   {
    "model": "gate2v49_warpdilatedneg",
@@ -1219,7 +1567,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 11.97
+   "ms": 6.21
   },
   {
    "model": "gate2v50_channelshuffle",
@@ -1248,7 +1596,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.71
+   "ms": 4.24
   },
   {
    "model": "gate2v52_adjswap",
@@ -1277,7 +1625,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.28
+   "ms": 4.3
   },
   {
    "model": "gate2v53_melbin_dropout",
@@ -1306,7 +1654,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.65
+   "ms": 4.23
   },
   {
    "model": "gate2v56_v54",
@@ -1335,7 +1683,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 25.29
+   "ms": 11.48
   },
   {
    "model": "gate2v56_v54b",
@@ -1364,7 +1712,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 25.25
+   "ms": 11.63
   },
   {
    "model": "gate2v57_pidgate",
@@ -1393,7 +1741,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.7
+   "ms": 4.39
   },
   {
    "model": "gate2v58_smooth_pidgate",
@@ -1422,7 +1770,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.49
+   "ms": 4.49
   },
   {
    "model": "gate2v59_focal_warp",
@@ -1451,7 +1799,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.27
+   "ms": 4.37
   },
   {
    "model": "gate2v60_phone_warp",
@@ -1480,7 +1828,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.47
+   "ms": 4.35
   },
   {
    "model": "gate2v61_keyword_mix",
@@ -1509,7 +1857,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.91
+   "ms": 4.36
   },
   {
    "model": "gate2v62_speechtrim",
@@ -1538,7 +1886,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.03
+   "ms": 4.37
   },
   {
    "model": "gate2v63_pca_frontend",
@@ -1567,7 +1915,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 6.49
+   "ms": 3.97
   },
   {
    "model": "gate2v64_paired_negatives",
@@ -1596,7 +1944,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.69
+   "ms": 4.36
   },
   {
    "model": "gate2v64c_stochmel",
@@ -1625,7 +1973,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.86
+   "ms": 4.42
   },
   {
    "model": "gate2v64d_expandedneg",
@@ -1654,7 +2002,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.88
+   "ms": 4.36
   },
   {
    "model": "gate2v64p_paired_owner",
@@ -1683,7 +2031,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.58
+   "ms": 4.4
   },
   {
    "model": "gate2v65_stoch15k",
@@ -1712,7 +2060,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.25
+   "ms": 4.39
   },
   {
    "model": "gate2v66_clean_only",
@@ -1741,7 +2089,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.31
+   "ms": 4.27
   },
   {
    "model": "gate2v66m_mutation",
@@ -1770,7 +2118,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.19
+   "ms": 4.33
   },
   {
    "model": "gate2v67_timeshift_only",
@@ -1799,7 +2147,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.35
+   "ms": 4.47
   },
   {
    "model": "gate2v68_timeshift_neg",
@@ -1828,7 +2176,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.6
+   "ms": 4.37
   },
   {
    "model": "gate2v69",
@@ -1857,7 +2205,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.56
+   "ms": 4.32
   },
   {
    "model": "gate2v70",
@@ -1886,7 +2234,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.53
+   "ms": 4.4
   },
   {
    "model": "gate2v71",
@@ -1915,7 +2263,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.35
+   "ms": 4.4
   },
   {
    "model": "gate2v72_v64d_pid",
@@ -1944,7 +2292,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 24.68
+   "ms": 11.52
   },
   {
    "model": "gate2v76_v64d_tr",
@@ -1973,7 +2321,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.54
+   "ms": 4.39
   },
   {
    "model": "gate2v77_speech_neg",
@@ -2002,7 +2350,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.63
+   "ms": 4.45
   },
   {
    "model": "gate2v81_timeshift_add",
@@ -2031,7 +2379,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.87
+   "ms": 4.4
   },
   {
    "model": "gate2v82_speechoos2",
@@ -2060,7 +2408,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.54
+   "ms": 4.54
   },
   {
    "model": "gate2v82b_speechoos2_w035",
@@ -2089,7 +2437,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.71
+   "ms": 4.43
   },
   {
    "model": "gate2v84_phonemeaux2",
@@ -2118,7 +2466,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.8
+   "ms": 4.45
   },
   {
    "model": "gate2v85_keywordsonly",
@@ -2147,7 +2495,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.53
+   "ms": 4.39
   },
   {
    "model": "gate2v86_speechoos_mid",
@@ -2176,7 +2524,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.81
+   "ms": 4.36
   },
   {
    "model": "gate2v86b_v77mix",
@@ -2205,7 +2553,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.5
+   "ms": 4.45
   },
   {
    "model": "gate2v87_combo_intent",
@@ -2234,7 +2582,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.63
+   "ms": 4.44
   },
   {
    "model": "gate2v96a_confweight2x",
@@ -2263,7 +2611,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.78
+   "ms": 4.46
   },
   {
    "model": "gate2v96c_v93b_rerun",
@@ -2292,7 +2640,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 8.23
+   "ms": 4.49
   },
   {
    "model": "gate2v97d_warmuplr",
@@ -2321,7 +2669,7 @@
    },
    "speech_s": 2.98,
    "trimmed_ok": 153,
-   "ms": 7.79
+   "ms": 4.73
   }
  ],
  "rank_by_raw": [
@@ -2329,13 +2677,16 @@
   "gate2v110_ownerft_aggr",
   "gate2v56_v54",
   "gate2v56_v54b",
+  "gate2v19p2_owner_vc",
   "gate2v19p",
+  "gate2v21p2_owner_vc",
   "gate2v64p_paired_owner",
   "gate2v87_combo_intent",
   "gate2v71",
   "gate2v72_v64d_pid",
   "gate2v124_ensemble4way",
   "gate2v108_ownerft_v93b",
+  "gate2v142_121b_ownerft",
   "gate2v19",
   "gate2v118_ambienttail",
   "gate2v64c_stochmel",
@@ -2345,6 +2696,7 @@
   "gate2v109_ownerft_v96c",
   "gate2v22",
   "gate2v117a_miniecho",
+  "gate2v121b_specaugonly",
   "gate2v18",
   "gate2v22s",
   "gate2v41_specaugmix",
@@ -2356,6 +2708,7 @@
   "gate2v81_timeshift_add",
   "gate2v46_impwarp",
   "gate2v119b_speedbounded",
+  "gate2v142_135_distilled_ownerft",
   "gate2v63_pca_frontend",
   "gate2v119a_speedwide",
   "gate2v66m_mutation",
@@ -2366,14 +2719,20 @@
   "gate2v53_melbin_dropout",
   "gate2v96a_confweight2x",
   "gate2v97d_warmuplr",
+  "gate2v120_timewarp",
+  "gate2v129_kw",
+  "gate2v142_132_singleword_ownerft",
   "gate2v77_speech_neg",
   "gate2v86b_v77mix",
+  "gate2v132_singlewordmassive",
   "gate2v42_reverb",
   "gate2v49_warpdilatedneg",
+  "gate2v131_multiscaleauxkw",
   "gate2v37_9win_neg",
   "gate2v64_paired_negatives",
   "gate2v82b_speechoos2_w035",
   "gate2v69",
+  "gate2v142_129_kw_ownerft",
   "gate2v24_crnn148x60",
   "gate2v29_deep9",
   "gate2v84_phonemeaux2",
@@ -2404,14 +2763,17 @@
   "gate2v26",
   "gate2v26_phraseconcat_neg",
   "gate2v70",
+  "gate2v126_mels180",
   "gate2v25"
  ],
  "rank_by_trim": [
+  "gate2v19p2_owner_vc",
   "gate2v19p",
   "gate2v56_v54",
   "gate2v21p",
   "gate2v56_v54b",
   "gate2v110_ownerft_aggr",
+  "gate2v21p2_owner_vc",
   "gate2v64p_paired_owner",
   "gate2v72_v64d_pid",
   "gate2v108_ownerft_v93b",
@@ -2421,22 +2783,27 @@
   "gate2v109_ownerft_v96c",
   "gate2v96c_v93b_rerun",
   "gate2v64c_stochmel",
+  "gate2v142_121b_ownerft",
   "gate2v19",
   "gate2v46_impwarp",
   "gate2v118_ambienttail",
+  "gate2v129_kw",
   "gate2v21",
   "gate2v22",
   "gate2v64d_expandedneg",
   "gate2v65_stoch15k",
   "gate2v87_combo_intent",
+  "gate2v121b_specaugonly",
   "gate2v86_speechoos_mid",
   "gate2v117a_miniecho",
   "gate2v119a_speedwide",
+  "gate2v142_129_kw_ownerft",
   "gate2v22s",
   "gate2v64_paired_negatives",
   "gate2v76_v64d_tr",
   "gate2v81_timeshift_add",
   "gate2v85_keywordsonly",
+  "gate2v120_timewarp",
   "gate2v82b_speechoos2_w035",
   "gate2v16",
   "gate2v86b_v77mix",
@@ -2445,19 +2812,23 @@
   "gate2v82_speechoos2",
   "gate2v97d_warmuplr",
   "gate2v119b_speedbounded",
+  "gate2v131_multiscaleauxkw",
   "gate2v66m_mutation",
   "gate2v36_17win",
   "gate2v63_pca_frontend",
   "gate2v84_phonemeaux2",
+  "gate2v142_135_distilled_ownerft",
   "gate2v77_speech_neg",
   "gate2v49_warpdilatedneg",
   "gate2v41_specaugmix",
+  "gate2v132_singlewordmassive",
   "gate2v58_smooth_pidgate",
   "gate2v69",
   "gate2v28a_5win",
   "gate2v71",
   "gate2v111c_bcresnet",
   "gate2v61_keyword_mix",
+  "gate2v142_132_singleword_ownerft",
   "gate2v40b_9win_attention",
   "gate2v57_pidgate",
   "gate2v48_audiopack",
@@ -2482,6 +2853,7 @@
   "gate2v66_clean_only",
   "gate2v25_phraseconcat",
   "gate2v67_timeshift_only",
+  "gate2v126_mels180",
   "gate2v26_phraseconcat_neg",
   "gate2v26",
   "gate2v25",
@@ -4437,6 +4809,474 @@
     "win": "raw"
    }
   ],
+  "gate2v120_timewarp": [
+   {
+    "session": "68",
+    "phrase": "make the lights green",
+    "expected": "COLOR",
+    "raw": "TEMPERATURE",
+    "trim": "COLOR",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "send a message to john",
+    "expected": "MESSAGE",
+    "raw": "TEMPERATURE",
+    "trim": "MESSAGE",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_UP",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "TIMER",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "remind me to study",
+    "expected": "CREATE_REMINDER",
+    "raw": "BRIGHTNESS",
+    "trim": "CREATE_REMINDER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "make the lights red",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "LIGHT_OFF",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 100 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "CREATE_REMINDER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "brightness 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 1 minute",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "TIMER",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "BRIGHTNESS",
+    "trim": "VOLUME_DOWN",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_OFF",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "PLAY_MUSIC",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "LIST_REMINDERS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "BRIGHTNESS",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "TIMER",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "weather",
+    "expected": "WEATHER",
+    "raw": "BRIGHTNESS",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "BRIGHTNESS",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
+  "gate2v121b_specaugonly": [
+   {
+    "session": "68",
+    "phrase": "make the lights green",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "TEMPERATURE",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "TEMPERATURE",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "show my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "list my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "text john hello",
+    "expected": "MESSAGE",
+    "raw": "LIST_REMINDERS",
+    "trim": "MESSAGE",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "quieter please",
+    "expected": "VOLUME_DOWN",
+    "raw": "TIMER",
+    "trim": "VOLUME_DOWN",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "LIST_REMINDERS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "TIME",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "put on some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 100 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "CREATE_REMINDER",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 9 pm",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "CREATE_REMINDER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "BRIGHTNESS",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "BRIGHTNESS",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "TIMER",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "message",
+    "expected": "MESSAGE",
+    "raw": "MESSAGE",
+    "trim": "ALARM",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "make a phone call",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "play the next track",
+    "expected": "NEXT",
+    "raw": "CREATE_REMINDER",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "stop",
+    "expected": "STOP",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "switch off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_OFF",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "switch on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_ON",
+    "trim": "LIGHT_OFF",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "TIMER",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_ON",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "VOLUME_UP",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "TIMER",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "weather",
+    "expected": "WEATHER",
+    "raw": "VOLUME_DOWN",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
   "gate2v124_ensemble4way": [
    {
     "session": "68",
@@ -4621,6 +5461,2078 @@
     "raw": "PLAY_MUSIC",
     "trim": "STOP",
     "win": "raw"
+   }
+  ],
+  "gate2v126_mels180": [
+   {
+    "session": "68",
+    "phrase": "set brightness to 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "stop playing",
+    "expected": "STOP",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "stop the music",
+    "expected": "STOP",
+    "raw": "STOP",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "will it rain tomorrow",
+    "expected": "WEATHER",
+    "raw": "STOP",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "start the music",
+    "expected": "PLAY_MUSIC",
+    "raw": "STOP",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "play my favorite song",
+    "expected": "PLAY_MUSIC",
+    "raw": "STOP",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "next",
+    "expected": "NEXT",
+    "raw": "STOP",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "stop playing",
+    "expected": "STOP",
+    "raw": "STOP",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "stop",
+    "expected": "STOP",
+    "raw": "STOP",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "STOP",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "STOP",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "STOP",
+    "trim": "WEATHER",
+    "win": "trim"
+   }
+  ],
+  "gate2v129_kw": [
+   {
+    "session": "68",
+    "phrase": "make the lights green",
+    "expected": "COLOR",
+    "raw": "TEMPERATURE",
+    "trim": "COLOR",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "TEMPERATURE",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 1 minute",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_DOWN",
+    "trim": "VOLUME_UP",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_UP",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "skip to the next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "switch off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "put on some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "BRIGHTNESS",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "remind me to study",
+    "expected": "CREATE_REMINDER",
+    "raw": "BRIGHTNESS",
+    "trim": "CREATE_REMINDER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "make the lights red",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "LIGHT_OFF",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "temperature 18 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "timer 10 seconds",
+    "expected": "TIMER",
+    "raw": "BRIGHTNESS",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "TIMER",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "BRIGHTNESS",
+    "trim": "VOLUME_DOWN",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "next",
+    "expected": "NEXT",
+    "raw": "BRIGHTNESS",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "stop",
+    "expected": "STOP",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "pause",
+    "expected": "PAUSE",
+    "raw": "BRIGHTNESS",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_OFF",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "BRIGHTNESS",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "TIMER",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "weather",
+    "expected": "WEATHER",
+    "raw": "BRIGHTNESS",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "start the music",
+    "expected": "PLAY_MUSIC",
+    "raw": "BRIGHTNESS",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "BRIGHTNESS",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
+  "gate2v131_multiscaleauxkw": [
+   {
+    "session": "68",
+    "phrase": "make the lights warm white",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "TEMPERATURE",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 8 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 1 minute",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 10 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_UP",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "skip to the next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "TIMER",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather like",
+    "expected": "WEATHER",
+    "raw": "ALARM",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "COLOR",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "start the music",
+    "expected": "PLAY_MUSIC",
+    "raw": "BRIGHTNESS",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "put on some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "remind me to drink water",
+    "expected": "CREATE_REMINDER",
+    "raw": "CREATE_REMINDER",
+    "trim": "CALL",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "make the lights red",
+    "expected": "COLOR",
+    "raw": "CALL",
+    "trim": "COLOR",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 40 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "CALL",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "show my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "CREATE_REMINDER",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "TIMER",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "list my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "PLAY_MUSIC",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "message",
+    "expected": "MESSAGE",
+    "raw": "TIMER",
+    "trim": "MESSAGE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "make a phone call",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "COLOR",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "volume up",
+    "expected": "VOLUME_UP",
+    "raw": "TIMER",
+    "trim": "VOLUME_UP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "stop",
+    "expected": "STOP",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "pause the song",
+    "expected": "PAUSE",
+    "raw": "NEXT",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_OFF",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "PLAY_MUSIC",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "LIGHT_OFF",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIMER",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather like",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "CREATE_REMINDER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "BRIGHTNESS",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "weather",
+    "expected": "WEATHER",
+    "raw": "BRIGHTNESS",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "weather today",
+    "expected": "WEATHER",
+    "raw": "COLOR",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
+  "gate2v132_singlewordmassive": [
+   {
+    "session": "68",
+    "phrase": "remind me to study",
+    "expected": "CREATE_REMINDER",
+    "raw": "CREATE_REMINDER",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "remind me to drink water",
+    "expected": "CREATE_REMINDER",
+    "raw": "CREATE_REMINDER",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "make the lights green",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "TEMPERATURE",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 8 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "ALARM",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "send a message to john",
+    "expected": "MESSAGE",
+    "raw": "COLOR",
+    "trim": "MESSAGE",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "increase the volume",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_UP",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "COLOR",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "make the lights red",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "CALL",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "change color to red",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "CALL",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set the temperature to 18 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "TEMPERATURE",
+    "trim": "CALL",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "TEMPERATURE",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "alarm 6 am",
+    "expected": "ALARM",
+    "raw": "COLOR",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "BRIGHTNESS",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "timer 10 seconds",
+    "expected": "TIMER",
+    "raw": "CREATE_REMINDER",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "make a phone call",
+    "expected": "CALL",
+    "raw": "VOLUME_DOWN",
+    "trim": "CALL",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "call",
+    "expected": "CALL",
+    "raw": "VOLUME_DOWN",
+    "trim": "CALL",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "increase the volume",
+    "expected": "VOLUME_UP",
+    "raw": "CALL",
+    "trim": "VOLUME_UP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "next",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "COLOR",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "stop",
+    "expected": "STOP",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "switch off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_OFF",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "PLAY_MUSIC",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_ON",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "weather today",
+    "expected": "WEATHER",
+    "raw": "ALARM",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
+  "gate2v142_121b_ownerft": [
+   {
+    "session": "68",
+    "phrase": "remind me to exercise",
+    "expected": "CREATE_REMINDER",
+    "raw": "MESSAGE",
+    "trim": "CREATE_REMINDER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 60 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 8 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 10 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "show my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "list my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "text john hello",
+    "expected": "MESSAGE",
+    "raw": "LIST_REMINDERS",
+    "trim": "MESSAGE",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "quieter please",
+    "expected": "VOLUME_DOWN",
+    "raw": "LIST_REMINDERS",
+    "trim": "VOLUME_DOWN",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "skip to the next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "VOLUME_DOWN",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "switch off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIST_REMINDERS",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_ON",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "TIME",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "remind me to exercise",
+    "expected": "CREATE_REMINDER",
+    "raw": "BRIGHTNESS",
+    "trim": "CREATE_REMINDER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "remind me to drink water",
+    "expected": "CREATE_REMINDER",
+    "raw": "BRIGHTNESS",
+    "trim": "CREATE_REMINDER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "CREATE_REMINDER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set the temperature to 22 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "CREATE_REMINDER",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "BRIGHTNESS",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "TIMER",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "message",
+    "expected": "MESSAGE",
+    "raw": "MESSAGE",
+    "trim": "ALARM",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "make a call",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "VOLUME_UP",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "louder please",
+    "expected": "VOLUME_UP",
+    "raw": "COLOR",
+    "trim": "VOLUME_UP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights off please",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_OFF",
+    "trim": "PAUSE",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "LIST_REMINDERS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "VOLUME_UP",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
+  "gate2v142_129_kw_ownerft": [
+   {
+    "session": "68",
+    "phrase": "remind me to exercise",
+    "expected": "CREATE_REMINDER",
+    "raw": "CREATE_REMINDER",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "make the lights green",
+    "expected": "COLOR",
+    "raw": "BRIGHTNESS",
+    "trim": "COLOR",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "make the lights blue",
+    "expected": "COLOR",
+    "raw": "BRIGHTNESS",
+    "trim": "COLOR",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 40 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 10 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "VOLUME_UP",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_DOWN",
+    "trim": "VOLUME_UP",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "skip to the next song",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "switch off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set the temperature to 26 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set the temperature to 22 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "BRIGHTNESS",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "timer 10 seconds",
+    "expected": "TIMER",
+    "raw": "BRIGHTNESS",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "show my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "BRIGHTNESS",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "BRIGHTNESS",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "list my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "BRIGHTNESS",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "message",
+    "expected": "MESSAGE",
+    "raw": "BRIGHTNESS",
+    "trim": "MESSAGE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "make a phone call",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "BRIGHTNESS",
+    "trim": "VOLUME_DOWN",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "next",
+    "expected": "NEXT",
+    "raw": "BRIGHTNESS",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "stop",
+    "expected": "STOP",
+    "raw": "LIGHT_OFF",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "pause",
+    "expected": "PAUSE",
+    "raw": "BRIGHTNESS",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "weather",
+    "expected": "WEATHER",
+    "raw": "BRIGHTNESS",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "start the music",
+    "expected": "PLAY_MUSIC",
+    "raw": "BRIGHTNESS",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "BRIGHTNESS",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   }
+  ],
+  "gate2v142_132_singleword_ownerft": [
+   {
+    "session": "68",
+    "phrase": "remind me to study",
+    "expected": "CREATE_REMINDER",
+    "raw": "CREATE_REMINDER",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 40 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "CREATE_REMINDER",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 60 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set the temperature to 26 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set the temperature to 22 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 8 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 1 minute",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "LIGHT_ON",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 10 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "quieter please",
+    "expected": "VOLUME_DOWN",
+    "raw": "LIST_REMINDERS",
+    "trim": "VOLUME_DOWN",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "CALL",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "increase the volume",
+    "expected": "VOLUME_UP",
+    "raw": "CREATE_REMINDER",
+    "trim": "VOLUME_UP",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_UP",
+    "trim": "CALL",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "pause the music",
+    "expected": "PAUSE",
+    "raw": "TIME",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_ON",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "VOLUME_DOWN",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "make the lights red",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "CREATE_REMINDER",
+    "trim": "ALARM",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "ALARM",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 10 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "ALARM",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "CREATE_REMINDER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "turn the volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_DOWN",
+    "trim": "VOLUME_UP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "next",
+    "expected": "NEXT",
+    "raw": "NEXT",
+    "trim": "COLOR",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "pause the music",
+    "expected": "PAUSE",
+    "raw": "TIMER",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights off please",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_OFF",
+    "trim": "PAUSE",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "turn off the lights",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_ON",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "switch on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_ON",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_ON",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "turn on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "LIST_REMINDERS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_ON",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIMER",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "weather today",
+    "expected": "WEATHER",
+    "raw": "ALARM",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "TIMER",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   }
+  ],
+  "gate2v142_135_distilled_ownerft": [
+   {
+    "session": "68",
+    "phrase": "remind me to exercise",
+    "expected": "CREATE_REMINDER",
+    "raw": "CREATE_REMINDER",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "remind me to drink water",
+    "expected": "CREATE_REMINDER",
+    "raw": "VOLUME_UP",
+    "trim": "CREATE_REMINDER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "make the lights green",
+    "expected": "COLOR",
+    "raw": "COLOR",
+    "trim": "ALARM",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 40 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 60 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "TIMER",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set the temperature to 22 degrees",
+    "expected": "TEMPERATURE",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 7 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "LIST_REMINDERS",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "LIGHT_ON",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 10 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "call mom",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "turn the volume up",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_UP",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "play the next track",
+    "expected": "NEXT",
+    "raw": "CREATE_REMINDER",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "skip to the next song",
+    "expected": "NEXT",
+    "raw": "CREATE_REMINDER",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "stop",
+    "expected": "STOP",
+    "raw": "STOP",
+    "trim": "LIGHT_OFF",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "lights off please",
+    "expected": "LIGHT_OFF",
+    "raw": "TIMER",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "switch on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_OFF",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "BRIGHTNESS",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather like",
+    "expected": "WEATHER",
+    "raw": "LIGHT_ON",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "CALL",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 40 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "CALL",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set an alarm for 6 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "alarm 6 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "call john please",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "VOLUME_DOWN",
+    "trim": "LIGHT_OFF",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "turn the volume down",
+    "expected": "VOLUME_DOWN",
+    "raw": "LIGHT_ON",
+    "trim": "VOLUME_DOWN",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "increase the volume",
+    "expected": "VOLUME_UP",
+    "raw": "VOLUME_UP",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "skip to the next song",
+    "expected": "NEXT",
+    "raw": "CREATE_REMINDER",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "stop playing",
+    "expected": "STOP",
+    "raw": "WEATHER",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "pause the music",
+    "expected": "PAUSE",
+    "raw": "PAUSE",
+    "trim": "TIME",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "lights off please",
+    "expected": "LIGHT_OFF",
+    "raw": "LIGHT_ON",
+    "trim": "LIGHT_OFF",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "TIME",
+    "trim": "BRIGHTNESS",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "time",
+    "expected": "TIME",
+    "raw": "MESSAGE",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "start the music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "MESSAGE",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "play some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "CALL",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
    }
   ],
   "gate2v16": [
@@ -5295,6 +8207,152 @@
     "win": "raw"
    }
   ],
+  "gate2v19p2_owner_vc": [
+   {
+    "session": "68",
+    "phrase": "make the lights green",
+    "expected": "COLOR",
+    "raw": "LIGHT_OFF",
+    "trim": "COLOR",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "call john please",
+    "expected": "CALL",
+    "raw": "TEMPERATURE",
+    "trim": "CALL",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "call mom",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "PAUSE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "next song",
+    "expected": "NEXT",
+    "raw": "CALL",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "what time is it",
+    "expected": "TIME",
+    "raw": "CALL",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "start the music",
+    "expected": "PLAY_MUSIC",
+    "raw": "TIMER",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 20 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "CREATE_REMINDER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "alarm 6 am",
+    "expected": "ALARM",
+    "raw": "ALARM",
+    "trim": "CREATE_REMINDER",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "stop the music",
+    "expected": "STOP",
+    "raw": "STOP",
+    "trim": "PLAY_MUSIC",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "pause the song",
+    "expected": "PAUSE",
+    "raw": "NEXT",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "pause the music",
+    "expected": "PAUSE",
+    "raw": "CALL",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "pause",
+    "expected": "PAUSE",
+    "raw": "CALL",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "PLAY_MUSIC",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "turn on the lights",
+    "expected": "LIGHT_ON",
+    "raw": "LIGHT_OFF",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather like",
+    "expected": "WEATHER",
+    "raw": "CREATE_REMINDER",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
   "gate2v20_aux": [
    {
     "session": "68",
@@ -5801,6 +8859,208 @@
     "phrase": "weather today",
     "expected": "WEATHER",
     "raw": "TEMPERATURE",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "play some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "NEXT",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "play music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "STOP",
+    "win": "raw"
+   }
+  ],
+  "gate2v21p2_owner_vc": [
+   {
+    "session": "68",
+    "phrase": "remind me to call the dentist",
+    "expected": "CREATE_REMINDER",
+    "raw": "TIMER",
+    "trim": "CREATE_REMINDER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set brightness to 40 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "BRIGHTNESS",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "start a timer for five minutes",
+    "expected": "TIMER",
+    "raw": "TEMPERATURE",
+    "trim": "TIMER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 30 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "set a timer for 10 seconds",
+    "expected": "TIMER",
+    "raw": "TIMER",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "show my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "WEATHER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "call mom",
+    "expected": "CALL",
+    "raw": "CALL",
+    "trim": "PAUSE",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "next song",
+    "expected": "NEXT",
+    "raw": "CALL",
+    "trim": "NEXT",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "stop playing",
+    "expected": "STOP",
+    "raw": "ALARM",
+    "trim": "STOP",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "TIMER",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "68",
+    "phrase": "start the music",
+    "expected": "PLAY_MUSIC",
+    "raw": "PLAY_MUSIC",
+    "trim": "TIMER",
+    "win": "raw"
+   },
+   {
+    "session": "68",
+    "phrase": "put on some music",
+    "expected": "PLAY_MUSIC",
+    "raw": "TIME",
+    "trim": "PLAY_MUSIC",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "set brightness to 100 percent",
+    "expected": "BRIGHTNESS",
+    "raw": "CREATE_REMINDER",
+    "trim": "BRIGHTNESS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what are my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "TEMPERATURE",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "list my reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "LIST_REMINDERS",
+    "trim": "COLOR",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "reminders",
+    "expected": "LIST_REMINDERS",
+    "raw": "CREATE_REMINDER",
+    "trim": "LIST_REMINDERS",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "send a message to john",
+    "expected": "MESSAGE",
+    "raw": "MESSAGE",
+    "trim": "TEMPERATURE",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "pause the music",
+    "expected": "PAUSE",
+    "raw": "PLAY_MUSIC",
+    "trim": "PAUSE",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "lights on please",
+    "expected": "LIGHT_ON",
+    "raw": "COLOR",
+    "trim": "LIGHT_ON",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "tell me the time",
+    "expected": "TIME",
+    "raw": "CREATE_REMINDER",
+    "trim": "TIME",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather like",
+    "expected": "WEATHER",
+    "raw": "CREATE_REMINDER",
+    "trim": "WEATHER",
+    "win": "trim"
+   },
+   {
+    "session": "86",
+    "phrase": "how is the weather outside",
+    "expected": "WEATHER",
+    "raw": "WEATHER",
+    "trim": "LIGHT_OFF",
+    "win": "raw"
+   },
+   {
+    "session": "86",
+    "phrase": "what's the weather today",
+    "expected": "WEATHER",
+    "raw": "COLOR",
     "trim": "WEATHER",
     "win": "trim"
    },
