@@ -582,17 +582,85 @@ GATE2_PACKAGE_RUNNERS = {
         "tflite/gate2v119b_speed_bounded_float16.tflite",
         SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
     ),
+    # 2026-10-29 batch: the v120-v142 runs, including the owner fine-tunes that were
+    # sitting in the nested "Shipping Container 1" drop. Intents-only packages ship
+    # their own 19-label list (the runner appends NEG); the fine-tunes inherit the
+    # V64D spec and label order.
+    "gate2v120_timewarp": (
+        SHIP_DIR / "Gate2V120_TimeWarp_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v120_time_warp_float16.tflite",
+        None,
+    ),
+    "gate2v121b_specaugonly": (
+        SHIP_DIR / "Gate2V121B_SpecAugOnly_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v121b_specaug_only_float16.tflite",
+        None,
+    ),
+    "gate2v126_mels180": (
+        SHIP_DIR / "Gate2V126_Mels180_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v126_mels180_float16.tflite",
+        None,
+    ),
+    "gate2v129_kw": (
+        SHIP_DIR / "Gate2V129_KW_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v129_kw_float16.tflite",
+        None,
+    ),
+    "gate2v131_multiscaleauxkw": (
+        SHIP_DIR / "Gate2V131_MultiScaleAuxKW_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v131_multiscale_aux_kw_intent_float16.tflite",
+        None,
+    ),
+    "gate2v132_singlewordmassive": (
+        SHIP_DIR / "Gate2V132_SingleWordMassive_ship_EXPERIMENTAL_20261027",
+        "tflite/gate2v132_singleword_float16.tflite",
+        None,
+    ),
+    "gate2v19p2_owner_vc": (
+        SHIP_DIR / "Gate2V19P2_OwnerVC_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v19p2_owner_vc_finetune_float16.tflite",
+        SHIP_DIR / "Gate2V69_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v21p2_owner_vc": (
+        SHIP_DIR / "Gate2V21P2_OwnerVC_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v21p2_owner_vc_finetune_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v142_121b_ownerft": (
+        SHIP_DIR / "Gate2v142_121b_specaug_only_OwnerFT_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v142_121b_specaug_only_ownerft_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v142_129_kw_ownerft": (
+        SHIP_DIR / "Gate2v142_129_kw_OwnerFT_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v142_129_kw_ownerft_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v142_132_singleword_ownerft": (
+        SHIP_DIR / "Gate2v142_132_singleword_OwnerFT_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v142_132_singleword_ownerft_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
+    "gate2v142_135_distilled_ownerft": (
+        SHIP_DIR / "Gate2v142_135_distilled_OwnerFT_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v142_135_distilled_ownerft_float16.tflite",
+        SHIP_DIR / "Gate2V64D_ExpandedNEG_ship_EXPERIMENTAL_20261022",
+    ),
 }
 
 GATE2_DISABLED_CANDIDATES = {
+    # 2026-10-29 batch: shipped but not feedable / not an intent head.
+    "gate2v130_groupmultihot": "250 outputs (group multi-hot aux head): no decoding spec for the intent logits.",
+    "gate2v66b_18extra": "27-channel frontend (1,148,60,27): needs the 18-extra channel builder the package does not ship.",
+    "gate2v121_specaugmixup": "Package ships no tflite (docs only).",
+    "gate2v122_v20pamodern": "Package ships no tflite (docs only).",
+    "gate2v138_doubledescent": "Analysis package (double-descent trajectory study): no tflite by design.",
+    "gate2v111b_bcresnetfix": "INVALID run (training broken: missing softmax); superseded by v111c.",
+    "gate2v112b_gmlpfix": "INVALID run (training broken: missing softmax); superseded by v112c.",
     # v100+ packages that cannot be fed or scored by this adapter:
     "gate2v102_distance": "18-channel frontend (1,148,60,18): needs the distance-channel builder the package does not ship.",
-    "gate2v107_distcompact": "Flattened 549-mel input (1,148,549): needs the compact-distance frontend.",
     "gate2v114_phonemeslots": "245 outputs (phoneme slot logits): no decoding spec shipped for the intent head.",
     "gate2v116_groupdistance": "5 group-distance outputs, not a 19/20-class intent head.",
-    "gate2v100_attngap": "Package ships no tflite (report and docs only).",
-    "gate2v101_crnn_v93b": "Package ships no tflite (docs only).",
-    "gate2v106_pairdiscriminators": "Package ships no tflite (docs only).",
     "gate2v115_discslotlogits": "Void run - no tflite (string-vs-int bug, fix queued upstream).",
     "gate2v20_phonecascade": "Two-stage phone-posterior cascade needs a custom cascade adapter.",
     "gate2v27a_3winalign": "Three-window alignment frontend needs a custom aligner.",
@@ -1262,6 +1330,12 @@ class Gate2PackageRunner:
                 f"one: {tflite_path}"
             )
         out_scores = int(np.prod(out_details[0]["shape"]))
+        if out_scores == len(self.labels) + 1:
+            # Several intents-only packages ship the 19 intent labels and let the
+            # twentieth output carry the reject class - the documented convention
+            # ("19 intents + index 19 = NEG"), the same ordering as the V64D base.
+            # Appending it keeps the intent order identical to the base package.
+            self.labels = [*self.labels, "NEG"]
         if out_scores != len(self.labels):
             # Catches a package registered against the wrong base: without this the mismatched
             # head would silently score near zero instead of failing.

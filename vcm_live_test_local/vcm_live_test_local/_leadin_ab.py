@@ -44,7 +44,7 @@ def windowed(clip: np.ndarray, window: int, drop_s: float | None) -> np.ndarray:
     if drop_s is None:
         return clip
     if drop_s > 0:
-        clip = clip[int(drop_s * gs.SR):]
+        clip = clip[int(drop_s * gs.SR) :]
     if clip.shape[0] >= window:
         start = (clip.shape[0] - window) // 2
         return clip[start : start + window]
@@ -136,15 +136,21 @@ def main() -> int:
                     }
                     for key, bucket in per_session.items()
                 },
-                "ms": round((time.perf_counter() - started) * 1000 / max(1, seen * 4), 2),
+                "ms": round(
+                    (time.perf_counter() - started) * 1000 / max(1, seen * 4), 2
+                ),
             }
         )
         print(
             name.ljust(28)
-            + " raw=" + str(acc["raw"]).rjust(5)
-            + "%  center=" + str(acc["center"]).rjust(5)
-            + "%  drop250=" + str(acc["drop250"]).rjust(5)
-            + "%  drop500=" + str(acc["drop500"]).rjust(5)
+            + " raw="
+            + str(acc["raw"]).rjust(5)
+            + "%  center="
+            + str(acc["center"]).rjust(5)
+            + "%  drop250="
+            + str(acc["drop250"]).rjust(5)
+            + "%  drop500="
+            + str(acc["drop500"]).rjust(5)
         )
         del runner
         gc.collect()
@@ -152,10 +158,13 @@ def main() -> int:
         print()
         for cond, _ in CONDITIONS:
             print(
-                "MEAN " + cond.ljust(8)
+                "MEAN "
+                + cond.ljust(8)
                 + str(round(statistics.mean(r["acc"][cond] for r in rows), 2)).rjust(6)
             )
-        best = max(CONDITIONS, key=lambda c: statistics.mean(r["acc"][c[0]] for r in rows))
+        best = max(
+            CONDITIONS, key=lambda c: statistics.mean(r["acc"][c[0]] for r in rows)
+        )
         print("BEST CONDITION overall: " + best[0])
     payload = {
         "generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

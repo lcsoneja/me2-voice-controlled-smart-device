@@ -321,7 +321,12 @@ def _leadin_seconds(body: dict) -> float:
 
 
 def _score_matrix(
-    gs, gates, store: Any, selected: list, models: list, trim: bool = False,
+    gs,
+    gates,
+    store: Any,
+    selected: list,
+    models: list,
+    trim: bool = False,
     leadin: float = 0.0,
 ) -> tuple[list, dict]:
     """Run every selected take through every model: one row per take, one result per model.
@@ -348,7 +353,7 @@ def _score_matrix(
             if trimmed is not None:
                 speech = trimmed[0]
         elif leadin > 0:
-            dropped = clip[int(leadin * gs.SR):]
+            dropped = clip[int(leadin * gs.SR) :]
             if dropped.shape[0] >= int(gs.SR * 0.4):
                 speech = dropped
         results = []
@@ -806,8 +811,14 @@ def _trim_to_speech(clip: np.ndarray, sample_rate: int):
 
 
 def _classify_capture(
-    gs, gates, name: str, clip: np.ndarray, pre: np.ndarray, thresholds: dict[str, Any],
-    trim: bool = False, leadin: float = 0.0,
+    gs,
+    gates,
+    name: str,
+    clip: np.ndarray,
+    pre: np.ndarray,
+    thresholds: dict[str, Any],
+    trim: bool = False,
+    leadin: float = 0.0,
 ):
     """ONE decision from the capture.
 
@@ -841,7 +852,7 @@ def _classify_capture(
                 best["at_s"] = round(speech_start / gs.SR, 2)
             return best, 1, name
     if not trim and leadin > 0:
-        dropped = clip[int(leadin * gs.SR):]
+        dropped = clip[int(leadin * gs.SR) :]
         if dropped.shape[0] >= int(gs.SR * 0.4):
             if dropped.shape[0] >= window:
                 segment = dropped[:window]
