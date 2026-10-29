@@ -1270,6 +1270,40 @@ def _track_ambient(amb: deque, wrms: float) -> float:
     return floor
 
 
+def _package_labels(pkg_dir: Path, spec_dir: Path | None, tflite_path: Path) -> list[str]:
+    """Label list for a package, accepting the shapes the runs actually ship.
+
+    Preference order: the package's own labels.json, then the fallback package's
+    (fine-tunes inherit their base head and the output-size check further down
+    fails loudly if the order does not match). Two shapes are accepted: a dict
+    with a "labels" list, or a bare list. Some packages instead ship a head
+    descriptor - V87's is {"num_outputs": 1, "format": "binary head ..."} - which
+    is not a label list and must fall through to the fallback package.
+    """
+    candidates = [pkg_dir / "labels.json"]
+    if spec_dir is not None:
+        candidates.append(spec_dir / "labels.json")
+    for path in candidates:
+        if not path.is_file():
+            continue
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        labels = raw.get("labels") if isinstance(raw, dict) else raw
+        if (
+            isinstance(labels, list)
+            and labels
+            and all(isinstance(item, str) for item in labels)
+        ):
+            return [str(item) for item in labels]
+    raise RuntimeError(
+        "Cannot load Gate2 package labels from "
+        + ", ".join(str(path) for path in candidates)
+        + ": no usable label list"
+    )
+
+
 class Gate2PackageRunner:
     """TFLite runner for shipped single-window and slide-window Gate2 packages."""
 
@@ -1295,20 +1329,7 @@ class Gate2PackageRunner:
             raise RuntimeError(
                 f"Gate2 package has no valid normalization stats: {spec_path}"
             )
-        labels_path = pkg_dir / "labels.json"
-        if not labels_path.is_file() and spec_dir is not None:
-            # Fine-tunes inherit their base package's head and ship without their own
-            # labels.json, exactly like the spec fallback above. The output-size check below
-            # fails loudly if the base label order does not actually match the model.
-            labels_path = spec_dir / "labels.json"
-        try:
-            self.labels = list(
-                json.loads(labels_path.read_text(encoding="utf-8"))["labels"]
-            )
-        except (OSError, json.JSONDecodeError) as exc:
-            raise RuntimeError(
-                f"Cannot load Gate2 package labels {labels_path}: {exc}"
-            ) from exc
+        self.labels = _package_labels(pkg_dir, spec_dir, tflite_path)
         self.interp = _make_interpreter(tflite_path)
         input_details = self.interp.get_input_details()
         if len(input_details) != 1:

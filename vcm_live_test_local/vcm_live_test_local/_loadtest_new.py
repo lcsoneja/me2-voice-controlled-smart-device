@@ -27,18 +27,39 @@ def main() -> int:
         try:
             runner = gs.Gate2PackageRunner(key)
         except (OSError, RuntimeError, ValueError, KeyError, ImportError) as exc:
-            print("FAIL " + key.ljust(32) + " " + type(exc).__name__ + ": " + str(exc)[:110])
+            print(
+                "FAIL "
+                + key.ljust(32)
+                + " "
+                + type(exc).__name__
+                + ": "
+                + str(exc)[:110]
+            )
             continue
-        print("OK   " + key.ljust(32)
-              + " labels=" + str(len(runner.labels))
-              + " last=" + str(runner.labels[-1])
-              + " ch=" + str(runner.channels)
-              + " mels=" + str(runner.n_mels)
-              + " frames=" + str(runner.frames))
+        print(
+            "OK   "
+            + key.ljust(32)
+            + " labels="
+            + str(len(runner.labels))
+            + " last="
+            + str(runner.labels[-1])
+            + " ch="
+            + str(runner.channels)
+            + " mels="
+            + str(runner.n_mels)
+            + " frames="
+            + str(runner.frames)
+        )
         ok += 1
         del runner
-    print("LOADED " + str(ok) + "/" + str(len(NEW))
-          + "  registry_total=" + str(len(gs.GATE2_PACKAGE_RUNNERS)))
+    print(
+        "LOADED "
+        + str(ok)
+        + "/"
+        + str(len(NEW))
+        + "  registry_total="
+        + str(len(gs.GATE2_PACKAGE_RUNNERS))
+    )
     return 0
 
 

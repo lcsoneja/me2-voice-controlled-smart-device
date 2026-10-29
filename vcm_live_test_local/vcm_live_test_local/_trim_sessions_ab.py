@@ -132,14 +132,14 @@ def main() -> int:
     clips = [(label, action, phrase, load_wav(path)) for label, path, action, phrase in takes]
     names = sorted(gs.GATE2_PACKAGE_RUNNERS)
     rows = []
-    flip_records: dict[str, dict] = {}
+    flip_records: dict[str, list[dict]] = {}
     for index_no, name in enumerate(names, 1):
         try:
             if name == "gate2v124_ensemble4way":
                 runner = gs.Gate2V124EnsembleRunner(name)
             else:
                 runner = gs.Gate2PackageRunner(name)
-        except (OSError, RuntimeError, ValueError, ImportError) as exc:
+        except (OSError, RuntimeError, ValueError, ImportError, KeyError, TypeError) as exc:
             print("SKIP " + name + " (" + type(exc).__name__ + ")")
             continue
         labels = list(runner.labels)
@@ -147,7 +147,7 @@ def main() -> int:
         window = max(1, frames * gs.HOP)
         raw_hits = trim_hits = seen = trimmed_ok = 0
         speech_len = []
-        per_session = {}
+        per_session: dict[str, list[int]] = {}
         flips = {"trim_wins": 0, "raw_wins": 0, "tie": 0}
         started = time.perf_counter()
         for session_label, action, phrase, clip in clips:
@@ -236,7 +236,7 @@ def main() -> int:
             + "% trim="
             + str(trim_acc)
             + "% d="
-            + ("%+.1f" % rows[-1]["delta"])
+            + format(rows[-1]["delta"], "+.1f")
             + " flips="
             + str(flips["trim_wins"])
             + "/"
@@ -247,7 +247,7 @@ def main() -> int:
 
     by_raw = sorted(rows, key=lambda r: (-r["raw"], r["model"]))
     by_trim = sorted(rows, key=lambda r: (-r["trim"], r["model"]))
-    print("")
+    print()
     print("RANK_BY_RAW  " + ", ".join(r["model"] + "=" + str(r["raw"]) for r in by_raw[:10]))
     print("RANK_BY_TRIM " + ", ".join(r["model"] + "=" + str(r["trim"]) for r in by_trim[:10]))
     helpers = [r for r in rows if r["delta"] > 0]

@@ -181,7 +181,7 @@ def main() -> int:
                 runner = gs.Gate2V124EnsembleRunner(name)
             else:
                 runner = gs.Gate2PackageRunner(name)
-        except (OSError, RuntimeError, ValueError, ImportError) as exc:
+        except (OSError, RuntimeError, ValueError, ImportError, KeyError, TypeError) as exc:
             print("SKIP " + name + " (" + type(exc).__name__ + ")")
             continue
         labels = list(runner.labels)
