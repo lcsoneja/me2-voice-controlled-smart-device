@@ -1,11 +1,179 @@
 {
  "ranking": [
   {
+   "model": "gate2v147_sessionft",
+   "correct": 315,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8468
+  },
+  {
+   "model": "gate2v164_oosspeech",
+   "correct": 314,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8441
+  },
+  {
+   "model": "gate2v165_quietnegs",
+   "correct": 314,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8441
+  },
+  {
+   "model": "gate2v158_deepparaphrase",
+   "correct": 310,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8333
+  },
+  {
+   "model": "gate2v153_paraphrasecoverage",
+   "correct": 302,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8118
+  },
+  {
+   "model": "gate2v155_paraphrasefixedsnr",
+   "correct": 302,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8118
+  },
+  {
+   "model": "gate2v154a_depth10blocks",
+   "correct": 300,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8065
+  },
+  {
+   "model": "gate2v161_zeroinit30",
+   "correct": 300,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8065
+  },
+  {
+   "model": "gate2v168_noownerfullneg",
+   "correct": 300,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8065
+  },
+  {
+   "model": "gate2v149_ownerftreplay",
+   "correct": 299,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8038
+  },
+  {
+   "model": "gate2v145_randompos",
+   "correct": 298,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8011
+  },
+  {
+   "model": "gate2v166_noowner",
+   "correct": 298,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.8011
+  },
+  {
+   "model": "gate2v163_zeroinit30dense5",
+   "correct": 297,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7984
+  },
+  {
+   "model": "gate2v167_noowneroos",
+   "correct": 297,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7984
+  },
+  {
+   "model": "gate2v150_ownervcftreplay",
+   "correct": 296,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7957
+  },
+  {
+   "model": "gate2v156_appsimfixedsnr",
+   "correct": 296,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7957
+  },
+  {
+   "model": "gate2v148_appsim",
+   "correct": 295,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.793
+  },
+  {
+   "model": "gate2v154b_depth10blocks",
+   "correct": 295,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.793
+  },
+  {
+   "model": "gate2v162_zeroinit10dense5",
+   "correct": 295,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.793
+  },
+  {
+   "model": "gate2v154c_depth10blocks",
+   "correct": 294,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7903
+  },
+  {
+   "model": "gate2v152_geometrycontrol",
+   "correct": 293,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7876
+  },
+  {
+   "model": "gate2v159_edgevisiondepth",
+   "correct": 293,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7876
+  },
+  {
    "model": "gate2v110_ownerft_aggr",
    "correct": 291,
    "scored": 372,
    "runs": 31,
    "acc": 0.7823
+  },
+  {
+   "model": "gate2v157_appsimfixedsnrownerft",
+   "correct": 290,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7796
+  },
+  {
+   "model": "gate2v160_deep50blocks",
+   "correct": 290,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7796
   },
   {
    "model": "gate2v56_v54",
@@ -232,6 +400,13 @@
    "acc": 0.7043
   },
   {
+   "model": "gate2v151_v21pappsim",
+   "correct": 262,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.7043
+  },
+  {
    "model": "gate2v22s",
    "correct": 262,
    "scored": 372,
@@ -379,6 +554,13 @@
    "acc": 0.6694
   },
   {
+   "model": "gate2v143_dominantmix",
+   "correct": 247,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.664
+  },
+  {
    "model": "gate2v42_reverb",
    "correct": 246,
    "scored": 372,
@@ -492,6 +674,13 @@
   },
   {
    "model": "gate2v111c_bcresnet",
+   "correct": 229,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.6156
+  },
+  {
+   "model": "gate2v144_dominantmix3way",
    "correct": 229,
    "scored": 372,
    "runs": 31,
@@ -624,6 +813,13 @@
    "acc": 0.1075
   },
   {
+   "model": "gate2v146_intentcrossattn",
+   "correct": 35,
+   "scored": 372,
+   "runs": 31,
+   "acc": 0.0941
+  },
+  {
    "model": "gate2v25",
    "correct": 30,
    "scored": 372,
@@ -645,5 +841,5 @@
    "acc": 0.0349
   }
  ],
- "models": 92
+ "models": 120
 }
