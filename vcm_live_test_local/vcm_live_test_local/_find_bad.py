@@ -33,15 +33,31 @@ def main() -> int:
                 raise ValueError("empty label list")
         except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
             bad.append((index, name, path, type(exc).__name__))
-            print("BAD #" + str(index) + " " + name.ljust(34) + " " + type(exc).__name__
-                  + "  labels_path=" + path.name)
+            print(
+                "BAD #"
+                + str(index)
+                + " "
+                + name.ljust(34)
+                + " "
+                + type(exc).__name__
+                + "  labels_path="
+                + path.name
+            )
     print("bad_count=" + str(len(bad)))
     for index, name, path, kind in bad:
         pkg, spec_dir, _path = label_file_for(name)
         own = pkg / "labels.json"
-        print(name + " own_labels=" + str(own.is_file())
-              + " spec_dir=" + str(spec_dir.name if spec_dir else None)
-              + " used=" + path.parent.name + "/" + path.name)
+        print(
+            name
+            + " own_labels="
+            + str(own.is_file())
+            + " spec_dir="
+            + str(spec_dir.name if spec_dir else None)
+            + " used="
+            + path.parent.name
+            + "/"
+            + path.name
+        )
         if own.is_file():
             text = own.read_text(encoding="utf-8")
             print("   own_first100=" + text[:100].replace(chr(10), " "))

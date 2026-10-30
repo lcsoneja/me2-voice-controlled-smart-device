@@ -66,7 +66,9 @@ def load_wav(path: pathlib.Path) -> np.ndarray:
             width = handle.getsampwidth()
             raw = handle.readframes(handle.getnframes())
     except (OSError, wave.Error) as exc:
-        raise SystemExit("cannot read " + str(path) + ": " + type(exc).__name__) from exc
+        raise SystemExit(
+            "cannot read " + str(path) + ": " + type(exc).__name__
+        ) from exc
     if width == 2:
         return np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
     if width == 4:
@@ -129,7 +131,9 @@ def load_sessions():
 def main() -> int:
     package, takes = load_sessions()
     print("package=" + package.name + " takes=" + str(len(takes)))
-    clips = [(label, action, phrase, load_wav(path)) for label, path, action, phrase in takes]
+    clips = [
+        (label, action, phrase, load_wav(path)) for label, path, action, phrase in takes
+    ]
     names = sorted(gs.GATE2_PACKAGE_RUNNERS)
     rows = []
     flip_records: dict[str, list[dict]] = {}
@@ -139,7 +143,14 @@ def main() -> int:
                 runner = gs.Gate2V124EnsembleRunner(name)
             else:
                 runner = gs.Gate2PackageRunner(name)
-        except (OSError, RuntimeError, ValueError, ImportError, KeyError, TypeError) as exc:
+        except (
+            OSError,
+            RuntimeError,
+            ValueError,
+            ImportError,
+            KeyError,
+            TypeError,
+        ) as exc:
             print("SKIP " + name + " (" + type(exc).__name__ + ")")
             continue
         labels = list(runner.labels)
@@ -220,9 +231,13 @@ def main() -> int:
                     }
                     for key, value in sorted(per_session.items())
                 },
-                "speech_s": round(statistics.median(speech_len), 2) if speech_len else None,
+                "speech_s": round(statistics.median(speech_len), 2)
+                if speech_len
+                else None,
                 "trimmed_ok": trimmed_ok,
-                "ms": round((time.perf_counter() - started) * 1000 / max(1, seen * 2), 2),
+                "ms": round(
+                    (time.perf_counter() - started) * 1000 / max(1, seen * 2), 2
+                ),
             }
         )
         print(
@@ -248,8 +263,14 @@ def main() -> int:
     by_raw = sorted(rows, key=lambda r: (-r["raw"], r["model"]))
     by_trim = sorted(rows, key=lambda r: (-r["trim"], r["model"]))
     print()
-    print("RANK_BY_RAW  " + ", ".join(r["model"] + "=" + str(r["raw"]) for r in by_raw[:10]))
-    print("RANK_BY_TRIM " + ", ".join(r["model"] + "=" + str(r["trim"]) for r in by_trim[:10]))
+    print(
+        "RANK_BY_RAW  "
+        + ", ".join(r["model"] + "=" + str(r["raw"]) for r in by_raw[:10])
+    )
+    print(
+        "RANK_BY_TRIM "
+        + ", ".join(r["model"] + "=" + str(r["trim"]) for r in by_trim[:10])
+    )
     helpers = [r for r in rows if r["delta"] > 0]
     hurts = [r for r in rows if r["delta"] < 0]
     neutral = [r for r in rows if r["delta"] == 0]
@@ -264,8 +285,12 @@ def main() -> int:
         + str(len(neutral))
     )
     if rows:
-        print("MEAN raw=" + str(round(statistics.mean(r["raw"] for r in rows), 1))
-              + " trim=" + str(round(statistics.mean(r["trim"] for r in rows), 1)))
+        print(
+            "MEAN raw="
+            + str(round(statistics.mean(r["raw"] for r in rows), 1))
+            + " trim="
+            + str(round(statistics.mean(r["trim"] for r in rows), 1))
+        )
     payload = {
         "generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "package": package.name,
