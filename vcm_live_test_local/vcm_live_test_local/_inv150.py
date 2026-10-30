@@ -5,12 +5,19 @@ import pathlib
 import re
 import sys
 
-sys.path.insert(0, r"C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/vcm_live_test_local/vcm_live_test_local")
+sys.path.insert(
+    0,
+    r"C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/vcm_live_test_local/vcm_live_test_local",
+)
 
 import gate1_server as gs
 
-SHIP = pathlib.Path(r"C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/Shipping")
-registered = {pathlib.Path(v[0]).resolve(): k for k, v in gs.GATE2_PACKAGE_RUNNERS.items()}
+SHIP = pathlib.Path(
+    r"C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/Shipping"
+)
+registered = {
+    pathlib.Path(v[0]).resolve(): k for k, v in gs.GATE2_PACKAGE_RUNNERS.items()
+}
 
 rows = []
 for base in (SHIP, SHIP / "Shipping Container 1"):
@@ -45,7 +52,20 @@ for ver, name, has, n_mels, n_frames, reg, parent in rows:
     extra = ""
     if has["t"] and reg is None:
         extra = "  <-- candidate"
-    print("v" + str(ver).ljust(4) + " " + name[:52].ljust(52)
-          + " tflite=" + str(has["t"]) + " spec=" + str(has["s"])
-          + " mel=" + str(n_mels) + " frames=" + str(n_frames)
-          + " " + tag + extra)
+    print(
+        "v"
+        + str(ver).ljust(4)
+        + " "
+        + name[:52].ljust(52)
+        + " tflite="
+        + str(has["t"])
+        + " spec="
+        + str(has["s"])
+        + " mel="
+        + str(n_mels)
+        + " frames="
+        + str(n_frames)
+        + " "
+        + tag
+        + extra
+    )

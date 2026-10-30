@@ -12,7 +12,10 @@ import re
 import numpy as np
 import tensorflow as tf
 
-SHIP = pathlib.Path(r"C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/Shipping")
+SHIP = pathlib.Path(
+    r"C:/Users/Leandro/Desktop/Leandro/AI 222 and AI 231/Exercise 2/Exercise 2b/Shipping"
+)
+
 
 def main() -> int:
     rows = []
@@ -45,15 +48,43 @@ def main() -> int:
                             n_lab = len(data)
                     except json.JSONDecodeError as err:
                         n_lab = "bad-json " + str(err)[:30]
-                verdict = "OK" if (ins == "1x148x60x9" and int(np.prod(inp["shape"])) == 1 * 148 * 60 * 9 and n_out in (19, 20)) else "CHECK"
-                rows.append((pkg.name, verdict, ins + " " + str(inp["dtype"].__name__), outs, "labels=" + str(n_lab)))
+                verdict = (
+                    "OK"
+                    if (
+                        ins == "1x148x60x9"
+                        and int(np.prod(inp["shape"])) == 1 * 148 * 60 * 9
+                        and n_out in (19, 20)
+                    )
+                    else "CHECK"
+                )
+                rows.append(
+                    (
+                        pkg.name,
+                        verdict,
+                        ins + " " + str(inp["dtype"].__name__),
+                        outs,
+                        "labels=" + str(n_lab),
+                    )
+                )
             except (ValueError, OSError, RuntimeError) as err:
                 rows.append((pkg.name, "LOAD-FAIL", str(err)[:60], "", ""))
     ok = sum(1 for r in rows if r[1] == "OK")
     print("probed=" + str(len(rows)) + " OK=" + str(ok))
     for name, verdict, ins, outs, labs in rows:
-        print("  " + verdict.ljust(9) + " " + name[:50].ljust(50) + " in[" + ins + "] out[" + outs + "] " + labs)
+        print(
+            "  "
+            + verdict.ljust(9)
+            + " "
+            + name[:50].ljust(50)
+            + " in["
+            + ins
+            + "] out["
+            + outs
+            + "] "
+            + labs
+        )
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
