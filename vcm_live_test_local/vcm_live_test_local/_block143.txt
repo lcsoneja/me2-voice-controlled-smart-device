@@ -1,0 +1,140 @@
+    "gate2v143_dominantmix": (
+        SHIP_DIR / "Gate2V143_DominantMix_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v143_dominant_mix_float16.tflite",
+        None,
+    ),
+    "gate2v144_dominantmix3way": (
+        SHIP_DIR / "Gate2V144_DominantMix3Way_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v144_dominant_mix3way_float16.tflite",
+        None,
+    ),
+    "gate2v145_randompos": (
+        SHIP_DIR / "Gate2V145_RandomPos_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v145_randompos_float16.tflite",
+        None,
+    ),
+    "gate2v146_intentcrossattn": (
+        SHIP_DIR / "Gate2V146_IntentCrossAttn_ship_EXPERIMENTAL_20261028",
+        "tflite/gate2v146_intent_crossattn_float16.tflite",
+        None,
+    ),
+    "gate2v147_sessionft": (
+        SHIP_DIR / "Gate2V147_SessionFT_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v147_session_ft_float16.tflite",
+        None,
+    ),
+    "gate2v148_appsim": (
+        SHIP_DIR / "Gate2V148_AppSim_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v148_appsim_float16.tflite",
+        None,
+    ),
+    "gate2v149_ownerftreplay": (
+        SHIP_DIR / "Gate2V149_OwnerFTReplay_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v149_ownerft_replay_float16.tflite",
+        None,
+    ),
+    "gate2v150_ownervcftreplay": (
+        SHIP_DIR / "Gate2V150_OwnerVCFTReplay_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v150_ownerft_replay_float16.tflite",
+        None,
+    ),
+    "gate2v151_v21pappsim": (
+        SHIP_DIR / "Gate2V151_V21pAppSim_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v151_v21p_appsim_float16.tflite",
+        None,
+    ),
+    "gate2v152_geometrycontrol": (
+        SHIP_DIR / "Gate2V152_GeometryControl_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v152_ownerft_replay_float16.tflite",
+        None,
+    ),
+    "gate2v153_paraphrasecoverage": (
+        SHIP_DIR / "Gate2V153_ParaphraseCoverage_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v153_paraphrase_float16.tflite",
+        None,
+    ),
+    "gate2v154a_depth10blocks": (
+        SHIP_DIR / "Gate2V154a_Depth10Blocks_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v154a_deep_float16.tflite",
+        None,
+    ),
+    "gate2v154b_depth10blocks": (
+        SHIP_DIR / "Gate2V154b_Depth10Blocks_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v154b_deep_float16.tflite",
+        None,
+    ),
+    "gate2v154c_depth10blocks": (
+        SHIP_DIR / "Gate2V154c_Depth10Blocks_ship_EXPERIMENTAL_20261029",
+        "tflite/gate2v154c_deep_float16.tflite",
+        None,
+    ),
+    "gate2v155_paraphrasefixedsnr": (
+        SHIP_DIR / "Gate2V155_ParaphraseFixedsnr_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v155_paraphrase_fixedsnr_float16.tflite",
+        None,
+    ),
+    "gate2v156_appsimfixedsnr": (
+        SHIP_DIR / "Gate2V156_AppsimFixedsnr_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v156_appsim_fixedsnr_float16.tflite",
+        None,
+    ),
+    "gate2v157_appsimfixedsnrownerft": (
+        SHIP_DIR / "Gate2V157_AppsimFixedsnrOwnerFT_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v157_ownerft_replay_float16.tflite",
+        None,
+    ),
+    "gate2v158_deepparaphrase": (
+        SHIP_DIR / "Gate2V158_DeepParaphrase_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v158_deep_paraphrase_float16.tflite",
+        None,
+    ),
+    "gate2v159_edgevisiondepth": (
+        SHIP_DIR / "Gate2V159_EdgeVisionDepth_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v159_deep30_float16.tflite",
+        None,
+    ),
+    "gate2v160_deep50blocks": (
+        SHIP_DIR / "Gate2V160_Deep50Blocks_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v160_deep50_float16.tflite",
+        None,
+    ),
+    "gate2v161_zeroinit30": (
+        SHIP_DIR / "Gate2V161_ZeroInit30_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v161_zeroinit30_float16.tflite",
+        None,
+    ),
+    "gate2v162_zeroinit10dense5": (
+        SHIP_DIR / "Gate2V162_ZeroInit10Dense5_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v162_d10_zeroinit_dense5_float16.tflite",
+        None,
+    ),
+    "gate2v163_zeroinit30dense5": (
+        SHIP_DIR / "Gate2V163_ZeroInit30Dense5_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v163_d30_zeroinit_dense5_float16.tflite",
+        None,
+    ),
+    "gate2v164_oosspeech": (
+        SHIP_DIR / "Gate2V164_OOSSpeech_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v164_oos_speech_float16.tflite",
+        None,
+    ),
+    "gate2v165_quietnegs": (
+        SHIP_DIR / "Gate2V165_QuietNegs_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v165_quietnegs_float16.tflite",
+        None,
+    ),
+    "gate2v166_noowner": (
+        SHIP_DIR / "Gate2V166_NoOwner_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v166_noowner_float16.tflite",
+        None,
+    ),
+    "gate2v167_noowneroos": (
+        SHIP_DIR / "Gate2V167_NoOwnerOOS_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v167_noowner_oos_float16.tflite",
+        None,
+    ),
+    "gate2v168_noownerfullneg": (
+        SHIP_DIR / "Gate2V168_NoOwnerFullNeg_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v168_noowner_fullneg_float16.tflite",
+        None,
+    ),
