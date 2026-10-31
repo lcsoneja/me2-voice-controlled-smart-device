@@ -1,845 +1,880 @@
 {
  "ranking": [
   {
-   "model": "gate2v147_sessionft",
-   "correct": 315,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8468
+   "model": "gate2v170_gainaug",
+   "correct": 408,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7556
   },
   {
-   "model": "gate2v164_oosspeech",
-   "correct": 314,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8441
+   "model": "gate2v172_gain6db",
+   "correct": 408,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7556
+  },
+  {
+   "model": "gate2v171_attnmultiscale",
+   "correct": 407,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7537
   },
   {
    "model": "gate2v165_quietnegs",
-   "correct": 314,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8441
+   "correct": 406,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7519
+  },
+  {
+   "model": "gate2v164_oosspeech",
+   "correct": 404,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7481
+  },
+  {
+   "model": "gate2v169_attnpool",
+   "correct": 404,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7481
+  },
+  {
+   "model": "gate2v173_disckw",
+   "correct": 403,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7463
   },
   {
    "model": "gate2v158_deepparaphrase",
-   "correct": 310,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8333
+   "correct": 400,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7407
   },
   {
-   "model": "gate2v153_paraphrasecoverage",
-   "correct": 302,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8118
-  },
-  {
-   "model": "gate2v155_paraphrasefixedsnr",
-   "correct": 302,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8118
-  },
-  {
-   "model": "gate2v154a_depth10blocks",
-   "correct": 300,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8065
-  },
-  {
-   "model": "gate2v161_zeroinit30",
-   "correct": 300,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8065
-  },
-  {
-   "model": "gate2v168_noownerfullneg",
-   "correct": 300,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8065
-  },
-  {
-   "model": "gate2v149_ownerftreplay",
-   "correct": 299,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8038
-  },
-  {
-   "model": "gate2v145_randompos",
-   "correct": 298,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8011
-  },
-  {
-   "model": "gate2v166_noowner",
-   "correct": 298,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.8011
-  },
-  {
-   "model": "gate2v163_zeroinit30dense5",
-   "correct": 297,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7984
+   "model": "gate2v147_sessionft",
+   "correct": 398,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.737
   },
   {
    "model": "gate2v167_noowneroos",
-   "correct": 297,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7984
-  },
-  {
-   "model": "gate2v150_ownervcftreplay",
-   "correct": 296,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7957
-  },
-  {
-   "model": "gate2v156_appsimfixedsnr",
-   "correct": 296,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7957
-  },
-  {
-   "model": "gate2v148_appsim",
-   "correct": 295,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.793
-  },
-  {
-   "model": "gate2v154b_depth10blocks",
-   "correct": 295,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.793
-  },
-  {
-   "model": "gate2v162_zeroinit10dense5",
-   "correct": 295,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.793
-  },
-  {
-   "model": "gate2v154c_depth10blocks",
-   "correct": 294,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7903
-  },
-  {
-   "model": "gate2v152_geometrycontrol",
-   "correct": 293,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7876
-  },
-  {
-   "model": "gate2v159_edgevisiondepth",
-   "correct": 293,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7876
-  },
-  {
-   "model": "gate2v110_ownerft_aggr",
-   "correct": 291,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7823
-  },
-  {
-   "model": "gate2v157_appsimfixedsnrownerft",
-   "correct": 290,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7796
-  },
-  {
-   "model": "gate2v160_deep50blocks",
-   "correct": 290,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7796
-  },
-  {
-   "model": "gate2v56_v54",
-   "correct": 290,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7796
-  },
-  {
-   "model": "gate2v21p",
-   "correct": 286,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7688
-  },
-  {
-   "model": "gate2v56_v54b",
-   "correct": 285,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7661
-  },
-  {
-   "model": "gate2v19p2_owner_vc",
-   "correct": 283,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7608
-  },
-  {
-   "model": "gate2v64p_paired_owner",
-   "correct": 281,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7554
-  },
-  {
-   "model": "gate2v87_combo_intent",
-   "correct": 281,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7554
-  },
-  {
-   "model": "gate2v72_v64d_pid",
-   "correct": 280,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7527
-  },
-  {
-   "model": "gate2v124_ensemble4way",
-   "correct": 279,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.75
-  },
-  {
-   "model": "gate2v19p",
-   "correct": 276,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7419
-  },
-  {
-   "model": "gate2v21p2_owner_vc",
-   "correct": 276,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7419
-  },
-  {
-   "model": "gate2v64d_expandedneg",
-   "correct": 276,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7419
-  },
-  {
-   "model": "gate2v64c_stochmel",
-   "correct": 275,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7392
-  },
-  {
-   "model": "gate2v108_ownerft_v93b",
-   "correct": 274,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7366
-  },
-  {
-   "model": "gate2v109_ownerft_v96c",
-   "correct": 273,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7339
-  },
-  {
-   "model": "gate2v118_ambienttail",
-   "correct": 273,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7339
-  },
-  {
-   "model": "gate2v142_121b_ownerft",
-   "correct": 273,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7339
-  },
-  {
-   "model": "gate2v71",
-   "correct": 271,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7285
-  },
-  {
-   "model": "gate2v96c_v93b_rerun",
-   "correct": 271,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7285
-  },
-  {
-   "model": "gate2v65_stoch15k",
-   "correct": 270,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7258
-  },
-  {
-   "model": "gate2v81_timeshift_add",
-   "correct": 270,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7258
-  },
-  {
-   "model": "gate2v85_keywordsonly",
-   "correct": 270,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7258
-  },
-  {
-   "model": "gate2v117a_miniecho",
-   "correct": 269,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7231
-  },
-  {
-   "model": "gate2v19",
-   "correct": 269,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7231
-  },
-  {
-   "model": "gate2v22",
-   "correct": 268,
-   "scored": 372,
-   "runs": 31,
+   "correct": 389,
+   "scored": 540,
+   "runs": 45,
    "acc": 0.7204
   },
   {
-   "model": "gate2v119b_speedbounded",
-   "correct": 267,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7177
+   "model": "gate2v168_noownerfullneg",
+   "correct": 389,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7204
   },
   {
-   "model": "gate2v76_v64d_tr",
-   "correct": 267,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7177
+   "model": "gate2v155_paraphrasefixedsnr",
+   "correct": 386,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7148
   },
   {
-   "model": "gate2v121b_specaugonly",
-   "correct": 265,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7124
+   "model": "gate2v153_paraphrasecoverage",
+   "correct": 385,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.713
+  },
+  {
+   "model": "gate2v154b_depth10blocks",
+   "correct": 384,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7111
+  },
+  {
+   "model": "gate2v166_noowner",
+   "correct": 384,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7111
+  },
+  {
+   "model": "gate2v145_randompos",
+   "correct": 381,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7056
+  },
+  {
+   "model": "gate2v154a_depth10blocks",
+   "correct": 379,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7019
+  },
+  {
+   "model": "gate2v150_ownervcftreplay",
+   "correct": 378,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.7
+  },
+  {
+   "model": "gate2v149_ownerftreplay",
+   "correct": 377,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6981
+  },
+  {
+   "model": "gate2v161_zeroinit30",
+   "correct": 377,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6981
+  },
+  {
+   "model": "gate2v163_zeroinit30dense5",
+   "correct": 377,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6981
+  },
+  {
+   "model": "gate2v156_appsimfixedsnr",
+   "correct": 375,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6944
+  },
+  {
+   "model": "gate2v162_zeroinit10dense5",
+   "correct": 374,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6926
+  },
+  {
+   "model": "gate2v148_appsim",
+   "correct": 372,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6889
+  },
+  {
+   "model": "gate2v154c_depth10blocks",
+   "correct": 371,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.687
+  },
+  {
+   "model": "gate2v56_v54",
+   "correct": 371,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.687
+  },
+  {
+   "model": "gate2v21p",
+   "correct": 369,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6833
+  },
+  {
+   "model": "gate2v160_deep50blocks",
+   "correct": 368,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6815
+  },
+  {
+   "model": "gate2v152_geometrycontrol",
+   "correct": 367,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6796
+  },
+  {
+   "model": "gate2v157_appsimfixedsnrownerft",
+   "correct": 367,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6796
+  },
+  {
+   "model": "gate2v159_edgevisiondepth",
+   "correct": 365,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6759
+  },
+  {
+   "model": "gate2v19p",
+   "correct": 364,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6741
+  },
+  {
+   "model": "gate2v19p2_owner_vc",
+   "correct": 364,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6741
+  },
+  {
+   "model": "gate2v21p2_owner_vc",
+   "correct": 363,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6722
+  },
+  {
+   "model": "gate2v56_v54b",
+   "correct": 363,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6722
+  },
+  {
+   "model": "gate2v110_ownerft_aggr",
+   "correct": 360,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6667
+  },
+  {
+   "model": "gate2v124_ensemble4way",
+   "correct": 359,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6648
+  },
+  {
+   "model": "gate2v87_combo_intent",
+   "correct": 354,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6556
+  },
+  {
+   "model": "gate2v71",
+   "correct": 349,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6463
+  },
+  {
+   "model": "gate2v19",
+   "correct": 347,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6426
   },
   {
    "model": "gate2v20_aux",
-   "correct": 265,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7124
+   "correct": 347,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6426
   },
   {
-   "model": "gate2v46_impwarp",
-   "correct": 265,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7124
+   "model": "gate2v118_ambienttail",
+   "correct": 346,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6407
   },
   {
-   "model": "gate2v86_speechoos_mid",
-   "correct": 264,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7097
+   "model": "gate2v64c_stochmel",
+   "correct": 346,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6407
+  },
+  {
+   "model": "gate2v72_v64d_pid",
+   "correct": 346,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6407
+  },
+  {
+   "model": "gate2v64p_paired_owner",
+   "correct": 345,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6389
   },
   {
    "model": "gate2v18",
-   "correct": 263,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.707
+   "correct": 343,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6352
   },
   {
-   "model": "gate2v119a_speedwide",
-   "correct": 262,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7043
+   "model": "gate2v22",
+   "correct": 343,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6352
   },
   {
-   "model": "gate2v151_v21pappsim",
-   "correct": 262,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7043
+   "model": "gate2v96c_v93b_rerun",
+   "correct": 343,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6352
   },
   {
-   "model": "gate2v22s",
-   "correct": 262,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7043
+   "model": "gate2v108_ownerft_v93b",
+   "correct": 342,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6333
   },
   {
-   "model": "gate2v96a_confweight2x",
-   "correct": 262,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.7043
+   "model": "gate2v65_stoch15k",
+   "correct": 342,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6333
   },
   {
-   "model": "gate2v120_timewarp",
-   "correct": 259,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6962
-  },
-  {
-   "model": "gate2v129_kw",
-   "correct": 259,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6962
+   "model": "gate2v109_ownerft_v96c",
+   "correct": 341,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6315
   },
   {
    "model": "gate2v21",
-   "correct": 259,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6962
+   "correct": 341,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6315
   },
   {
-   "model": "gate2v41_specaugmix",
-   "correct": 259,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6962
+   "model": "gate2v64d_expandedneg",
+   "correct": 341,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6315
+  },
+  {
+   "model": "gate2v81_timeshift_add",
+   "correct": 340,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6296
+  },
+  {
+   "model": "gate2v142_121b_ownerft",
+   "correct": 337,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6241
+  },
+  {
+   "model": "gate2v151_v21pappsim",
+   "correct": 336,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6222
+  },
+  {
+   "model": "gate2v117a_miniecho",
+   "correct": 334,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6185
+  },
+  {
+   "model": "gate2v85_keywordsonly",
+   "correct": 334,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6185
   },
   {
    "model": "gate2v66m_mutation",
-   "correct": 259,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6962
+   "correct": 332,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6148
   },
   {
-   "model": "gate2v82_speechoos2",
-   "correct": 259,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6962
+   "model": "gate2v121b_specaugonly",
+   "correct": 331,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.613
   },
   {
-   "model": "gate2v77_speech_neg",
-   "correct": 258,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6935
+   "model": "gate2v119a_speedwide",
+   "correct": 330,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6111
   },
   {
-   "model": "gate2v86b_v77mix",
-   "correct": 258,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6935
+   "model": "gate2v119b_speedbounded",
+   "correct": 328,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6074
   },
   {
-   "model": "gate2v97d_warmuplr",
-   "correct": 257,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6909
+   "model": "gate2v86_speechoos_mid",
+   "correct": 326,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6037
   },
   {
-   "model": "gate2v132_singlewordmassive",
-   "correct": 255,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6855
+   "model": "gate2v129_kw",
+   "correct": 325,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6019
   },
   {
-   "model": "gate2v82b_speechoos2_w035",
-   "correct": 255,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6855
-  },
-  {
-   "model": "gate2v64_paired_negatives",
-   "correct": 254,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6828
-  },
-  {
-   "model": "gate2v131_multiscaleauxkw",
-   "correct": 253,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6801
-  },
-  {
-   "model": "gate2v29b_wide9",
-   "correct": 253,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6801
-  },
-  {
-   "model": "gate2v142_129_kw_ownerft",
-   "correct": 251,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6747
-  },
-  {
-   "model": "gate2v84_phonemeaux2",
-   "correct": 251,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6747
-  },
-  {
-   "model": "gate2v142_132_singleword_ownerft",
-   "correct": 250,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.672
+   "model": "gate2v41_specaugmix",
+   "correct": 325,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6019
   },
   {
    "model": "gate2v69",
-   "correct": 250,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.672
+   "correct": 325,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6019
   },
   {
-   "model": "gate2v28b_9win",
-   "correct": 249,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6694
+   "model": "gate2v76_v64d_tr",
+   "correct": 325,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6019
   },
   {
-   "model": "gate2v143_dominantmix",
-   "correct": 247,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.664
+   "model": "gate2v29b_wide9",
+   "correct": 324,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.6
   },
   {
-   "model": "gate2v42_reverb",
-   "correct": 246,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6613
+   "model": "gate2v120_timewarp",
+   "correct": 322,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5963
   },
   {
-   "model": "gate2v142_135_distilled_ownerft",
-   "correct": 245,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6586
+   "model": "gate2v46_impwarp",
+   "correct": 322,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5963
   },
   {
-   "model": "gate2v49_warpdilatedneg",
-   "correct": 245,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6586
+   "model": "gate2v86b_v77mix",
+   "correct": 322,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5963
+  },
+  {
+   "model": "gate2v22s",
+   "correct": 321,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5944
+  },
+  {
+   "model": "gate2v96a_confweight2x",
+   "correct": 321,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5944
+  },
+  {
+   "model": "gate2v82_speechoos2",
+   "correct": 319,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5907
+  },
+  {
+   "model": "gate2v77_speech_neg",
+   "correct": 318,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5889
+  },
+  {
+   "model": "gate2v131_multiscaleauxkw",
+   "correct": 315,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5833
+  },
+  {
+   "model": "gate2v132_singlewordmassive",
+   "correct": 315,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5833
+  },
+  {
+   "model": "gate2v82b_speechoos2_w035",
+   "correct": 313,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5796
   },
   {
    "model": "gate2v53_melbin_dropout",
-   "correct": 245,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6586
+   "correct": 312,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5778
+  },
+  {
+   "model": "gate2v28b_9win",
+   "correct": 311,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5759
+  },
+  {
+   "model": "gate2v42_reverb",
+   "correct": 310,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5741
+  },
+  {
+   "model": "gate2v49_warpdilatedneg",
+   "correct": 310,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5741
   },
   {
    "model": "gate2v61_keyword_mix",
-   "correct": 244,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6559
-  },
-  {
-   "model": "gate2v62_speechtrim",
-   "correct": 242,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6505
+   "correct": 308,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5704
   },
   {
    "model": "gate2v16",
-   "correct": 241,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6478
+   "correct": 307,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5685
   },
   {
-   "model": "gate2v52_adjswap",
-   "correct": 241,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6478
+   "model": "gate2v84_phonemeaux2",
+   "correct": 307,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5685
   },
   {
-   "model": "gate2v63_pca_frontend",
-   "correct": 241,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6478
+   "model": "gate2v62_speechtrim",
+   "correct": 306,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5667
+  },
+  {
+   "model": "gate2v142_129_kw_ownerft",
+   "correct": 305,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5648
+  },
+  {
+   "model": "gate2v143_dominantmix",
+   "correct": 305,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5648
   },
   {
    "model": "gate2v29_deep9",
-   "correct": 239,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6425
+   "correct": 305,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5648
+  },
+  {
+   "model": "gate2v52_adjswap",
+   "correct": 305,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5648
+  },
+  {
+   "model": "gate2v64_paired_negatives",
+   "correct": 305,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5648
+  },
+  {
+   "model": "gate2v97d_warmuplr",
+   "correct": 305,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5648
+  },
+  {
+   "model": "gate2v142_132_singleword_ownerft",
+   "correct": 302,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5593
+  },
+  {
+   "model": "gate2v63_pca_frontend",
+   "correct": 302,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5593
+  },
+  {
+   "model": "gate2v142_135_distilled_ownerft",
+   "correct": 301,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5574
   },
   {
    "model": "gate2v37_9win_neg",
-   "correct": 239,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6425
+   "correct": 299,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5537
   },
   {
    "model": "gate2v24_crnn148x60",
-   "correct": 237,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6371
-  },
-  {
-   "model": "gate2v50_channelshuffle",
-   "correct": 236,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6344
+   "correct": 289,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5352
   },
   {
    "model": "gate2v57_pidgate",
-   "correct": 232,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6237
-  },
-  {
-   "model": "gate2v38_crnn9",
-   "correct": 231,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.621
-  },
-  {
-   "model": "gate2v36_17win",
-   "correct": 230,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6183
+   "correct": 285,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5278
   },
   {
    "model": "gate2v111c_bcresnet",
-   "correct": 229,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6156
+   "correct": 284,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5259
   },
   {
-   "model": "gate2v144_dominantmix3way",
-   "correct": 229,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6156
+   "model": "gate2v38_crnn9",
+   "correct": 283,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5241
   },
   {
-   "model": "gate2v48_audiopack",
-   "correct": 226,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.6075
+   "model": "gate2v50_channelshuffle",
+   "correct": 282,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5222
   },
   {
    "model": "gate2v59_focal_warp",
-   "correct": 223,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5995
+   "correct": 282,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5222
+  },
+  {
+   "model": "gate2v48_audiopack",
+   "correct": 280,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5185
+  },
+  {
+   "model": "gate2v144_dominantmix3way",
+   "correct": 275,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5093
+  },
+  {
+   "model": "gate2v36_17win",
+   "correct": 273,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.5056
   },
   {
    "model": "gate2v28a_5win",
-   "correct": 220,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5914
-  },
-  {
-   "model": "gate2v47_windrop_melwarp",
-   "correct": 220,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5914
+   "correct": 267,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.4944
   },
   {
    "model": "gate2v40b_9win_attention",
-   "correct": 213,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5726
+   "correct": 263,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.487
   },
   {
    "model": "gate2v60_phone_warp",
-   "correct": 208,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5591
+   "correct": 262,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.4852
   },
   {
-   "model": "gate2v113c_matchbox",
-   "correct": 207,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5565
-  },
-  {
-   "model": "gate2v58_smooth_pidgate",
-   "correct": 203,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5457
+   "model": "gate2v47_windrop_melwarp",
+   "correct": 259,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.4796
   },
   {
    "model": "gate2v23_crnn50x30",
-   "correct": 202,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.543
+   "correct": 242,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.4481
   },
   {
-   "model": "gate2v67_timeshift_only",
-   "correct": 188,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.5054
+   "model": "gate2v113c_matchbox",
+   "correct": 237,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.4389
+  },
+  {
+   "model": "gate2v58_smooth_pidgate",
+   "correct": 222,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.4111
   },
   {
    "model": "gate2v112c_gmlp",
-   "correct": 184,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.4946
+   "correct": 216,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.4
   },
   {
-   "model": "gate2v68_timeshift_neg",
-   "correct": 175,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.4704
+   "model": "gate2v67_timeshift_only",
+   "correct": 207,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.3833
   },
   {
    "model": "gate2v34a_std",
-   "correct": 169,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.4543
+   "correct": 201,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.3722
   },
   {
    "model": "gate2v34b_finehop",
-   "correct": 156,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.4194
+   "correct": 191,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.3537
+  },
+  {
+   "model": "gate2v68_timeshift_neg",
+   "correct": 191,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.3537
   },
   {
    "model": "gate2v66_clean_only",
-   "correct": 142,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.3817
+   "correct": 161,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.2981
   },
   {
    "model": "gate2v26_phraseconcat_neg",
-   "correct": 115,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.3091
+   "correct": 126,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.2333
   },
   {
    "model": "gate2v25_phraseconcat",
-   "correct": 99,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.2661
+   "correct": 111,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.2056
   },
   {
    "model": "gate2v26",
-   "correct": 40,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.1075
+   "correct": 48,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.0889
   },
   {
    "model": "gate2v146_intentcrossattn",
-   "correct": 35,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.0941
+   "correct": 46,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.0852
   },
   {
    "model": "gate2v25",
-   "correct": 30,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.0806
+   "correct": 37,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.0685
   },
   {
    "model": "gate2v70",
-   "correct": 24,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.0645
+   "correct": 35,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.0648
   },
   {
    "model": "gate2v126_mels180",
-   "correct": 13,
-   "scored": 372,
-   "runs": 31,
-   "acc": 0.0349
+   "correct": 27,
+   "scored": 540,
+   "runs": 45,
+   "acc": 0.05
   }
  ],
- "models": 120
+ "models": 125
 }
