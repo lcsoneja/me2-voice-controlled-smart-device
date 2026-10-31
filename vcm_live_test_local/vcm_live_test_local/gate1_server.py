@@ -789,9 +789,39 @@ GATE2_PACKAGE_RUNNERS = {
         "tflite/gate2v168_noowner_fullneg_float16.tflite",
         None,
     ),
+    # 2026-10-31 batch: v169-v173, probed through Gate2PackageRunner before registering.
+    # V174CHEAT is deliberately NOT registered: it was trained in-sample on the live
+    # sessions and the holdout, so its scores are upper-bound only (see disabled list).
+    "gate2v169_attnpool": (
+        SHIP_DIR / "Gate2V169_AttnPool_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v169_attnpool_float16.tflite",
+        None,
+    ),
+    "gate2v170_gainaug": (
+        SHIP_DIR / "Gate2V170_GainAug_ship_EXPERIMENTAL_20261030",
+        "tflite/gate2v170_gainaug_float16.tflite",
+        None,
+    ),
+    "gate2v171_attnmultiscale": (
+        SHIP_DIR / "Gate2V171_AttnMultiScale_ship_EXPERIMENTAL_20261031",
+        "tflite/gate2v171_attnms_float16.tflite",
+        None,
+    ),
+    "gate2v172_gain6db": (
+        SHIP_DIR / "Gate2V172_Gain6dB_ship_EXPERIMENTAL_20261031",
+        "tflite/gate2v172_gain6_float16.tflite",
+        None,
+    ),
+    "gate2v173_disckw": (
+        SHIP_DIR / "Gate2V173_DiscKW_ship_EXPERIMENTAL_20261031",
+        "tflite/gate2v173_disckw_float16.tflite",
+        None,
+    ),
 }
 
 GATE2_DISABLED_CANDIDATES = {
+    # 2026-10-31 batch.
+    "gate2v174cheat_alldata": "CONTAMINATED by design: trained in-sample on the live sessions + holdout (upper-bound analysis). Registering it would flatter the benchmark, so it stays out of the app.",
     # 2026-10-29 batch: shipped but not feedable / not an intent head.
     "gate2v130_groupmultihot": "250 outputs (group multi-hot aux head): no decoding spec for the intent logits.",
     "gate2v66b_18extra": "27-channel frontend (1,148,60,27): needs the 18-extra channel builder the package does not ship.",
