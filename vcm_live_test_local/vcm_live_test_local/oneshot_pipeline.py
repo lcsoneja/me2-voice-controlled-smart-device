@@ -82,6 +82,7 @@ def register_routes(app: web.Application) -> None:
     app.router.add_post("/api/oneshot/sessions/delete", api_sessions_delete)
     app.router.add_post("/api/oneshot/results/export", api_results_export)
     app.router.add_post("/api/oneshot/results/save", api_results_save)
+    app.router.add_post("/api/oneshot/ab", api_ab)
     app.router.add_get("/api/oneshot/leaderboard", api_leaderboard)
     app.router.add_post("/api/oneshot/leaderboard/score", api_leaderboard_score)
     app.router.add_post("/api/oneshot/leaderboard/reset", api_leaderboard_reset)
@@ -320,6 +321,125 @@ def _leadin_seconds(body: dict) -> float:
     return value if 0.0 < value < 2.0 else 0.0
 
 
+# A/B conditions: one click compares how the same takes score under different
+# input recipes, so "is the noise canceller good / is trimming good / would a
+# 3 s window work" get answered with the user's own recordings.
+AB_CONDITIONS = (
+    ("raw", "raw (5 s)", {}),
+    ("nc", "noise canceller", {"nc": True}),
+    ("trim", "trim to speech", {"trim": True}),
+    ("drop500", "drop 0.5 s", {"leadin": 0.5}),
+    ("w4", "4 s window", {"window": 4.0}),
+    ("w3", "3 s window", {"window": 3.0}),
+)
+MAX_AB_TAKES = 60
+MAX_AB_MODELS = 8
+
+
+async def api_ab(request: web.Request) -> web.Response:
+    """Score the same takes under every prep condition and report win/loss flips.
+
+    Body: {"ids": "all" | [...], "models": "all" | [...], "conditions": [...]}.
+    The window conditions cut the take to its FIRST N seconds, so the wake word
+    (captured at the start) stays inside - exactly what a shorter live capture would
+    contain. The nc condition applies the same canceller the live pipeline uses.
+    """
+    gs = importlib.import_module("gate1_server")
+    gates = request.app["gates"]
+    store = request.app["lab"].store
+    try:
+        body = await request.json()
+    except (TypeError, ValueError):
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    labelled = [row for row in _recording_rows(store) if row["action"].strip()]
+    by_id = {row["id"]: row for row in labelled}
+    wanted = body.get("ids")
+    if isinstance(wanted, str) and wanted == "all":
+        selected = labelled
+    elif isinstance(wanted, list) and wanted:
+        selected = [by_id[str(i)] for i in wanted if str(i) in by_id]
+    else:
+        selected = labelled[:MAX_AB_TAKES]
+    capped = len(selected) > MAX_AB_TAKES
+    selected = selected[:MAX_AB_TAKES]
+    requested = body.get("models")
+    known = sorted(gs.GATE2_PACKAGE_RUNNERS)
+    models = (
+        known
+        if (not requested or requested == "all")
+        else [str(name) for name in requested if str(name) in known]
+    )
+    models = models[:MAX_AB_MODELS]
+    if not selected:
+        return web.json_response({"error": "no takes with an intent label"}, status=400)
+    if not models:
+        return web.json_response({"error": "no known Gate 2 models requested"}, status=400)
+    asked = body.get("conditions")
+    if isinstance(asked, list) and asked:
+        wanted_cond = {str(c) for c in asked}
+        chosen = tuple(c for c in AB_CONDITIONS if c[0] in wanted_cond)
+    else:
+        chosen = AB_CONDITIONS
+    if not chosen:
+        chosen = AB_CONDITIONS
+    rows = {name: {} for name in models}
+    flips: dict[str, dict[str, int]] = {}
+    raw_hits: dict[tuple, bool] = {}
+    for cid, _label, kwargs in chosen:
+        takes, tally = _score_matrix(gs, gates, store, selected, models, **kwargs)
+        for name in models:
+            correct, scored = tally[name]
+            rows[name][cid] = {
+                "correct": int(correct),
+                "scored": int(scored),
+                "acc": (correct / scored) if scored else None,
+            }
+        hits = {
+            (take["id"], result["model"]): bool(result["match"])
+            for take in takes
+            for result in take["results"]
+        }
+        if cid == "raw":
+            raw_hits = hits
+        elif raw_hits:
+            win = loss = tie = 0
+            for key, hit in hits.items():
+                base = raw_hits.get(key)
+                if base is None:
+                    continue
+                if hit and not base:
+                    win += 1
+                elif base and not hit:
+                    loss += 1
+                else:
+                    tie += 1
+            flips[cid] = {"win": win, "loss": loss, "tie": tie}
+    mean = {}
+    for cid, _label, _kwargs in chosen:
+        accs = [
+            rows[name][cid]["acc"]
+            for name in models
+            if rows[name][cid]["acc"] is not None
+        ]
+        mean[cid] = (sum(accs) / len(accs)) if accs else None
+    return web.json_response(
+        {
+            "takes": len(selected),
+            "models": models,
+            "capped": capped,
+            "take_cap": MAX_AB_TAKES,
+            "conditions": [
+                {"id": cid, "label": label} for cid, label, _kwargs in chosen
+            ],
+            "rows": [{"model": name, "scores": rows[name]} for name in models],
+            "mean": mean,
+            "flips": flips,
+        }
+    )
+
+
 def _score_matrix(
     gs,
     gates,
@@ -328,6 +448,8 @@ def _score_matrix(
     models: list,
     trim: bool = False,
     leadin: float = 0.0,
+    nc: bool = False,
+    window: float = 0.0,
 ) -> tuple[list, dict]:
     """Run every selected take through every model: one row per take, one result per model.
 
@@ -347,6 +469,14 @@ def _score_matrix(
         if not candidate.is_file():
             continue
         clip = _load_clip(candidate)
+        if nc:
+            nc_state = {"enabled": True}
+            gs._nc_noise_update(clip, nc_state)
+            clip = gs._nc_apply(clip, nc_state)
+        if window > 0:
+            keep = int(window * gs.SR)
+            if clip.shape[0] > keep:
+                clip = clip[:keep]
         speech = None
         if trim:
             trimmed = _trim_to_speech(clip, gs.SR)

@@ -308,6 +308,7 @@
         <button id="tk-score" type="button">Score selected x all models</button>
         <button id="tk-score-one" type="button">Score selected x chosen Gate 2</button>
         <button id="tk-each" type="button">All intents per take</button>
+        <button id="tk-ab" type="button" title="Score the selected takes (or the newest 60) under six input conditions: raw 5 s; noise canceller; trim to speech; drop 0.5 s; 4 s window; 3 s window (wake word kept). Record with the noise canceller OFF for a fair NC comparison - it bakes into saved takes when ON.">A/B: NC / trim / window</button>
         <button id="tk-live" type="button">Start continuous x all models</button>
         <button id="tk-live-reset" type="button">Reset ranking</button>
         <button id="tk-save" type="button">Save results</button>
@@ -1176,6 +1177,117 @@
       })
       .catch(function () { el("tk-count").textContent = "test all failed"; });
   });
+
+  // A/B: the same takes under every prep condition (raw / NC / trim / drop 0.5 s /
+  // 4 s window / 3 s window). Answers "is the noise canceller good?", "is trimming
+  // good?" and "would a shorter window still work?" with the user's own recordings.
+  el("tk-ab").addEventListener("click", function () {
+    var ids = selectedIds();
+    if (!ids.length) {
+      ids = takes.filter(function (r) { return !r.holdout && (r.action || "").trim(); })
+        .slice(0, 60).map(function (r) { return r.id; });
+    }
+    if (!ids.length) { el("tk-count").textContent = "no takes with an intent label yet"; return; }
+    var sel = el("sel-g2");
+    var models = [];
+    if (sel.value) { models.push(sel.value); }
+    for (var i = 0; i < sel.options.length && models.length < 8; i++) {
+      var v = sel.options[i].value;
+      if (v && models.indexOf(v) < 0) { models.push(v); }
+    }
+    postJson("/api/oneshot/ab",
+             { ids: ids, models: models,
+               conditions: ["raw", "nc", "trim", "drop500", "w4", "w3"] },
+             "A/B: " + ids.length + " take(s) x " + models.length + " model(s) x 6 conditions")
+      .then(function (d) { renderAb(d); })
+      .catch(function () { el("tk-count").textContent = "A/B failed"; });
+  });
+
+  function renderAb(d) {
+    var host = el("tk-result");
+    host.hidden = false;
+    host.textContent = "";
+    var labels = {};
+    var ids = d.conditions.map(function (c) { labels[c.id] = c.label; return c.id; });
+    var head = document.createElement("p");
+    head.className = "note";
+    var rawMean = d.mean["raw"];
+    var best = null;
+    ids.forEach(function (cid) {
+      if (cid === "raw" || d.mean[cid] === null || d.mean[cid] === undefined) { return; }
+      if (best === null || d.mean[cid] > d.mean[best]) { best = cid; }
+    });
+    var parts = ["A/B - " + d.takes + " take(s) x " + d.models.length + " model(s)"];
+    if (best !== null && rawMean !== null && rawMean !== undefined) {
+      parts.push("best alternative: " + labels[best] + " "
+        + (100 * d.mean[best]).toFixed(1) + "% vs raw " + (100 * rawMean).toFixed(1)
+        + "% (" + (100 * (d.mean[best] - rawMean) >= 0 ? "+" : "")
+        + (100 * (d.mean[best] - rawMean)).toFixed(1) + " pts)");
+    }
+    head.textContent = parts.join(" - ");
+    host.appendChild(head);
+
+    var table = document.createElement("table");
+    var hr = document.createElement("tr");
+    ["model"].concat(ids.map(function (cid) { return labels[cid]; })).forEach(function (t) {
+      var th = document.createElement("th");
+      th.textContent = t;
+      hr.appendChild(th);
+    });
+    var thead = document.createElement("thead");
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    d.rows.slice().sort(function (a, b) {
+      return ((b.scores.raw || {}).acc || 0) - ((a.scores.raw || {}).acc || 0);
+    }).forEach(function (row) {
+      var tr = document.createElement("tr");
+      var td0 = document.createElement("td");
+      td0.textContent = String(row.model).replace(/^gate2/, "");
+      tr.appendChild(td0);
+      ids.forEach(function (cid) {
+        var s = row.scores[cid] || {};
+        var td = document.createElement("td");
+        td.className = "n";
+        td.textContent = (s.acc === null || s.acc === undefined) ? "-" : (100 * s.acc).toFixed(1) + "%";
+        var rawAcc = (row.scores.raw || {}).acc;
+        if (cid !== "raw" && s.acc !== null && s.acc !== undefined
+            && rawAcc !== null && rawAcc !== undefined && s.acc > rawAcc) {
+          td.style.fontWeight = "700";
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    var mtr = document.createElement("tr");
+    mtr.className = "top";
+    var mtd0 = document.createElement("td");
+    mtd0.textContent = "mean";
+    mtr.appendChild(mtd0);
+    ids.forEach(function (cid) {
+      var td = document.createElement("td");
+      td.className = "n";
+      var m = d.mean[cid];
+      td.textContent = (m === null || m === undefined) ? "-" : (100 * m).toFixed(1) + "%";
+      mtr.appendChild(td);
+    });
+    tbody.appendChild(mtr);
+    table.appendChild(tbody);
+    host.appendChild(table);
+
+    var flipParts = [];
+    Object.keys(d.flips).forEach(function (cid) {
+      var f = d.flips[cid];
+      flipParts.push(labels[cid] + ": +" + f.win + " / -" + f.loss + " vs raw");
+    });
+    if (flipParts.length) {
+      var fp = document.createElement("p");
+      fp.className = "note";
+      fp.textContent = "take flips (wins/losses across model x take): " + flipParts.join("; ");
+      host.appendChild(fp);
+    }
+    el("tk-count").textContent = "A/B done - " + d.takes + " take(s) x " + d.models.length + " model(s)";
+  }
 
   loadRanking();
 
